@@ -105,10 +105,12 @@ namespace PDTW_clustering
             ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
             ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
             dtwDist = new DtwDistance(ts1, ts2);
-            dtwDist.dtw();
+            dtwDist.parallel_dtw();
             nudTest3.Maximum = dtwDist.PathMatrix.Count - 1;
-            lblTest.Text = Environment.ProcessorCount.ToString();
-            //lblTest.Text = dtwDist.PathMatrix.Count.ToString();
+            nudTest1.Maximum = ts1.Series.Count - 1;
+            nudTest2.Maximum = ts2.Series.Count - 1;
+            //lblTest.Text = Environment.ProcessorCount.ToString();
+            lblTest.Text = dtwDist.PathMatrix.Count.ToString();
             //lblTest.Text = (dtwDist.X.Series[3] + dtwDist.Y.Series[int.Parse(txtTest.Text)]).ToString();
             //lblTest.Text = (ts1.Series[3] + ts2.Series[int.Parse(txtTest.Text)]).ToString();
         }
@@ -129,9 +131,9 @@ namespace PDTW_clustering
         {
             lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
             lblTest.Text += ": ";
-            lblTest.Text += dtwDist.PathMatrix[(int)nudTest3.Value].x.ToString();
+            lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
             lblTest.Text += ", ";
-            lblTest.Text += dtwDist.PathMatrix[(int)nudTest3.Value].y.ToString();
+            lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
         }
 
         private void tuan()

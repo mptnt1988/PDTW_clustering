@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Algorithms;
 using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
@@ -28,7 +29,33 @@ namespace PDTW_clustering.lib
 
         public void parallel_dtw()
         {
-
+            DistanceMatrix = new float[X.Length, Y.Length];
+            //int numBlocks = Environment.ProcessorCount * 4;
+            int noOfBlocks = 3;
+            ParallelAlgorithms.Wavefront(X.Length, Y.Length, noOfBlocks, noOfBlocks,
+                (start_i, end_i, start_j, end_j) =>
+            {
+                for (int i = start_i; i < end_i; i++)
+                    for (int j = start_j; j < end_j; j++)
+                    {
+                        if (i == 0)
+                            if (j == 0)
+                                DistanceMatrix[0, 0] = elems_distance(X.Series[0], Y.Series[0]);
+                            else
+                                DistanceMatrix[0, j] = elems_distance(X.Series[0], Y.Series[j]) + DistanceMatrix[0, j - 1];
+                        else if (j == 0)
+                            DistanceMatrix[i, 0] = elems_distance(X.Series[i], Y.Series[0]) + DistanceMatrix[i - 1, 0];
+                        else
+                        {
+                            float minPredVal =
+                                find_min(DistanceMatrix[i - 1, j],
+                                         DistanceMatrix[i, j - 1],
+                                         DistanceMatrix[i - 1, j - 1]);
+                            DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
+                        }
+                    }
+            });
+            dtw_update_path();
         }
 
         public void dtw()
@@ -36,30 +63,29 @@ namespace PDTW_clustering.lib
             int nY = Y.Length;
             int nX = X.Length;
             DistanceMatrix = new float[nX, nY];
-            float valX = X.Series[0];
-            float valY = Y.Series[0];
-            DistanceMatrix[0, 0] = elems_distance(valX, valY);
-            for (int j = 1; j < nY; j++)
-            {
-                DistanceMatrix[0, j] = elems_distance(valX, Y.Series[j]) + DistanceMatrix[0, j - 1];
-            }
-            for (int i = 1; i < nX; i++)
-            {
-                DistanceMatrix[i, 0] = elems_distance(X.Series[i], valY) + DistanceMatrix[i - 1, 0];
-            }
-            for (int i = 1; i < nX; i++)
-                for (int j = 1; j < nY; j++)
+            for (int i = 0; i < nX; i++)
+                for (int j = 0; j < nY; j++)
                 {
-                    float minPredVal =
-                        find_min(DistanceMatrix[i - 1, j],
-                                 DistanceMatrix[i, j - 1],
-                                 DistanceMatrix[i - 1, j - 1]);
-                    DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
+                    if (i == 0)
+                        if (j == 0)
+                            DistanceMatrix[0, 0] = elems_distance(X.Series[0], Y.Series[0]);
+                        else
+                            DistanceMatrix[0, j] = elems_distance(X.Series[0], Y.Series[j]) + DistanceMatrix[0, j - 1];
+                    else if (j == 0)
+                        DistanceMatrix[i, 0] = elems_distance(X.Series[i], Y.Series[0]) + DistanceMatrix[i - 1, 0];
+                    else
+                    {
+                        float minPredVal =
+                            find_min(DistanceMatrix[i - 1, j],
+                                     DistanceMatrix[i, j - 1],
+                                     DistanceMatrix[i - 1, j - 1]);
+                        DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
+                    }
                 }
-            update_dtw_path(DistanceMatrix);
+            dtw_update_path();
         }
 
-        private void update_dtw_path(float[,] DistanceMatrix)
+        private void dtw_update_path()
         {
             PathMatrix = new List<PathPoint>();
             int curX = DistanceMatrix.GetLength(0) - 1;
