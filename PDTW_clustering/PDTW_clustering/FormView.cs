@@ -112,7 +112,8 @@ namespace PDTW_clustering
             {
                 //t1 = t1 + 0.1;
                 t1 = t1 + 1;
-                m_pointsList.Add(t1, ts.get_at(j));
+                //m_pointsList.Add(t1, ts.get_at(j));
+                m_pointsList.Add(t1, ts.Series[j]);
             }
             //
 

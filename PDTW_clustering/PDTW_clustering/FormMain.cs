@@ -97,20 +97,47 @@ namespace PDTW_clustering
             Application.Exit();
         }
 
+        // TESTING
+        DtwDistance dtwDist;
+        TimeSeries ts1, ts2;
         private void btnTest_Click(object sender, EventArgs e)
         {
-
-            //TimeSeries ts = (TimeSeries)this._data[0];
-            //ts.get_paa(int.Parse(txtTest.Text));
-            //lblTest.Text = ts.PaaSeries.Series[ts.PaaSeries.Length - 1].ToString();
-            //float[,] f = new float[3, 5];
-            //lblTest.Text = tuan(f);
-            int x = 3;
-            lblTest.Text = (++x + tuan(x, 2)).ToString();
+            ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
+            ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
+            dtwDist = new DtwDistance(ts1, ts2);
+            dtwDist.dtw();
+            nudTest3.Maximum = dtwDist.PathMatrix.Count - 1;
+            lblTest.Text = Environment.ProcessorCount.ToString();
+            //lblTest.Text = dtwDist.PathMatrix.Count.ToString();
+            //lblTest.Text = (dtwDist.X.Series[3] + dtwDist.Y.Series[int.Parse(txtTest.Text)]).ToString();
+            //lblTest.Text = (ts1.Series[3] + ts2.Series[int.Parse(txtTest.Text)]).ToString();
         }
-        private int tuan(int x, int n)
+
+        private void nudTest1_ValueChanged(object sender, EventArgs e)
         {
-            return x * n;
+            tuan();
+            //lblTest.Text = ts1.Series[(int)nudTest1.Value].ToString();
+        }
+
+        private void nudTest2_ValueChanged(object sender, EventArgs e)
+        {
+            tuan();
+            //lblTest.Text = ts2.Series[(int)nudTest2.Value].ToString();
+        }
+
+        private void nudTest3_ValueChanged(object sender, EventArgs e)
+        {
+            lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
+            lblTest.Text += ": ";
+            lblTest.Text += dtwDist.PathMatrix[(int)nudTest3.Value].x.ToString();
+            lblTest.Text += ", ";
+            lblTest.Text += dtwDist.PathMatrix[(int)nudTest3.Value].y.ToString();
+        }
+
+        private void tuan()
+        {
+            lblTest.Text = dtwDist.DistanceMatrix[(int)nudTest1.Value, (int)nudTest2.Value].ToString();
         }
     }
 }
+

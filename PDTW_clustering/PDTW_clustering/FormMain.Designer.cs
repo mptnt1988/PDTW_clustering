@@ -61,6 +61,9 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.btnTest = new System.Windows.Forms.Button();
             this.txtTest = new System.Windows.Forms.TextBox();
+            this.nudTest2 = new System.Windows.Forms.NumericUpDown();
+            this.nudTest1 = new System.Windows.Forms.NumericUpDown();
+            this.nudTest3 = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -69,6 +72,9 @@
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -393,11 +399,48 @@
             this.txtTest.Size = new System.Drawing.Size(100, 20);
             this.txtTest.TabIndex = 16;
             // 
+            // nudTest2
+            // 
+            this.nudTest2.Location = new System.Drawing.Point(369, 269);
+            this.nudTest2.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.nudTest2.Name = "nudTest2";
+            this.nudTest2.Size = new System.Drawing.Size(120, 20);
+            this.nudTest2.TabIndex = 17;
+            this.nudTest2.ValueChanged += new System.EventHandler(this.nudTest2_ValueChanged);
+            // 
+            // nudTest1
+            // 
+            this.nudTest1.Location = new System.Drawing.Point(369, 248);
+            this.nudTest1.Maximum = new decimal(new int[] {
+            9,
+            0,
+            0,
+            0});
+            this.nudTest1.Name = "nudTest1";
+            this.nudTest1.Size = new System.Drawing.Size(120, 20);
+            this.nudTest1.TabIndex = 18;
+            this.nudTest1.ValueChanged += new System.EventHandler(this.nudTest1_ValueChanged);
+            // 
+            // nudTest3
+            // 
+            this.nudTest3.Location = new System.Drawing.Point(613, 233);
+            this.nudTest3.Name = "nudTest3";
+            this.nudTest3.Size = new System.Drawing.Size(120, 20);
+            this.nudTest3.TabIndex = 19;
+            this.nudTest3.ValueChanged += new System.EventHandler(this.nudTest3_ValueChanged);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 411);
+            this.Controls.Add(this.nudTest3);
+            this.Controls.Add(this.nudTest1);
+            this.Controls.Add(this.nudTest2);
             this.Controls.Add(this.txtTest);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnExit);
@@ -427,6 +470,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -467,6 +513,9 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.TextBox txtTest;
+        private System.Windows.Forms.NumericUpDown nudTest2;
+        private System.Windows.Forms.NumericUpDown nudTest1;
+        private System.Windows.Forms.NumericUpDown nudTest3;
     }
 }
 

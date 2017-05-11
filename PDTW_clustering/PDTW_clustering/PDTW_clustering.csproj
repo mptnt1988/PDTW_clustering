@@ -70,6 +70,8 @@
     <Compile Include="lib\Cluster.cs" />
     <Compile Include="lib\DataStructure.cs" />
     <Compile Include="lib\Distance.cs" />
+    <Compile Include="lib\ExTreeNode.cs" />
+    <Compile Include="lib\ParallelAlgorithms_Wavefront.cs" />
     <Compile Include="lib\TimeSeries.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

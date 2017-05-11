@@ -23,7 +23,7 @@ namespace PDTW_clustering.lib
         // ??? Value
         // public int Value { get; set; }
         // An ArrayList obj of data points read from file for this obj
-        public ArrayList Series { get; private set; }
+        public List<float> Series { get; private set; }
         // An ArrayList obj of PAA data points
         public TimeSeries PaaSeries { get; private set; }
         // Indicate the compression rate of this time series
@@ -41,7 +41,17 @@ namespace PDTW_clustering.lib
             // this.Length = 0;
             // this.Value = 1;
             this.CurrentCluster = null;
-            this.Series = new ArrayList();
+            this.Series = new List<float>();
+            this.PaaSeries = null;
+            this.CompressionRate = 1;
+        }
+        public TimeSeries(List<float> series)
+        {
+            this.Index = -1;
+            // this.Length = 0;
+            // this.Value = 1;
+            this.CurrentCluster = null;
+            this.Series = series;
             this.PaaSeries = null;
             this.CompressionRate = 1;
         }
@@ -50,7 +60,7 @@ namespace PDTW_clustering.lib
             this.Index = ts.Index;
             // this.Length = 0;
             this.CurrentCluster = ts.CurrentCluster;
-            this.Series = new ArrayList();
+            this.Series = new List<float>();
             this.PaaSeries = null;
             this.CompressionRate = c;
         }
@@ -60,7 +70,7 @@ namespace PDTW_clustering.lib
             // this.Value = 1;
             this.Index = index;
             this.CurrentCluster = null;
-            this.Series = new ArrayList();
+            this.Series = new List<float>();
             //_qseries = new ArrayList();
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
@@ -92,10 +102,10 @@ namespace PDTW_clustering.lib
 
         #region METHODS
         // Get data point value at specified index
-        public float get_at(int index)
-        {
-            return (float)this.Series[index];
-        }
+        //public float get_at(int index)
+        //{
+        //    return (float)this.Series[index];
+        //}
 
         // Calculate PAA time series
         public TimeSeries get_paa(int c)  // c is compression rate
@@ -103,7 +113,7 @@ namespace PDTW_clustering.lib
             if (this.PaaSeries == null || this.PaaSeries.CompressionRate != c)
             {
                 TimeSeries paaTimeSeries = new TimeSeries(this, c);
-                ArrayList series = new ArrayList();
+                List<float> series = new List<float>();
                 int n = this.Length;
                 int noOfFullFrame = n / c;
                 int j = 0;
@@ -121,7 +131,7 @@ namespace PDTW_clustering.lib
         }
         #endregion
 
-        private void paa_calculate_frame(ArrayList series, ref int index, int ubound, int quantity)
+        private void paa_calculate_frame(List<float> series, ref int index, int ubound, int quantity)
         {
             float sum = 0;
             for (; index < ubound; index++)

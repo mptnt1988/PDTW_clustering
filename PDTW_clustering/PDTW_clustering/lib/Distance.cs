@@ -12,126 +12,75 @@ namespace PDTW_clustering.lib
         public TimeSeries X { get; private set; }
         public TimeSeries Y { get; private set; }
 
-        //private void SimpleDtw()
-        //{
-        //    float v;
-        //    float[,] f = new float[_x.Length, _y.Length];
-        //    Pos[,] path = new Pos[_x.Length, _y.Length];
-        //    for (int i = 0; i < _x.Length; i++)
-        //    {
-        //        for (int j = 0; j < _y.Length; j++)
-        //        {
-        //            if (i == 0 && j == 0)
-        //            {
-        //                f[i, j] = (_x.GetAt(i) - _y.GetAt(j)) * (_x.GetAt(i) - _y.GetAt(j));
-        //            }
-        //            else if (i == 0 && j > 0)
-        //            {
-        //                f[i, j] = (_x.GetAt(i) - _y.GetAt(j)) * (_x.GetAt(i) - _y.GetAt(j)) + f[i, j - 1];
-        //                path[i, j].x = i;
-        //                path[i, j].y = j - 1;
-        //            }
-        //            else if (j == 0 && i > 0)
-        //            {
-        //                f[i, j] = (_x.GetAt(i) - _y.GetAt(j)) * (_x.GetAt(i) - _y.GetAt(j)) + f[i - 1, j];
-        //                path[i, j].x = i - 1;
-        //                path[i, j].y = j;
-        //            }
-        //            else
-        //            {
-        //                f[i, j] = (_x.GetAt(i) - _y.GetAt(j)) * (_x.GetAt(i) - _y.GetAt(j));
-        //                // calculate previous pos
-        //                path[i, j].x = i - 1;
-        //                path[i, j].y = j - 1;
-        //                v = f[i - 1, j - 1];
-        //                if (f[i - 1, j - 1] > f[i - 1, j])
-        //                {
-        //                    path[i, j].x = i - 1;
-        //                    path[i, j].y = j;
-        //                    v = f[i - 1, j];
-        //                    if (f[i - 1, j] > f[i, j - 1])
-        //                    {
-        //                        path[i, j].x = i;
-        //                        path[i, j].y = j - 1;
-        //                        v = f[i, j - 1];
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    if (f[i - 1, j - 1] > f[i, j - 1])
-        //                    {
-        //                        path[i, j].x = i;
-        //                        path[i, j].y = j - 1;
-        //                        v = f[i, j - 1];
-        //                    }
-        //                }
-        //                f[i, j] = f[i, j] + v;
-        //                v = 0;
-        //            }
-        //        }
-        //    }
-        //    //GetPath(path);
-        //    _sum = f[_x.Length - 1, _y.Length - 1];
-        //    if (_sum != 0)
-        //    {
-        //        _sum = (float)Math.Sqrt(_sum);//_path.Count;
-        //    }
-        //}
+        public Distance(TimeSeries tsX, TimeSeries tsY)
+        {
+            this.X = tsX;
+            this.Y = tsY;
+        }
     }
 
     class DtwDistance : Distance
     {
         public List<PathPoint> PathMatrix { get; private set; }
+        public float[,] DistanceMatrix { get; private set; }
+
+        public DtwDistance(TimeSeries tsX, TimeSeries tsY) : base(tsX, tsY) { }
+
+        public void parallel_dtw()
+        {
+
+        }
+
         public void dtw()
         {
             int nY = Y.Length;
             int nX = X.Length;
-            float[,] distanceMatrix = new float[nX, nY];
-            float valX = X.get_at(0);
-            float valY = Y.get_at(0);
-            distanceMatrix[0, 0] = square(valX - valY);
+            DistanceMatrix = new float[nX, nY];
+            float valX = X.Series[0];
+            float valY = Y.Series[0];
+            DistanceMatrix[0, 0] = elems_distance(valX, valY);
             for (int j = 1; j < nY; j++)
             {
-                distanceMatrix[0, j] = square(valX - Y.get_at(j));
+                DistanceMatrix[0, j] = elems_distance(valX, Y.Series[j]) + DistanceMatrix[0, j - 1];
             }
             for (int i = 1; i < nX; i++)
             {
-                distanceMatrix[i, 0] = square(X.get_at(i) - valY);
+                DistanceMatrix[i, 0] = elems_distance(X.Series[i], valY) + DistanceMatrix[i - 1, 0];
             }
             for (int i = 1; i < nX; i++)
                 for (int j = 1; j < nY; j++)
                 {
                     float minPredVal =
-                        find_min(distanceMatrix[i - 1, j],
-                                 distanceMatrix[i, j - 1],
-                                 distanceMatrix[i - 1, j - 1]);
-                    distanceMatrix[i, j] = square(X.get_at(i) - Y.get_at(j)) + minPredVal;
+                        find_min(DistanceMatrix[i - 1, j],
+                                 DistanceMatrix[i, j - 1],
+                                 DistanceMatrix[i - 1, j - 1]);
+                    DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
                 }
-            update_dtw_path(distanceMatrix);
+            update_dtw_path(DistanceMatrix);
         }
 
-        private void update_dtw_path(float[,] distanceMatrix)
+        private void update_dtw_path(float[,] DistanceMatrix)
         {
             PathMatrix = new List<PathPoint>();
-            int curX = distanceMatrix.GetLength(0) - 1;
-            int curY = distanceMatrix.GetLength(1) - 1;
-            PathMatrix.Add(new PathPoint(curX, curY, distanceMatrix[curX, curY]));
+            int curX = DistanceMatrix.GetLength(0) - 1;
+            int curY = DistanceMatrix.GetLength(1) - 1;
+            PathMatrix.Add(new PathPoint(curX, curY, DistanceMatrix[curX, curY]));
             while(curX != 0 || curY != 0)
             {
                 if (curX == 0)
                 {
-                    PathMatrix.Add(new PathPoint(0, --curY, distanceMatrix[0, curY]));
+                    PathMatrix.Add(new PathPoint(0, --curY, DistanceMatrix[0, curY]));
                     continue;
                 }
                 if (curY == 0)
                 {
-                    PathMatrix.Add(new PathPoint(--curX, 0, distanceMatrix[curX, 0]));
+                    PathMatrix.Add(new PathPoint(--curX, 0, DistanceMatrix[curX, 0]));
                     continue;
                 }
                 DtwMinPredecessor minPred =
-                    find_min_predecessor(distanceMatrix[curX - 1, curY],
-                                         distanceMatrix[curX, curY - 1],
-                                         distanceMatrix[curX - 1, curY - 1]);
+                    find_min_predecessor(DistanceMatrix[curX - 1, curY],
+                                         DistanceMatrix[curX, curY - 1],
+                                         DistanceMatrix[curX - 1, curY - 1]);
                 switch(minPred.position)
                 {
                     case EnumDtwPredecessorPosition.UPLEFT:
@@ -145,11 +94,12 @@ namespace PDTW_clustering.lib
                         break;
                 }
             }
+            PathMatrix.Reverse();
         }
 
-        private float square(float x)
+        private float elems_distance(float e1, float e2)
         {
-            return x * x;
+            return (e1 - e2) * (e1 - e2);
         }
 
         private float find_min(float x, float y, float z)
@@ -159,11 +109,11 @@ namespace PDTW_clustering.lib
 
         private DtwMinPredecessor find_min_predecessor(float up, float left, float upleft)
         {
-            if (upleft >= up && upleft >= left)
+            if (upleft <= up && upleft <= left)
             {
                 return new DtwMinPredecessor(upleft, EnumDtwPredecessorPosition.UPLEFT);
             }
-            else if (up >= left && up >= upleft)
+            else if (up <= left && up <= upleft)
             {
                 return new DtwMinPredecessor(up, EnumDtwPredecessorPosition.UP);
             }
