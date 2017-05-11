@@ -24,15 +24,29 @@ namespace PDTW_clustering.lib
     {
         public List<PathPoint> PathMatrix { get; private set; }
         public float[,] DistanceMatrix { get; private set; }
+        public float Value { get; private set; }
 
-        public DtwDistance(TimeSeries tsX, TimeSeries tsY) : base(tsX, tsY) { }
+        public DtwDistance(TimeSeries tsX, TimeSeries tsY, EnumDtwMultithreading isMultithreading) : base(tsX, tsY)
+        {
+            switch(isMultithreading)
+            {
+                case EnumDtwMultithreading.DISABLED:
+                    dtw();
+                    break;
+                case EnumDtwMultithreading.ENABLED:
+                    parallel_dtw();
+                    break;
+            }
+        }
 
         public void parallel_dtw()
         {
-            DistanceMatrix = new float[X.Length, Y.Length];
+            int nX = X.Length;
+            int nY = Y.Length;
+            DistanceMatrix = new float[nX, nY];
             //int numBlocks = Environment.ProcessorCount * 4;
             int noOfBlocks = 3;
-            ParallelAlgorithms.Wavefront(X.Length, Y.Length, noOfBlocks, noOfBlocks,
+            ParallelAlgorithms.Wavefront(nX, nY, noOfBlocks, noOfBlocks,
                 (start_i, end_i, start_j, end_j) =>
             {
                 for (int i = start_i; i < end_i; i++)
@@ -55,6 +69,7 @@ namespace PDTW_clustering.lib
                         }
                     }
             });
+            Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
             dtw_update_path();
         }
 
@@ -82,6 +97,7 @@ namespace PDTW_clustering.lib
                         DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
                     }
                 }
+            Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
             dtw_update_path();
         }
 

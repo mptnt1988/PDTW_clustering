@@ -1,5 +1,18 @@
 ﻿namespace PDTW_clustering.lib
 {
+    enum EnumDtwPredecessorPosition
+    {
+        UP,
+        LEFT,
+        UPLEFT
+    }
+
+    enum EnumDtwMultithreading
+    {
+        ENABLED,
+        DISABLED
+    }
+
     struct PathPoint
     {
         public int x;
@@ -11,13 +24,6 @@
             this.y = y;
             this.value = value;
         }
-    }
-
-    enum EnumDtwPredecessorPosition
-    {
-        UP,
-        LEFT,
-        UPLEFT
     }
 
     struct DtwMinPredecessor

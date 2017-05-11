@@ -104,13 +104,13 @@ namespace PDTW_clustering
         {
             ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
             ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
-            dtwDist = new DtwDistance(ts1, ts2);
-            dtwDist.parallel_dtw();
+            dtwDist = new DtwDistance(ts1, ts2, EnumDtwMultithreading.ENABLED);
             nudTest3.Maximum = dtwDist.PathMatrix.Count - 1;
             nudTest1.Maximum = ts1.Series.Count - 1;
             nudTest2.Maximum = ts2.Series.Count - 1;
+            lblTest.Text = dtwDist.Value.ToString();
             //lblTest.Text = Environment.ProcessorCount.ToString();
-            lblTest.Text = dtwDist.PathMatrix.Count.ToString();
+            //lblTest.Text = dtwDist.PathMatrix.Count.ToString();
             //lblTest.Text = (dtwDist.X.Series[3] + dtwDist.Y.Series[int.Parse(txtTest.Text)]).ToString();
             //lblTest.Text = (ts1.Series[3] + ts2.Series[int.Parse(txtTest.Text)]).ToString();
         }

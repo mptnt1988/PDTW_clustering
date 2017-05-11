@@ -10,4 +10,9 @@ namespace PDTW_clustering.lib
     {
 
     }
+
+    class KMedoids : Cluster
+    {
+
+    }
 }
