@@ -68,6 +68,8 @@
       <DependentUpon>FormView.cs</DependentUpon>
     </Compile>
     <Compile Include="lib\Cluster.cs" />
+    <Compile Include="lib\DataStructure.cs" />
+    <Compile Include="lib\Distance.cs" />
     <Compile Include="lib\TimeSeries.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

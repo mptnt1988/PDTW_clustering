@@ -63,13 +63,6 @@ namespace PDTW_clustering
                     }
                     _data = _temp;
                     MessageBox.Show("Data successfully loaded", "Information");
-                    //TimeSeries ts = (TimeSeries)_temp[3];
-                    //lblTest.Text = "";
-                    //for (int i=0;i < ts.Length; i++)
-                    //{
-                    //    if (i < 3 || i > ts.Length - 4)
-                    //        lblTest.Text += ts.GetAt(i).ToString() + ", ";
-                    //}
                 }
                 catch (Exception)
                 {
@@ -99,11 +92,6 @@ namespace PDTW_clustering
             Application.Exit();
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
-        {
-            lblTest.Text = "PAA of Dimensionality Reduction has been changed";
-        }
-
         private void btnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -111,10 +99,18 @@ namespace PDTW_clustering
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            //lblTest.Text = ((TimeSeries)this._data[0]).Length.ToString();
-            TimeSeries ts = (TimeSeries)this._data[0];
-            ts.get_paa(int.Parse(txtTest.Text));
-            lblTest.Text = ts.PaaSeries.Series[ts.PaaSeries.Length - 1].ToString();
+
+            //TimeSeries ts = (TimeSeries)this._data[0];
+            //ts.get_paa(int.Parse(txtTest.Text));
+            //lblTest.Text = ts.PaaSeries.Series[ts.PaaSeries.Length - 1].ToString();
+            //float[,] f = new float[3, 5];
+            //lblTest.Text = tuan(f);
+            int x = 3;
+            lblTest.Text = (++x + tuan(x, 2)).ToString();
+        }
+        private int tuan(int x, int n)
+        {
+            return x * n;
         }
     }
 }

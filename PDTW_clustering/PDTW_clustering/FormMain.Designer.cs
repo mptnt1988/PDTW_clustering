@@ -210,7 +210,6 @@
             this.radDimRed_Paa.TabStop = true;
             this.radDimRed_Paa.Text = "PAA";
             this.radDimRed_Paa.UseVisualStyleBackColor = true;
-            this.radDimRed_Paa.CheckedChanged += new System.EventHandler(this.radioButton2_CheckedChanged);
             // 
             // radDimRed_Disabled
             // 
