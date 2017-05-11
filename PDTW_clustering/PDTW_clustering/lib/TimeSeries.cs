@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
 {
-    class TimeSeries
+    public class TimeSeries
     {
         #region PROPERTIES
         // Length of this obj

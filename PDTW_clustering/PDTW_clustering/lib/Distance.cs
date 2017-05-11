@@ -28,7 +28,7 @@ namespace PDTW_clustering.lib
 
         public DtwDistance(TimeSeries tsX, TimeSeries tsY, EnumDtwMultithreading isMultithreading) : base(tsX, tsY)
         {
-            switch(isMultithreading)
+            switch (isMultithreading)
             {
                 case EnumDtwMultithreading.DISABLED:
                     dtw();
@@ -70,7 +70,7 @@ namespace PDTW_clustering.lib
                     }
             });
             Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            dtw_update_path();
+            // dtw_update_path();
         }
 
         public void dtw()
@@ -98,7 +98,7 @@ namespace PDTW_clustering.lib
                     }
                 }
             Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            dtw_update_path();
+            // dtw_update_path();
         }
 
         private void dtw_update_path()

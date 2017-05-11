@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using PDTW_clustering.lib;
 using System.Collections;
@@ -19,12 +20,12 @@ namespace PDTW_clustering
         #region PROPERTIES
         // ??? Times
         public long Times { get; set; }
-        // ??? Data
-        public ArrayList Data { get; set; }
+        // List of all time series to be viewed
+        public List<TimeSeries> Data { get; private set; }
         #endregion
 
         #region CONSTRUCTOR
-        public FormView(FormMain mainForm, ArrayList data)
+        public FormView(FormMain mainForm, List<TimeSeries> data)
         {
             this._mainForm = mainForm;
             InitializeComponent();
@@ -250,7 +251,7 @@ namespace PDTW_clustering
         private void btPath_Click(object sender, EventArgs e)
         {
             int index = 1;
-            ArrayList _temp = new ArrayList();
+            List<TimeSeries> _temp = new List<TimeSeries>();
             TimeSeries t;
             // Show file selection dialog
             if (openFile.ShowDialog() == DialogResult.OK)

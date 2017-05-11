@@ -15,7 +15,7 @@ namespace PDTW_clustering
 {
     public partial class FormMain : Form
     {
-        private ArrayList _data;
+        private List<TimeSeries> _data;
         public long MaxLength;
         public long MinLength;
         public FormMain()
@@ -33,7 +33,7 @@ namespace PDTW_clustering
             int index = 1;
             MaxLength = long.MinValue;
             MinLength = long.MaxValue;
-            ArrayList _temp = new ArrayList();
+            List<TimeSeries> _temp = new List<TimeSeries>();
             TimeSeries t;
 
             // Show file selection dialog
@@ -105,7 +105,7 @@ namespace PDTW_clustering
             ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
             ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
             dtwDist = new DtwDistance(ts1, ts2, EnumDtwMultithreading.ENABLED);
-            nudTest3.Maximum = dtwDist.PathMatrix.Count - 1;
+            //nudTest3.Maximum = dtwDist.PathMatrix.Count - 1;
             nudTest1.Maximum = ts1.Series.Count - 1;
             nudTest2.Maximum = ts2.Series.Count - 1;
             lblTest.Text = dtwDist.Value.ToString();
@@ -138,7 +138,21 @@ namespace PDTW_clustering
 
         private void tuan()
         {
-            lblTest.Text = dtwDist.DistanceMatrix[(int)nudTest1.Value, (int)nudTest2.Value].ToString();
+            List<ImprovedKMedoids_V> list = new List<ImprovedKMedoids_V>();
+            list.Add(new ImprovedKMedoids_V(9.5f, 0));
+            list.Add(new ImprovedKMedoids_V(8.4f, 1));
+            list.Add(new ImprovedKMedoids_V(2.1f, 2));
+            list.Add(new ImprovedKMedoids_V(7.1f, 3));
+            list.Add(new ImprovedKMedoids_V(2.3f, 4));
+            list.Add(new ImprovedKMedoids_V(0.1f, 5));
+            list.Add(new ImprovedKMedoids_V(3.4f, 6));
+            list.Add(new ImprovedKMedoids_V(5.9f, 7));
+            ImprovedKMedoids_V max = list.Max<ImprovedKMedoids_V>();
+            lblTest.Text = max.value.ToString();
+            list.Remove(max);
+            max = list.Max<ImprovedKMedoids_V>();
+            lblTest.Text = max.value.ToString();
+            //lblTest.Text = dtwDist.DistanceMatrix[(int)nudTest1.Value, (int)nudTest2.Value].ToString();
         }
     }
 }
