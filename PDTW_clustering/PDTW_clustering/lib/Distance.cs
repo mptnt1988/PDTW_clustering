@@ -8,27 +8,55 @@ using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
 {
-    class Distance
+    public abstract class Distance
     {
-        public TimeSeries X { get; private set; }
-        public TimeSeries Y { get; private set; }
+        public object X { get; private set; }
+        public object Y { get; private set; }
 
-        public Distance(TimeSeries tsX, TimeSeries tsY)
+        public Distance() { }
+        public Distance(object objX, object objY)
         {
-            this.X = tsX;
-            this.Y = tsY;
+            this.X = objX;
+            this.Y = objY;
         }
+
+        public abstract float Calculate();
+        public abstract float Calculate(object X, object Y);
     }
 
     class DtwDistance : Distance
     {
+        public new TimeSeries X { get; private set; }
+        public new TimeSeries Y { get; private set; }
+
         public List<PathPoint> PathMatrix { get; private set; }
         public float[,] DistanceMatrix { get; private set; }
         public float Value { get; private set; }
+        public EnumDtwMultithreading IsMultithreading { get; set; }
 
-        public DtwDistance(TimeSeries tsX, TimeSeries tsY, EnumDtwMultithreading isMultithreading) : base(tsX, tsY)
+        public DtwDistance() : base()
         {
-            switch (isMultithreading)
+            IsMultithreading = EnumDtwMultithreading.ENABLED;
+        }
+
+        public DtwDistance(TimeSeries tsX, TimeSeries tsY) : base(tsX, tsY)
+        {
+            IsMultithreading = EnumDtwMultithreading.ENABLED;
+        }
+
+        public override float Calculate()
+        {
+            if (this.X == null || this.Y == null)
+                throw new ArgumentNullException("At least one of time series is null");
+            else
+                return Calculate(this.X, this.Y);
+        }
+
+        public override float Calculate(object tsX, object tsY)
+        {
+            X = (TimeSeries)tsX;
+            Y = (TimeSeries)tsY;
+            switch (IsMultithreading)
             {
                 case EnumDtwMultithreading.DISABLED:
                     dtw();
@@ -37,6 +65,7 @@ namespace PDTW_clustering.lib
                     parallel_dtw();
                     break;
             }
+            return Value;
         }
 
         public void parallel_dtw()
@@ -70,7 +99,7 @@ namespace PDTW_clustering.lib
                     }
             });
             Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            // dtw_update_path();
+            dtw_update_path();
         }
 
         public void dtw()
@@ -98,7 +127,7 @@ namespace PDTW_clustering.lib
                     }
                 }
             Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            // dtw_update_path();
+            dtw_update_path();
         }
 
         private void dtw_update_path()

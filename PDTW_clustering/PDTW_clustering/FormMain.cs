@@ -99,20 +99,29 @@ namespace PDTW_clustering
 
         // TESTING
         DtwDistance dtwDist;
-        TimeSeries ts1, ts2;
+        TimeSeries ts1, ts2, ts3, ts4;
+        int[] clusterOfObject;
         private void btnTest_Click(object sender, EventArgs e)
         {
             ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
             ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
-            dtwDist = new DtwDistance(ts1, ts2, EnumDtwMultithreading.ENABLED);
-            //nudTest3.Maximum = dtwDist.PathMatrix.Count - 1;
+            ts3 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 5, 4, 8, 2 }));
+            ts4 = new TimeSeries(new List<float>(new float[] { 5, 7, 3, 2, 9, 5, 9, 4, 8, 5 }));
+            
+            dtwDist = new DtwDistance();
+            //dtwDist.Calculate(ts1, ts2);
             nudTest1.Maximum = ts1.Series.Count - 1;
             nudTest2.Maximum = ts2.Series.Count - 1;
-            lblTest.Text = dtwDist.Value.ToString();
-            //lblTest.Text = Environment.ProcessorCount.ToString();
-            //lblTest.Text = dtwDist.PathMatrix.Count.ToString();
-            //lblTest.Text = (dtwDist.X.Series[3] + dtwDist.Y.Series[int.Parse(txtTest.Text)]).ToString();
-            //lblTest.Text = (ts1.Series[3] + ts2.Series[int.Parse(txtTest.Text)]).ToString();
+
+            List<object> tsList = new List<object>();
+            tsList.Add(ts1);
+            tsList.Add(ts2);
+            tsList.Add(ts3);
+            tsList.Add(ts4);
+            ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 2, dtwDist);
+            clusterOfObject = cls.do_cluster();
+            nudTest3.Maximum = clusterOfObject.Length - 1;
+            //lblTest.Text = dtwDist.Value.ToString();
         }
 
         private void nudTest1_ValueChanged(object sender, EventArgs e)
@@ -129,30 +138,17 @@ namespace PDTW_clustering
 
         private void nudTest3_ValueChanged(object sender, EventArgs e)
         {
-            lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
-            lblTest.Text += ": ";
-            lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
-            lblTest.Text += ", ";
-            lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
+            lblTest.Text = clusterOfObject[(int)nudTest3.Value].ToString();
+            //lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
+            //lblTest.Text += ": ";
+            //lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
+            //lblTest.Text += ", ";
+            //lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
         }
 
         private void tuan()
         {
-            List<ImprovedKMedoids_V> list = new List<ImprovedKMedoids_V>();
-            list.Add(new ImprovedKMedoids_V(9.5f, 0));
-            list.Add(new ImprovedKMedoids_V(8.4f, 1));
-            list.Add(new ImprovedKMedoids_V(2.1f, 2));
-            list.Add(new ImprovedKMedoids_V(7.1f, 3));
-            list.Add(new ImprovedKMedoids_V(2.3f, 4));
-            list.Add(new ImprovedKMedoids_V(0.1f, 5));
-            list.Add(new ImprovedKMedoids_V(3.4f, 6));
-            list.Add(new ImprovedKMedoids_V(5.9f, 7));
-            ImprovedKMedoids_V max = list.Max<ImprovedKMedoids_V>();
-            lblTest.Text = max.value.ToString();
-            list.Remove(max);
-            max = list.Max<ImprovedKMedoids_V>();
-            lblTest.Text = max.value.ToString();
-            //lblTest.Text = dtwDist.DistanceMatrix[(int)nudTest1.Value, (int)nudTest2.Value].ToString();
+            lblTest.Text = dtwDist.DistanceMatrix[(int)nudTest1.Value, (int)nudTest2.Value].ToString();
         }
     }
 }
