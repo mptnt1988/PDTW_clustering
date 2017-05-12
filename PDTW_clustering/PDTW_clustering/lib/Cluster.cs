@@ -11,7 +11,30 @@ namespace PDTW_clustering.lib
 
     }
 
-    class ImprovedKMedoids : Cluster
+    //class ImprovedKMedoids_Object
+    //{
+    //    public object Object { get; set; }
+    //    public ImprovedKMedoids_Cluster Cluster { get; set; }
+    //    public float Distance { get; set; }
+
+    //    public ImprovedKMedoids_Object(object obj)
+    //    {
+    //        Object = obj;
+    //    }
+    //}
+
+    //class ImprovedKMedoids_Cluster
+    //{
+    //    public ImprovedKMedoids_Object Medoid { get; set; }
+    //    public List<ImprovedKMedoids_Object> Members;
+
+    //    public ImprovedKMedoids_Cluster(ImprovedKMedoids_Object medoid)
+    //    {
+    //        Medoid = medoid;
+    //    }
+    //}
+
+    class ImprovedKMedoids
     {
         private List<object> _data;
         private float[,] _distanceMatrix;
@@ -51,7 +74,7 @@ namespace PDTW_clustering.lib
 
             // Calculate v[j] for each object j
             // Store them to variable v
-            List<ImprovedKMedoids_V> v = new List<ImprovedKMedoids_V>();
+            List<ValueIndex> v = new List<ValueIndex>();
             for (int j = 0; j < size; j++)  // for each time series
             {
                 float vj = 0;
@@ -64,16 +87,15 @@ namespace PDTW_clustering.lib
                     }
                     vj += _distanceMatrix[i, j] / sumIL;
                 }
-                v.Add(new ImprovedKMedoids_V(vj, j));
+                v.Add(new ValueIndex(vj, j));
             }
 
             // Select k objects having the first k smallest values as initial medoids
-            // List<ImprovedKMedoids_V> vTemp = new List<ImprovedKMedoids_V>(v);
             _medoids = new int[_k];
             int[] clusterOfObject = new int[size];
             for (int i = 0; i < _k; i++)
             {
-                ImprovedKMedoids_V minObj = v.Min<ImprovedKMedoids_V>();
+                ValueIndex minObj = v.Min<ValueIndex>();
                 int minObjIndex = minObj.index;
                 _medoids[i] = minObjIndex;  // medoid of cluster i is the obj specified by its index
                 clusterOfObject[minObjIndex] = i;
@@ -81,19 +103,22 @@ namespace PDTW_clustering.lib
             }
 
             // Obtain the initial cluster result by assigning each object to the nearest medoid
+            //   stored as variable clusterOfObject
+            // Calculate the sum of distances from all objects to their medoid
+            //   stored as variable totalSum
+            float totalSum = 0;
             for (int i = 0; i < size; i++)  // foreach object
             {
                 if (_medoids.Contains(i))
                     continue;
-                v = new List<ImprovedKMedoids_V>();
+                v = new List<ValueIndex>();
                 for (int j = 0; j < _k; j++)  // foreach cluster
-                    v.Add(new ImprovedKMedoids_V(_distanceMatrix[i, j], j));
-                ImprovedKMedoids_V nearestMedoid = v.Min<ImprovedKMedoids_V>();
+                    v.Add(new ValueIndex(_distanceMatrix[i, j], j));
+                ValueIndex nearestMedoid = v.Min<ValueIndex>();
                 clusterOfObject[i] = nearestMedoid.index;
+                totalSum += nearestMedoid.value;
             }
             testReturn = clusterOfObject;
-
-            // Calculate the sum of distances from all objects to their medoid
         }
 
         private void update_medoids()
