@@ -99,7 +99,7 @@ namespace PDTW_clustering
 
         // TESTING
         DtwDistance dtwDist;
-        TimeSeries ts1, ts2, ts3, ts4;
+        TimeSeries ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8;
         int[] clusterOfObject;
         private void btnTest_Click(object sender, EventArgs e)
         {
@@ -107,18 +107,20 @@ namespace PDTW_clustering
             ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
             ts3 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 5, 4, 8, 2 }));
             ts4 = new TimeSeries(new List<float>(new float[] { 5, 7, 3, 2, 9, 5, 9, 4, 8, 5 }));
-            
+            ts5 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
+            ts6 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
+            ts7 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 5, 4, 8, 2 }));
+            ts8 = new TimeSeries(new List<float>(new float[] { 5, 7, 3, 2, 9, 5, 9, 4, 8, 5 }));
+
             dtwDist = new DtwDistance();
             //dtwDist.Calculate(ts1, ts2);
             nudTest1.Maximum = ts1.Series.Count - 1;
             nudTest2.Maximum = ts2.Series.Count - 1;
 
             List<object> tsList = new List<object>();
-            tsList.Add(ts1);
-            tsList.Add(ts2);
-            tsList.Add(ts3);
-            tsList.Add(ts4);
-            ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 2, dtwDist);
+            tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
+            tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
+            ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 3, dtwDist);
             clusterOfObject = cls.do_cluster();
             nudTest3.Maximum = clusterOfObject.Length - 1;
             //lblTest.Text = dtwDist.Value.ToString();
