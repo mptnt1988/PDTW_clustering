@@ -11,30 +11,7 @@ namespace PDTW_clustering.lib
 
     }
 
-    //class ImprovedKMedoids_Object
-    //{
-    //    public object Object { get; set; }
-    //    public ImprovedKMedoids_Cluster Cluster { get; set; }
-    //    public float Distance { get; set; }
-
-    //    public ImprovedKMedoids_Object(object obj)
-    //    {
-    //        Object = obj;
-    //    }
-    //}
-
-    //class ImprovedKMedoids_Cluster
-    //{
-    //    public ImprovedKMedoids_Object Medoid { get; set; }
-    //    public List<ImprovedKMedoids_Object> Members;
-
-    //    public ImprovedKMedoids_Cluster(ImprovedKMedoids_Object medoid)
-    //    {
-    //        Medoid = medoid;
-    //    }
-    //}
-
-    class ImprovedKMedoids
+    class ImprovedKMedoids : Cluster
     {
         private List<object> _data;
         private float[,] _distanceMatrix;
@@ -64,7 +41,8 @@ namespace PDTW_clustering.lib
                 update_medoids();
                 assign_objects_to_medoids();
             }
-            while (_totalSum == _totalSumOld);
+            while (_totalSum != _totalSumOld);
+            GC.Collect();
             return _clusterOfObject;
         }
 
@@ -144,6 +122,7 @@ namespace PDTW_clustering.lib
         private void assign_objects_to_medoids()
         {
             _totalSumOld = _totalSum;
+            Console.Write("Old: " + _totalSumOld.ToString() + " --- ");
             _totalSum = 0;
             for (int i = 0; i < _size; i++)  // foreach object
             {
@@ -157,6 +136,7 @@ namespace PDTW_clustering.lib
                 _clusters[nearestMedoid.index].Add(i);
                 _totalSum += nearestMedoid.value;
             }
+            Console.WriteLine("New: " + _totalSum.ToString());
         }
     }
 }

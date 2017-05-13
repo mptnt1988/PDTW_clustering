@@ -39,19 +39,19 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbxDimRed = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nudCompressionRate = new System.Windows.Forms.NumericUpDown();
             this.radDimRed_Paa = new System.Windows.Forms.RadioButton();
             this.radDimRed_Disabled = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbxClusteringAlgo = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.nudNoOfClusters = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.radClusterAlgo_DensityPeaks = new System.Windows.Forms.RadioButton();
             this.radClusterAlgo_ImpKMedoids = new System.Windows.Forms.RadioButton();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.gbxMultithreading = new System.Windows.Forms.GroupBox();
             this.radMultithreading_Disabled = new System.Windows.Forms.RadioButton();
             this.radMultithreading_Enabled = new System.Windows.Forms.RadioButton();
             this.lblTest = new System.Windows.Forms.Label();
@@ -64,14 +64,16 @@
             this.nudTest2 = new System.Windows.Forms.NumericUpDown();
             this.nudTest1 = new System.Windows.Forms.NumericUpDown();
             this.nudTest3 = new System.Windows.Forms.NumericUpDown();
+            this.lblExeTimeLabel = new System.Windows.Forms.Label();
+            this.lblExeTimeValue = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.gbxDimRed.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCompressionRate)).BeginInit();
-            this.groupBox2.SuspendLayout();
+            this.gbxClusteringAlgo.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudNoOfClusters)).BeginInit();
+            this.gbxMultithreading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).BeginInit();
@@ -156,17 +158,17 @@
             // 
             this.openFile.FileName = "openFileDialog1";
             // 
-            // groupBox1
+            // gbxDimRed
             // 
-            this.groupBox1.Controls.Add(this.groupBox4);
-            this.groupBox1.Controls.Add(this.radDimRed_Paa);
-            this.groupBox1.Controls.Add(this.radDimRed_Disabled);
-            this.groupBox1.Location = new System.Drawing.Point(46, 153);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(249, 139);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Dimensionality Reduction";
+            this.gbxDimRed.Controls.Add(this.groupBox4);
+            this.gbxDimRed.Controls.Add(this.radDimRed_Paa);
+            this.gbxDimRed.Controls.Add(this.radDimRed_Disabled);
+            this.gbxDimRed.Location = new System.Drawing.Point(46, 153);
+            this.gbxDimRed.Name = "gbxDimRed";
+            this.gbxDimRed.Size = new System.Drawing.Size(249, 139);
+            this.gbxDimRed.TabIndex = 2;
+            this.gbxDimRed.TabStop = false;
+            this.gbxDimRed.Text = "Dimensionality Reduction";
             // 
             // groupBox4
             // 
@@ -191,8 +193,13 @@
             // nudCompressionRate
             // 
             this.nudCompressionRate.Location = new System.Drawing.Point(100, 23);
+            this.nudCompressionRate.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.nudCompressionRate.Minimum = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
@@ -200,7 +207,7 @@
             this.nudCompressionRate.Size = new System.Drawing.Size(51, 20);
             this.nudCompressionRate.TabIndex = 8;
             this.nudCompressionRate.Value = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
@@ -227,21 +234,21 @@
             this.radDimRed_Disabled.Text = "Disabled";
             this.radDimRed_Disabled.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // gbxClusteringAlgo
             // 
-            this.groupBox2.Controls.Add(this.groupBox5);
-            this.groupBox2.Controls.Add(this.radClusterAlgo_DensityPeaks);
-            this.groupBox2.Controls.Add(this.radClusterAlgo_ImpKMedoids);
-            this.groupBox2.Location = new System.Drawing.Point(355, 41);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(275, 124);
-            this.groupBox2.TabIndex = 4;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Clustering Algorithm";
+            this.gbxClusteringAlgo.Controls.Add(this.groupBox5);
+            this.gbxClusteringAlgo.Controls.Add(this.radClusterAlgo_DensityPeaks);
+            this.gbxClusteringAlgo.Controls.Add(this.radClusterAlgo_ImpKMedoids);
+            this.gbxClusteringAlgo.Location = new System.Drawing.Point(355, 41);
+            this.gbxClusteringAlgo.Name = "gbxClusteringAlgo";
+            this.gbxClusteringAlgo.Size = new System.Drawing.Size(275, 124);
+            this.gbxClusteringAlgo.TabIndex = 4;
+            this.gbxClusteringAlgo.TabStop = false;
+            this.gbxClusteringAlgo.Text = "Clustering Algorithm";
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.numericUpDown2);
+            this.groupBox5.Controls.Add(this.nudNoOfClusters);
             this.groupBox5.Controls.Add(this.label2);
             this.groupBox5.Location = new System.Drawing.Point(22, 39);
             this.groupBox5.Name = "groupBox5";
@@ -250,23 +257,23 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Parameters";
             // 
-            // numericUpDown2
+            // nudNoOfClusters
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(107, 21);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
+            this.nudNoOfClusters.Location = new System.Drawing.Point(107, 21);
+            this.nudNoOfClusters.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
+            this.nudNoOfClusters.Minimum = new decimal(new int[] {
             2,
             0,
             0,
             0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(65, 20);
-            this.numericUpDown2.TabIndex = 7;
-            this.numericUpDown2.Value = new decimal(new int[] {
+            this.nudNoOfClusters.Name = "nudNoOfClusters";
+            this.nudNoOfClusters.Size = new System.Drawing.Size(65, 20);
+            this.nudNoOfClusters.TabIndex = 7;
+            this.nudNoOfClusters.Value = new decimal(new int[] {
             2,
             0,
             0,
@@ -303,16 +310,16 @@
             this.radClusterAlgo_ImpKMedoids.Text = "Improved k-Medoids";
             this.radClusterAlgo_ImpKMedoids.UseVisualStyleBackColor = true;
             // 
-            // groupBox3
+            // gbxMultithreading
             // 
-            this.groupBox3.Controls.Add(this.radMultithreading_Disabled);
-            this.groupBox3.Controls.Add(this.radMultithreading_Enabled);
-            this.groupBox3.Location = new System.Drawing.Point(65, 41);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(108, 75);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Multithreading";
+            this.gbxMultithreading.Controls.Add(this.radMultithreading_Disabled);
+            this.gbxMultithreading.Controls.Add(this.radMultithreading_Enabled);
+            this.gbxMultithreading.Location = new System.Drawing.Point(65, 41);
+            this.gbxMultithreading.Name = "gbxMultithreading";
+            this.gbxMultithreading.Size = new System.Drawing.Size(108, 75);
+            this.gbxMultithreading.TabIndex = 6;
+            this.gbxMultithreading.TabStop = false;
+            this.gbxMultithreading.Text = "Multithreading";
             // 
             // radMultithreading_Disabled
             // 
@@ -353,6 +360,7 @@
             this.btnRun.TabIndex = 11;
             this.btnRun.Text = "Run";
             this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // btnStop
             // 
@@ -362,6 +370,7 @@
             this.btnStop.TabIndex = 12;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // btnViewResult
             // 
@@ -433,11 +442,31 @@
             this.nudTest3.TabIndex = 19;
             this.nudTest3.ValueChanged += new System.EventHandler(this.nudTest3_ValueChanged);
             // 
+            // lblExeTimeLabel
+            // 
+            this.lblExeTimeLabel.AutoSize = true;
+            this.lblExeTimeLabel.Location = new System.Drawing.Point(12, 308);
+            this.lblExeTimeLabel.Name = "lblExeTimeLabel";
+            this.lblExeTimeLabel.Size = new System.Drawing.Size(83, 13);
+            this.lblExeTimeLabel.TabIndex = 20;
+            this.lblExeTimeLabel.Text = "Execution Time:";
+            // 
+            // lblExeTimeValue
+            // 
+            this.lblExeTimeValue.AutoSize = true;
+            this.lblExeTimeValue.Location = new System.Drawing.Point(114, 308);
+            this.lblExeTimeValue.Name = "lblExeTimeValue";
+            this.lblExeTimeValue.Size = new System.Drawing.Size(93, 13);
+            this.lblExeTimeValue.TabIndex = 21;
+            this.lblExeTimeValue.Text = "(exe_time_display)";
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 411);
+            this.Controls.Add(this.lblExeTimeValue);
+            this.Controls.Add(this.lblExeTimeLabel);
             this.Controls.Add(this.nudTest3);
             this.Controls.Add(this.nudTest1);
             this.Controls.Add(this.nudTest2);
@@ -448,28 +477,27 @@
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.lblTest);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbxMultithreading);
+            this.Controls.Add(this.gbxClusteringAlgo);
+            this.Controls.Add(this.gbxDimRed);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "PDTW Clustering";
-            this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.gbxDimRed.ResumeLayout(false);
+            this.gbxDimRed.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCompressionRate)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbxClusteringAlgo.ResumeLayout(false);
+            this.gbxClusteringAlgo.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudNoOfClusters)).EndInit();
+            this.gbxMultithreading.ResumeLayout(false);
+            this.gbxMultithreading.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).EndInit();
@@ -491,19 +519,19 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFile;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbxDimRed;
         private System.Windows.Forms.RadioButton radDimRed_Paa;
         private System.Windows.Forms.RadioButton radDimRed_Disabled;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbxClusteringAlgo;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudCompressionRate;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown nudNoOfClusters;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.RadioButton radClusterAlgo_DensityPeaks;
         private System.Windows.Forms.RadioButton radClusterAlgo_ImpKMedoids;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox gbxMultithreading;
         private System.Windows.Forms.RadioButton radMultithreading_Disabled;
         private System.Windows.Forms.RadioButton radMultithreading_Enabled;
         private System.Windows.Forms.Label lblTest;
@@ -516,6 +544,8 @@
         private System.Windows.Forms.NumericUpDown nudTest2;
         private System.Windows.Forms.NumericUpDown nudTest1;
         private System.Windows.Forms.NumericUpDown nudTest3;
+        private System.Windows.Forms.Label lblExeTimeLabel;
+        private System.Windows.Forms.Label lblExeTimeValue;
     }
 }
 

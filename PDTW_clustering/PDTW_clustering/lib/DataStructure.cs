@@ -15,6 +15,27 @@ namespace PDTW_clustering.lib
         DISABLED
     }
 
+    enum EnumDimentionalityReduction
+    {
+        PAA,
+        DISABLED
+    }
+
+    enum EnumClusteringAlgorithm
+    {
+        IMPROVED_KMEDOIDS,
+        DENSITY_PEAKS
+    }
+
+    struct Configuration
+    {
+        public EnumDtwMultithreading multithreading;
+        public EnumDimentionalityReduction dimensionalityReduction;
+        public int paaCompressionRate;
+        public EnumClusteringAlgorithm clusteringAlgorithm;
+        public int noOfClusters;
+    }
+
     struct PathPoint
     {
         public int x;
@@ -58,7 +79,7 @@ namespace PDTW_clustering.lib
             if (other != null)
                 return this.value.CompareTo(other.value);
             else
-                throw new ArgumentException("Object is not a ImprovedKMedoids_V");
+                throw new ArgumentException("Object is not a ValueIndex");
         }
     }
 }
