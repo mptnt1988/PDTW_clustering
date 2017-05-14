@@ -73,8 +73,9 @@ namespace PDTW_clustering.lib
             int nX = X.Length;
             int nY = Y.Length;
             DistanceMatrix = new float[nX, nY];
-            //int numBlocks = Environment.ProcessorCount * 4;
-            int noOfBlocks = 3;
+            //int noOfBlocks = Environment.ProcessorCount * 4;
+            int noOfBlocks = Environment.ProcessorCount + 2;
+            //int noOfBlocks = 3;
             ParallelAlgorithms.Wavefront(nX, nY, noOfBlocks, noOfBlocks,
                 (start_i, end_i, start_j, end_j) =>
             {
@@ -99,7 +100,7 @@ namespace PDTW_clustering.lib
                     }
             });
             Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            dtw_update_path();
+            //dtw_update_path();
         }
 
         public void dtw()
@@ -127,7 +128,7 @@ namespace PDTW_clustering.lib
                     }
                 }
             Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            dtw_update_path();
+            //dtw_update_path();
         }
 
         private void dtw_update_path()

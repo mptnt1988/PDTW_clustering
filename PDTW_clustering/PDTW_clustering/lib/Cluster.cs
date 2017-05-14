@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
 {
-    public class Cluster
+    public abstract class Cluster
     {
-
+        public abstract int[] do_clustering();
     }
 
     class ImprovedKMedoids : Cluster
@@ -33,7 +33,7 @@ namespace PDTW_clustering.lib
             this._totalSumOld = this._totalSum = 0;
         }
 
-        public int[] do_cluster()
+        public override int[] do_clustering()
         {
             select_initial_medoids();
             do
@@ -54,6 +54,7 @@ namespace PDTW_clustering.lib
             for (int i = 0; i < _size; i++)
                 for (int j = 0; j < _size; j++)
                 {
+                    Console.WriteLine("------ " + i.ToString() + " * " + j.ToString());
                     if (i == j)
                         _distanceMatrix[i, j] = 0;
                     else if (i < j)
@@ -61,6 +62,19 @@ namespace PDTW_clustering.lib
                     else
                         _distanceMatrix[i, j] = _distanceMatrix[j, i];
                 }
+            //Parallel.For(0, _size, delegate (int i)
+            //{
+            //    for (int j = 0; j < _size; j++)
+            //    {
+            //        Console.WriteLine("------ " + i.ToString() + " * " + j.ToString());
+            //        if (i == j)
+            //            _distanceMatrix[i, j] = 0;
+            //        else if (i < j)
+            //            _distanceMatrix[i, j] = _distance.Calculate(_data[i], _data[j]);
+            //        else
+            //            _distanceMatrix[i, j] = _distanceMatrix[j, i];
+            //    }
+            //});
 
             // Calculate v[j] for each object j
             // Store them to variable 'v'

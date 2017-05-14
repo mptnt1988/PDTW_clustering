@@ -21,7 +21,7 @@ namespace PDTW_clustering
         private long _exeTimeStart;
         private Configuration _configuration;
         private Thread _threadExe;
-        private Cluster _result;
+        private Cluster _clusters;
         private CancellationTokenSource _cts;
 
         public FormMain()
@@ -165,7 +165,7 @@ namespace PDTW_clustering
             lblExeTimeValue.Text = "0";
 
             // Start executing thread
-            _result = null;
+            _clusters = null;
             _exeTimeStart = System.Environment.TickCount;
 
             //if (_threadExe != null)
@@ -198,10 +198,15 @@ namespace PDTW_clustering
 
         private void do_clustering(CancellationToken token)
         {
-            token.ThrowIfCancellationRequested();
+            //token.ThrowIfCancellationRequested();
             DtwDistance dtwDistance = new DtwDistance();
             dtwDistance.IsMultithreading = _configuration.multithreading;
-            
+            List<object> data = new List<object>(_data);
+            _clusters = new ImprovedKMedoids(data, _configuration.noOfClusters, dtwDistance);
+            clusterOfObject = _clusters.do_clustering();
+            // check
+            nudTest3.Maximum = clusterOfObject.Length - 1;
+
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -236,7 +241,7 @@ namespace PDTW_clustering
             tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
             tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
             ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 3, dtwDist);
-            clusterOfObject = cls.do_cluster();
+            clusterOfObject = cls.do_clustering();
             nudTest3.Maximum = clusterOfObject.Length - 1;
             //lblTest.Text = dtwDist.Value.ToString();
         }
