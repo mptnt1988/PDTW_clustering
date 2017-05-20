@@ -380,6 +380,7 @@
             this.btnViewResult.TabIndex = 13;
             this.btnViewResult.Text = "View result";
             this.btnViewResult.UseVisualStyleBackColor = true;
+            this.btnViewResult.Click += new System.EventHandler(this.btnViewResult_Click);
             // 
             // btnExit
             // 

@@ -21,7 +21,7 @@ namespace PDTW_clustering
         private long _exeTimeStart;
         private Configuration _configuration;
         private Thread _threadExe;
-        private Cluster _clusters;
+        private Cluster _cluster;
         private CancellationTokenSource _cts;
 
         public FormMain()
@@ -165,7 +165,7 @@ namespace PDTW_clustering
             lblExeTimeValue.Text = "0";
 
             // Start executing thread
-            _clusters = null;
+            _cluster = null;
             _exeTimeStart = System.Environment.TickCount;
 
             //if (_threadExe != null)
@@ -201,9 +201,15 @@ namespace PDTW_clustering
             //token.ThrowIfCancellationRequested();
             DtwDistance dtwDistance = new DtwDistance();
             dtwDistance.IsMultithreading = _configuration.multithreading;
-            List<object> data = new List<object>(_data);
-            _clusters = new ImprovedKMedoids(data, _configuration.noOfClusters, dtwDistance);
-            clusterOfObject = _clusters.do_clustering();
+            List<object> data;
+            if (_configuration.dimensionalityReduction == EnumDimentionalityReduction.DISABLED)
+                data = new List<object>(_data);
+            else if (_configuration.dimensionalityReduction == EnumDimentionalityReduction.PAA)
+                data = new List<object>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
+            else
+                throw new Exception("There is some error in configuring dimensionality reduction");
+            _cluster = new ImprovedKMedoids(data, _configuration.noOfClusters, dtwDistance);
+            clusterOfObject = _cluster.do_clustering();
             // check
             nudTest3.Maximum = clusterOfObject.Length - 1;
 
@@ -219,6 +225,16 @@ namespace PDTW_clustering
         #region ManualTest
         DtwDistance dtwDist;
         TimeSeries ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8;
+
+        private void btnViewResult_Click(object sender, EventArgs e)
+        {
+            FormView resultForm = new FormView(this, _data, _cluster, false);
+            resultForm.Times = _exeTime;
+            resultForm.Show();
+            resultForm.Activate();
+            resultForm.DrawData();
+            this.Enabled = false;
+        }
 
         int[] clusterOfObject;
         private void btnTest_Click(object sender, EventArgs e)

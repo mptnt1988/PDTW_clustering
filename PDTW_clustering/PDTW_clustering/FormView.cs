@@ -13,6 +13,7 @@ namespace PDTW_clustering
     {
         FormMain _mainForm = null;
         private int window = 200;
+        private Cluster _cluster;
         private GraphPane m_graphPane;
         private PointPairList m_pointsList;
         //private Cluster _cluster;
@@ -36,51 +37,56 @@ namespace PDTW_clustering
             this.Data = data;
         }
 
-        //public FormView(ArrayList mean) 
+        //public FormView(ArrayList mean)
         //{
         //    InitializeComponent();
         //    m_graphPane = m_graph.GraphPane;
         //    toolBar.Visible = false;
         //    splitContainer.Panel1Collapsed = true;
         //    _data = mean;
-           
+
         //}
 
-        //public FormView(Cluster cluster,bool ap)
-        //{
-        //    InitializeComponent();
-        //    string temp = "";
-        //    m_graphPane = m_graph.GraphPane;
-        //    tbLoadData.Visible = false;
-        //    btnSaveClusters.Visible = true;
-        //    /*if (ap == true)
-        //    {
-        //        tbResult.Visible = false;
-        //    }*/
-        //    _cluster = cluster;
-        //    treeView.Nodes.Clear();
-        //    ExTreeNode root = new ExTreeNode(null,0,"Cluster Result");
+        public FormView(FormMain mainForm, List<TimeSeries> data, Cluster cluster, bool ap)
+        {
+            this._mainForm = mainForm;
+            InitializeComponent();
+            string temp = "";
+            m_graphPane = m_graph.GraphPane;
+            tbLoadData.Visible = false;
+            btnSaveClusters.Visible = true;
 
-        //    for (int i = 0; i < _cluster.Clusters.Count; i++) 
-        //    {
-        //        temp = "Cluster: " + (i + 1).ToString(); 
-        //        temp =  temp + " : " + ((ArrayList)_cluster.Clusters[i]).Count.ToString() + " Items";
-        //        root.Nodes.Add(new ExTreeNode((ArrayList)_cluster.Clusters[i],i+1,temp));
-        //        TreeNode child = root.LastNode;
-        //        ArrayList ts = (ArrayList)_cluster.Clusters[i];
-        //        for (int j = 0; j < ts.Count; j++)
-        //        {
-        //            TimeSeries t = (TimeSeries)(ts[j]);
-        //            child.Nodes.Add(new ExTreeNode(t, "Item:" + t.Index));
-        //        }
-                
-        //    }
-            
-        //    treeView.Nodes.Add(root);
-        //    //treeView.ExpandAll();
-        //    _data = (ArrayList)_cluster.Clusters[0];
-        //    treeView.SelectedNode = root.Nodes[0];
-        //}
+            _cluster = cluster;
+            List<int>[] clusters = _cluster.Clusters;
+            List<TimeSeries>[] tsClusters = new List<TimeSeries>[clusters.Length];
+
+            treeView.Nodes.Clear();
+            ExTreeNode root = new ExTreeNode(null, 0, "Cluster Result");
+
+            for (int i = 0; i < clusters.Length; i++)  // for each cluster
+            {
+                temp = "Cluster: " + (i + 1).ToString();
+                temp = temp + " : " + clusters[i].Count.ToString() + " Items";
+                //root.Nodes.Add(new ExTreeNode(clusters[i], i + 1, temp));
+                //TreeNode child = root.LastNode;
+                root.Nodes.Add(new ExTreeNode(new List<TimeSeries>(), i + 1, temp));
+                ExTreeNode child = (ExTreeNode)root.LastNode;
+                List<int> tsIndices = clusters[i];  // all time series of current cluster
+                tsClusters[i] = new List<TimeSeries>();
+                for (int j = 0; j < tsIndices.Count; j++)
+                {
+                    TimeSeries ts = data[tsIndices[j]];
+                    tsClusters[i].Add(ts);
+                    child.Nodes.Add(new ExTreeNode(ts, "Item:" + ts.Index));
+                }
+                child.Cluster = tsClusters[i];
+            }
+
+            treeView.Nodes.Add(root);
+            //treeView.ExpandAll();
+            Data = tsClusters[0];
+            treeView.SelectedNode = root.Nodes[0];
+        }
         #endregion
 
         #region METHODS: Drawing
@@ -297,13 +303,13 @@ namespace PDTW_clustering
             _mainForm.Enabled = true;
         }
         #endregion
-        //private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        //{
-        //    ExTreeNode node = (ExTreeNode)treeView.SelectedNode;
-        //    _data = node.Data;
-        //    DrawData();
+        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            ExTreeNode node = (ExTreeNode)treeView.SelectedNode;
+            Data = node.Cluster;
+            DrawData();
 
-        //}
+        }
 
         //private void tbResult_Click(object sender, EventArgs e)
         //{

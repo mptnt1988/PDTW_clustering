@@ -9,6 +9,7 @@ namespace PDTW_clustering.lib
     public abstract class Cluster
     {
         public abstract int[] do_clustering();
+        public abstract List<int>[] Clusters { get; set; }
     }
 
     class ImprovedKMedoids : Cluster
@@ -16,14 +17,14 @@ namespace PDTW_clustering.lib
         private List<object> _data;
         private float[,] _distanceMatrix;
         private int[] _medoids;
-        private List<int>[] _clusters;
         private int[] _clusterOfObject;
         private float _totalSum;
         private float _totalSumOld;
         private int _size;
-
         private int _k;
         private Distance _distance;
+
+        public override List<int>[] Clusters { get; set; }
 
         public ImprovedKMedoids(List<object> data, int k, Distance distance)
         {
@@ -54,7 +55,7 @@ namespace PDTW_clustering.lib
             for (int i = 0; i < _size; i++)
                 for (int j = 0; j < _size; j++)
                 {
-                    Console.WriteLine("------ " + i.ToString() + " * " + j.ToString());
+                    //Console.WriteLine("------ " + i.ToString() + " * " + j.ToString());
                     if (i == j)
                         _distanceMatrix[i, j] = 0;
                     else if (i < j)
@@ -96,16 +97,17 @@ namespace PDTW_clustering.lib
 
             // Select k objects having the first k smallest values as initial medoids
             _medoids = new int[_k];
-            _clusters = new List<int>[_k];
-            _clusterOfObject = new int[_size];
-            for (int i = 0; i < _k; i++)
+            Clusters = new List<int>[_k];
+            //_clusterOfObject = new int[_size];
+            _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
+            for (int i = 0; i < _k; i++)  // for each cluster
             {
-                ValueIndex minObj = v.Min<ValueIndex>();
+                ValueIndex minObj = v.Min<ValueIndex>();  // get the minimum one based on vj value
                 int minObjIndex = minObj.index;
                 _medoids[i] = minObjIndex;  // medoid of cluster i is the obj's index
                 _clusterOfObject[minObjIndex] = i;  // cluster of obj's index is i
-                _clusters[i] = new List<int>();
-                _clusters[i].Add(minObjIndex);  // add obj's index to cluster i
+                Clusters[i] = new List<int>();
+                Clusters[i].Add(minObjIndex);  // add obj's index to cluster i
                 v.Remove(minObj);
             }
 
@@ -118,13 +120,13 @@ namespace PDTW_clustering.lib
 
         private void update_medoids()
         {
-            for (int i = 0; i<_k;i++)  // foreach cluster
+            for (int i = 0; i < _k; i++)  // foreach cluster
             {
                 List<ValueIndex> v = new List<ValueIndex>();  // store value & index for comparison
-                foreach (int objIndexFrom in _clusters[i])  // foreach obj in cluster i
+                foreach (int objIndexFrom in Clusters[i])  // foreach obj in cluster i
                 {
                     float sum = 0;
-                    foreach (int objIndexTo in _clusters[i])  // sum all distances from the obj to others
+                    foreach (int objIndexTo in Clusters[i])  // sum all distances from the obj to others
                         sum += _distanceMatrix[objIndexFrom, objIndexTo];
                     v.Add(new ValueIndex(sum, objIndexFrom));
                 }
@@ -136,7 +138,7 @@ namespace PDTW_clustering.lib
         private void assign_objects_to_medoids()
         {
             _totalSumOld = _totalSum;
-            Console.Write("Old: " + _totalSumOld.ToString() + " --- ");
+            // Console.Write("Old: " + _totalSumOld.ToString() + " --- ");
             _totalSum = 0;
             for (int i = 0; i < _size; i++)  // foreach object
             {
@@ -144,13 +146,18 @@ namespace PDTW_clustering.lib
                     continue;
                 List<ValueIndex> v = new List<ValueIndex>();
                 for (int j = 0; j < _k; j++)  // foreach cluster
-                    v.Add(new ValueIndex(_distanceMatrix[i, j], j));
+                    v.Add(new ValueIndex(_distanceMatrix[i, _medoids[j]], j));  // distance from the object i to medoid of cluster j, indexed by j
                 ValueIndex nearestMedoid = v.Min<ValueIndex>();
-                _clusterOfObject[i] = nearestMedoid.index;
-                _clusters[nearestMedoid.index].Add(i);
+                if (nearestMedoid.index != _clusterOfObject[i])  // if nearest medoid is different from the object's medoid
+                {
+                    if (_clusterOfObject[i] != _k)
+                        Clusters[_clusterOfObject[i]].Remove(i);  // remove object of index i from old cluster
+                    _clusterOfObject[i] = nearestMedoid.index;  // update new cluster for object of index i
+                    Clusters[nearestMedoid.index].Add(i);  // update object of index i into new cluster
+                }
                 _totalSum += nearestMedoid.value;
             }
-            Console.WriteLine("New: " + _totalSum.ToString());
+            // Console.WriteLine("New: " + _totalSum.ToString());
         }
     }
 }

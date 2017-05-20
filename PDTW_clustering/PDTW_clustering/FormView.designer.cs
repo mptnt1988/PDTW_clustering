@@ -153,6 +153,7 @@
             this.treeView.Name = "treeView";
             this.treeView.Size = new System.Drawing.Size(160, 495);
             this.treeView.TabIndex = 0;
+            this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
             // 
             // m_graph
             // 

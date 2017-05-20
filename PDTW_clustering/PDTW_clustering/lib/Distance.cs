@@ -99,8 +99,7 @@ namespace PDTW_clustering.lib
                         }
                     }
             });
-            Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            //dtw_update_path();
+            dtw_update_path();
         }
 
         public void dtw()
@@ -127,8 +126,7 @@ namespace PDTW_clustering.lib
                         DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
                     }
                 }
-            Value = (float)Math.Sqrt(DistanceMatrix[nX - 1, nY - 1]);
-            //dtw_update_path();
+            dtw_update_path();
         }
 
         private void dtw_update_path()
@@ -167,6 +165,7 @@ namespace PDTW_clustering.lib
                 }
             }
             PathMatrix.Reverse();
+            Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1]/PathMatrix.Count);
         }
 
         private float elems_distance(float e1, float e2)
