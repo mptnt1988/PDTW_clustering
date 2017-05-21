@@ -72,7 +72,7 @@
             // lblObjFuncValue
             // 
             this.lblObjFuncValue.AutoSize = true;
-            this.lblObjFuncValue.Location = new System.Drawing.Point(227, 91);
+            this.lblObjFuncValue.Location = new System.Drawing.Point(273, 104);
             this.lblObjFuncValue.Name = "lblObjFuncValue";
             this.lblObjFuncValue.Size = new System.Drawing.Size(22, 13);
             this.lblObjFuncValue.TabIndex = 24;
@@ -135,11 +135,11 @@
             // lblObjFunc
             // 
             this.lblObjFunc.AutoSize = true;
-            this.lblObjFunc.Location = new System.Drawing.Point(162, 91);
+            this.lblObjFunc.Location = new System.Drawing.Point(162, 104);
             this.lblObjFunc.Name = "lblObjFunc";
-            this.lblObjFunc.Size = new System.Drawing.Size(59, 13);
+            this.lblObjFunc.Size = new System.Drawing.Size(105, 13);
             this.lblObjFunc.TabIndex = 17;
-            this.lblObjFunc.Text = "Obj Func =";
+            this.lblObjFunc.Text = "Objective Function =";
             // 
             // lblAdjustedRand
             // 
@@ -180,7 +180,7 @@
             // lblRand
             // 
             this.lblRand.AutoSize = true;
-            this.lblRand.Location = new System.Drawing.Point(15, 54);
+            this.lblRand.Location = new System.Drawing.Point(12, 54);
             this.lblRand.Name = "lblRand";
             this.lblRand.Size = new System.Drawing.Size(42, 13);
             this.lblRand.TabIndex = 12;
@@ -203,6 +203,7 @@
             this.Controls.Add(this.groupBox6);
             this.Name = "FormQuality";
             this.Text = "Quality";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormQuality_FormClosed);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.ResumeLayout(false);

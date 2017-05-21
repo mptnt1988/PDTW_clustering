@@ -33,8 +33,8 @@
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.tbLoadData = new System.Windows.Forms.ToolStripButton();
-            this.tbViewQuality = new System.Windows.Forms.ToolStripButton();
             this.tbViewData = new System.Windows.Forms.ToolStripButton();
+            this.tbViewQuality = new System.Windows.Forms.ToolStripButton();
             this.btnSaveClusters = new System.Windows.Forms.ToolStripButton();
             this.tbNormalize = new System.Windows.Forms.ToolStripButton();
             this.tbPaa = new System.Windows.Forms.ToolStripButton();
@@ -78,16 +78,6 @@
             this.tbLoadData.Text = "Load Data";
             this.tbLoadData.Click += new System.EventHandler(this.btPath_Click);
             // 
-            // tbViewQuality
-            // 
-            this.tbViewQuality.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbViewQuality.Image = ((System.Drawing.Image)(resources.GetObject("tbViewQuality.Image")));
-            this.tbViewQuality.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbViewQuality.Name = "tbViewQuality";
-            this.tbViewQuality.Size = new System.Drawing.Size(23, 22);
-            this.tbViewQuality.Text = "View Quality";
-            this.tbViewQuality.ToolTipText = "Clustering Quality";
-            // 
             // tbViewData
             // 
             this.tbViewData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -99,6 +89,17 @@
             this.tbViewData.ToolTipText = "Display Data";
             this.tbViewData.Click += new System.EventHandler(this.btnViewData_Click);
             // 
+            // tbViewQuality
+            // 
+            this.tbViewQuality.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbViewQuality.Image = ((System.Drawing.Image)(resources.GetObject("tbViewQuality.Image")));
+            this.tbViewQuality.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbViewQuality.Name = "tbViewQuality";
+            this.tbViewQuality.Size = new System.Drawing.Size(23, 22);
+            this.tbViewQuality.Text = "View Quality";
+            this.tbViewQuality.ToolTipText = "Clustering Quality";
+            this.tbViewQuality.Click += new System.EventHandler(this.tbViewQuality_Click);
+            // 
             // btnSaveClusters
             // 
             this.btnSaveClusters.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -108,6 +109,7 @@
             this.btnSaveClusters.Size = new System.Drawing.Size(23, 22);
             this.btnSaveClusters.Text = "Save Clusters";
             this.btnSaveClusters.Visible = false;
+            this.btnSaveClusters.Click += new System.EventHandler(this.btnSaveClusters_Click);
             // 
             // tbNormalize
             // 
@@ -153,7 +155,6 @@
             this.treeView.Name = "treeView";
             this.treeView.Size = new System.Drawing.Size(160, 495);
             this.treeView.TabIndex = 0;
-            this.treeView.AfterSelect += TreeView_AfterSelect;
             // 
             // m_graph
             // 

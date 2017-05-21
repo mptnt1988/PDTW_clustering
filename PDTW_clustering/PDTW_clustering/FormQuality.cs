@@ -12,9 +12,24 @@ namespace PDTW_clustering
 {
     public partial class FormQuality : Form
     {
+        FormView _mainForm = null;
+
+        #region CONSTRUCTOR
         public FormQuality()
         {
             InitializeComponent();
+        }
+
+        public FormQuality(FormView mainForm)
+        {
+            this._mainForm = mainForm;
+            InitializeComponent();
+        }
+        #endregion
+
+        private void FormQuality_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _mainForm.Enabled = true;
         }
     }
 }

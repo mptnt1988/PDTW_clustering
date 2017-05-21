@@ -12,11 +12,11 @@ namespace PDTW_clustering
     public partial class FormView : Form
     {
         FormMain _mainForm = null;
-        private int window = 200;
+        private int _window = 200;
         private Cluster _cluster;
         private GraphPane m_graphPane;
         private PointPairList m_pointsList;
-        //private Cluster _cluster;
+        private List<TimeSeries> _dataset;
 
         #region PROPERTIES
         // Clustering time (in millisecs)
@@ -29,6 +29,7 @@ namespace PDTW_clustering
         public FormView(FormMain mainForm, List<TimeSeries> data)
         {
             this._mainForm = mainForm;
+            this._dataset = new List<TimeSeries>(data);
             InitializeComponent();
             m_graphPane = m_graph.GraphPane;
             splitContainer.Panel1Collapsed = true;
@@ -49,6 +50,7 @@ namespace PDTW_clustering
         public FormView(FormMain mainForm, List<TimeSeries> data, Cluster cluster, bool ap)
         {
             this._mainForm = mainForm;
+            this._dataset = new List<TimeSeries>(data);
             InitializeComponent();
             string labelCluster = "";
             m_graphPane = m_graph.GraphPane;
@@ -84,7 +86,7 @@ namespace PDTW_clustering
         #endregion
 
         #region METHODS: Drawing
-        public void DrawData() 
+        public void DrawData()
         {
             int view = 0;
             TimeSeries t;
@@ -93,10 +95,10 @@ namespace PDTW_clustering
                 return;
             }
             InitGraph();
-            view = Math.Min(window, this.Data.Count);
-            for (int i = 0; i <view ; i++) 
+            view = Math.Min(_window, this.Data.Count);
+            for (int i = 0; i < view; i++)
             {
-                t = (TimeSeries) this.Data[i];
+                t = (TimeSeries)this.Data[i];
                 DrawTimeSeries(t, Color.FromArgb((i * 100) % 255, Math.Abs((255 - i * 100) % 255), (i * 10) % 255));
             }
             m_graph.Refresh();
@@ -301,7 +303,7 @@ namespace PDTW_clustering
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             ExTreeNode node = (ExTreeNode)treeView.SelectedNode;
-            switch(node.Type)
+            switch (node.Type)
             {
                 case EnumExTreeNodeType.CLUSTER:
                     Data = node.Cluster;
@@ -407,48 +409,62 @@ namespace PDTW_clustering
         //    }
         //}
 
-        //private void btnSaveClusters_Click(object sender, EventArgs e)
-        //{
-        //    if (_cluster != null && _cluster.Clusters != null) 
-        //    {
-        //        if (saveFile.ShowDialog() == DialogResult.OK)
-        //        {
-        //            StreamWriter writer = null;
-        //            try
-        //            {
-        //                // open selected file
-        //                String clusters = "Cluster ";
-        //                writer = new StreamWriter(File.OpenWrite(saveFile.FileName));
-        //                int clustetn = 1;
-        //                ArrayList data;
-        //                TimeSeries tsr;
-        //                for (int i = 0;i< _cluster.Clusters.Count; i++)
-        //                {
-        //                    clustetn = i + 1;
-        //                    writer.WriteLine(clusters+clustetn.ToString()+ ":");
-        //                    data = (ArrayList)_cluster.Clusters[i];
-        //                    for (int j = 0; j < _data.Count; j++)
-        //                    {
-        //                        tsr = (TimeSeries)_data[j];
-        //                        tsr.save(writer);
-        //                    }
+        private void btnSaveClusters_Click(object sender, EventArgs e)
+        {
+            if (_cluster != null && _cluster.Clusters != null)
+            {
+                List<int>[] clusters = _cluster.Clusters;
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    StreamWriter writer = null;
+                    try
+                    {
+                        // Open selected file
+                        String labelCluster = "Cluster ";
+                        writer = new StreamWriter(File.OpenWrite(saveFile.FileName));
+                        int clusterNumber = 1;
+                        TimeSeries timeSeries;
+                        List<TimeSeries>[] tsClusters = new List<TimeSeries>[clusters.Length];
+                        for (int i = 0; i < _cluster.Clusters.Length; i++)
+                        {
+                            clusterNumber = i + 1;
+                            writer.WriteLine(labelCluster + clusterNumber.ToString() + ":");
+                            List<int> tsIndices = clusters[i];
+                            for (int j = 0; j < tsIndices.Count; j++)
+                            {
+                                timeSeries = (TimeSeries)_dataset[tsIndices[j]];
+                                string data2Write = clusterNumber.ToString() + "@";
+                                for (int k = 0; k < timeSeries.Series.Count; k++)
+                                {
+                                    data2Write = data2Write + " " + timeSeries.Series[k].ToString();
+                                }
+                                writer.WriteLine(data2Write);
+                            }
+                        }
+                        MessageBox.Show("Data Saved", "Information");
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Failed Writing the file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    finally
+                    {
+                        // Close file
+                        if (writer != null)
+                            writer.Close();
+                    }
+                }
+            }
+        }
 
-        //                }
-        //                MessageBox.Show("Data Saved", "Information");
-        //            }
-        //            catch (Exception)
-        //            {
-        //                MessageBox.Show("Failed Writing the file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //                return;
-        //            }
-        //            finally
-        //            {
-        //                // close file
-        //                if (writer != null)
-        //                    writer.Close();
-        //            }
-        //        }
-        //    }
-        //}
+        private void tbViewQuality_Click(object sender, EventArgs e)
+        {
+            FormView formView = new FormQuality(this);
+            formView.Show();
+            formView.Activate();
+            this.Enabled = false;
+
+        }
     }
 }

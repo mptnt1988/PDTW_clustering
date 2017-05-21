@@ -76,7 +76,6 @@ namespace PDTW_clustering
         private void viewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormView formView = new FormView(this, _data);
-            //formView.Parent = this;
             formView.Show();
             formView.Activate();
             this.Enabled = false;
