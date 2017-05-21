@@ -7,12 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PDTW_clustering.lib;
 
 namespace PDTW_clustering
 {
     public partial class FormQuality : Form
     {
         FormView _mainForm = null;
+        Cluster _cluster;
+        List<TimeSeries>[] _tsClusters;
 
         #region CONSTRUCTOR
         public FormQuality()
@@ -20,10 +23,12 @@ namespace PDTW_clustering
             InitializeComponent();
         }
 
-        public FormQuality(FormView mainForm)
+        public FormQuality(FormView mainForm, Cluster cluster, List<TimeSeries>[] tsClusters)
         {
             this._mainForm = mainForm;
             InitializeComponent();
+            _cluster = cluster;
+            _tsClusters = tsClusters;
         }
         #endregion
 

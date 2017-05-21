@@ -10,6 +10,7 @@ namespace PDTW_clustering.lib
     {
         public abstract int[] do_clustering();
         public abstract List<int>[] Clusters { get; set; }
+        public abstract Evaluation Evaluation { get; set; }
     }
 
     class ImprovedKMedoids : Cluster
@@ -25,6 +26,7 @@ namespace PDTW_clustering.lib
         private Distance _distance;
 
         public override List<int>[] Clusters { get; set; }
+        public override Evaluation Evaluation { get; set; }
 
         public ImprovedKMedoids(List<object> data, int k, Distance distance)
         {
@@ -154,6 +156,31 @@ namespace PDTW_clustering.lib
                 }
                 _totalSum += nearestMedoid.value;
             }
+        }
+    }
+
+    public class Evaluation
+    {
+        private int _a;
+        private int _b;
+        private int _c;
+        private int _d;
+
+        public float InternalValidation { get; set; }
+        public ExtValidation ExternalValidation { get; set; }
+
+        public Evaluation(int a, int b, int c, int d)
+        {
+            _a = a;
+            _b = b;
+            _c = c;
+            _d = d;
+            evaluate();
+        }
+
+        private void evaluate()
+        {
+
         }
     }
 }

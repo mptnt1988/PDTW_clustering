@@ -20,7 +20,6 @@ namespace PDTW_clustering
         private long _exeTime;
         private long _exeTimeStart;
         private Configuration _configuration;
-        private Thread _threadExe;
         private Cluster _cluster;
         private CancellationTokenSource _cts;
 

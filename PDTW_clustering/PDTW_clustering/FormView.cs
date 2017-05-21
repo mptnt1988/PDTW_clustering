@@ -17,12 +17,13 @@ namespace PDTW_clustering
         private GraphPane m_graphPane;
         private PointPairList m_pointsList;
         private List<TimeSeries> _dataset;
+        private List<TimeSeries>[] _tsClusters;
 
         #region PROPERTIES
         // Clustering time (in millisecs)
         public long Time { get; set; }
         // List of all time series to be viewed
-        public List<TimeSeries> Data { get; private set; }
+        public List<TimeSeries> Data { get; private set; }  // data to be drawn
         #endregion
 
         #region CONSTRUCTOR
@@ -59,7 +60,7 @@ namespace PDTW_clustering
 
             _cluster = cluster;
             List<int>[] clusters = _cluster.Clusters;
-            List<TimeSeries>[] tsClusters = new List<TimeSeries>[clusters.Length];
+            _tsClusters = new List<TimeSeries>[clusters.Length];
 
             treeView.Nodes.Clear();
             ExTreeNode root = new ExTreeNode(null, 0, "Cluster Result");
@@ -71,18 +72,20 @@ namespace PDTW_clustering
                 ExTreeNode child = (ExTreeNode)root.LastNode;
                 clusters[i].Sort();
                 List<int> tsIndices = clusters[i];  // all time series of current cluster
-                tsClusters[i] = new List<TimeSeries>();
+                _tsClusters[i] = new List<TimeSeries>();
                 for (int j = 0; j < tsIndices.Count; j++)
                 {
                     TimeSeries ts = data[tsIndices[j]];
-                    tsClusters[i].Add(ts);
+                    _tsClusters[i].Add(ts);
                     child.Nodes.Add(new ExTreeNode(ts, "Object " + ts.Index));
                 }
-                child.Cluster = tsClusters[i];
+                child.Cluster = _tsClusters[i];
             }
             treeView.Nodes.Add(root);
+            treeView.AfterSelect += treeView_AfterSelect;
             treeView.SelectedNode = root.Nodes[0];
         }
+
         #endregion
 
         #region METHODS: Drawing
@@ -300,7 +303,7 @@ namespace PDTW_clustering
         }
         #endregion
 
-        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        private void treeView_AfterSelect(object sender, EventArgs e)
         {
             ExTreeNode node = (ExTreeNode)treeView.SelectedNode;
             switch (node.Type)
@@ -413,7 +416,7 @@ namespace PDTW_clustering
         {
             if (_cluster != null && _cluster.Clusters != null)
             {
-                List<int>[] clusters = _cluster.Clusters;
+                //List<int>[] clusters = _cluster.Clusters;
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
                     StreamWriter writer = null;
@@ -424,15 +427,13 @@ namespace PDTW_clustering
                         writer = new StreamWriter(File.OpenWrite(saveFile.FileName));
                         int clusterNumber = 1;
                         TimeSeries timeSeries;
-                        List<TimeSeries>[] tsClusters = new List<TimeSeries>[clusters.Length];
-                        for (int i = 0; i < _cluster.Clusters.Length; i++)
+                        for (int i = 0; i < _tsClusters.Length; i++)
                         {
                             clusterNumber = i + 1;
                             writer.WriteLine(labelCluster + clusterNumber.ToString() + ":");
-                            List<int> tsIndices = clusters[i];
-                            for (int j = 0; j < tsIndices.Count; j++)
+                            for (int j = 0; j < _tsClusters[i].Count; j++)
                             {
-                                timeSeries = (TimeSeries)_dataset[tsIndices[j]];
+                                timeSeries = _tsClusters[i][j];
                                 string data2Write = clusterNumber.ToString() + "@";
                                 for (int k = 0; k < timeSeries.Series.Count; k++)
                                 {
@@ -460,11 +461,10 @@ namespace PDTW_clustering
 
         private void tbViewQuality_Click(object sender, EventArgs e)
         {
-            FormView formView = new FormQuality(this);
+            FormQuality formView = new FormQuality(this, _cluster, _tsClusters);
             formView.Show();
             formView.Activate();
             this.Enabled = false;
-
         }
     }
 }

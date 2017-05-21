@@ -66,6 +66,16 @@ namespace PDTW_clustering.lib
         }
     }
 
+    public struct ExtValidation
+    {
+        public float rand;     // Rand
+        public float ari;      // Adjusted Rand Index (ARI)
+        public float jaccard;  // Jaccard
+        public float fm;       // Fowlkes and Mallow (FM)
+        public float csm;      // Cluster Similarity Measure (CSM)
+        public float nmi;      // Normalized Mutual Information (NMI)
+    }
+
     public class ValueIndex : IComparable
     {
         public float value;

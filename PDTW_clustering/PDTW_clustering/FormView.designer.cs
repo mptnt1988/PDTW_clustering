@@ -200,10 +200,10 @@
 
         }
 
-        private void TreeView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
-        {
-            this.treeView_AfterSelect(sender, e);
-        }
+        //private void TreeView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
+        //{
+        //    this.treeView_AfterSelect(sender, e);
+        //}
 
         #endregion
 
