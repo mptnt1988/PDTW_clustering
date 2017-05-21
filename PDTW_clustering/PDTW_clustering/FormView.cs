@@ -44,7 +44,6 @@ namespace PDTW_clustering
         //    toolBar.Visible = false;
         //    splitContainer.Panel1Collapsed = true;
         //    _data = mean;
-
         //}
 
         public FormView(FormMain mainForm, List<TimeSeries> data, Cluster cluster, bool ap)
@@ -65,7 +64,7 @@ namespace PDTW_clustering
 
             for (int i = 0; i < clusters.Length; i++)  // for each cluster
             {
-                labelCluster = "Cluster " + (i + 1).ToString() + " : " + clusters[i].Count.ToString() + " Items";
+                labelCluster = "Cluster " + (i + 1).ToString() + " : " + clusters[i].Count.ToString() + " objects";
                 root.Nodes.Add(new ExTreeNode(new List<TimeSeries>(), i + 1, labelCluster));
                 ExTreeNode child = (ExTreeNode)root.LastNode;
                 clusters[i].Sort();
@@ -75,14 +74,11 @@ namespace PDTW_clustering
                 {
                     TimeSeries ts = data[tsIndices[j]];
                     tsClusters[i].Add(ts);
-                    child.Nodes.Add(new ExTreeNode(ts, "Item " + ts.Index));
+                    child.Nodes.Add(new ExTreeNode(ts, "Object " + ts.Index));
                 }
                 child.Cluster = tsClusters[i];
             }
-
             treeView.Nodes.Add(root);
-            //treeView.ExpandAll();
-            Data = tsClusters[0];
             treeView.SelectedNode = root.Nodes[0];
         }
         #endregion
@@ -301,12 +297,23 @@ namespace PDTW_clustering
             _mainForm.Enabled = true;
         }
         #endregion
-        private void treeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+
+        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             ExTreeNode node = (ExTreeNode)treeView.SelectedNode;
-            Data = node.Cluster;
+            switch(node.Type)
+            {
+                case EnumExTreeNodeType.CLUSTER:
+                    Data = node.Cluster;
+                    break;
+                case EnumExTreeNodeType.TIMESERIES:
+                    Data = new List<TimeSeries>();
+                    Data.Add(node.TimeSeries);
+                    break;
+                default:
+                    throw new Exception("There is some error with ExTreeNodeType");
+            }
             DrawData();
-
         }
 
         //private void tbResult_Click(object sender, EventArgs e)

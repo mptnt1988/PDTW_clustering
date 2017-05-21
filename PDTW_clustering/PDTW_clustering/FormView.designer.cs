@@ -153,7 +153,7 @@
             this.treeView.Name = "treeView";
             this.treeView.Size = new System.Drawing.Size(160, 495);
             this.treeView.TabIndex = 0;
-            this.treeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView_NodeMouseClick);
+            this.treeView.AfterSelect += TreeView_AfterSelect;
             // 
             // m_graph
             // 
@@ -197,6 +197,11 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void TreeView_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
+        {
+            this.treeView_AfterSelect(sender, e);
         }
 
         #endregion

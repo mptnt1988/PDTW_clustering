@@ -2,6 +2,12 @@
 
 namespace PDTW_clustering.lib
 {
+    public enum EnumExTreeNodeType
+    {
+        CLUSTER,
+        TIMESERIES
+    }
+
     enum EnumDtwPredecessorPosition
     {
         UP,

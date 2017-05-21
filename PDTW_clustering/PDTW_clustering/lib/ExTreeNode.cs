@@ -8,6 +8,7 @@ namespace PDTW_clustering.lib
     public class ExTreeNode : TreeNode
     {
         public int Id { get; private set; }
+        public EnumExTreeNodeType Type { get; private set; }
 
         public List<TimeSeries> Cluster { get; set; }
         public TimeSeries TimeSeries { get; set; }
@@ -16,11 +17,13 @@ namespace PDTW_clustering.lib
         {
             Cluster = data;
             Id = id;
+            Type = EnumExTreeNodeType.CLUSTER;
         }
 
         public ExTreeNode(TimeSeries ts, string name) : base(name)
         {
             TimeSeries = ts;
+            Type = EnumExTreeNodeType.TIMESERIES;
         }
     }
 }
