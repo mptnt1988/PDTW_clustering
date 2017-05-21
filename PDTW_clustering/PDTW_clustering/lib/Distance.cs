@@ -165,7 +165,7 @@ namespace PDTW_clustering.lib
                 }
             }
             PathMatrix.Reverse();
-            Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1]/PathMatrix.Count);
+            Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1])/PathMatrix.Count;
         }
 
         private float elems_distance(float e1, float e2)

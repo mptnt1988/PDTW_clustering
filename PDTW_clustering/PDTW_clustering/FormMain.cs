@@ -210,9 +210,6 @@ namespace PDTW_clustering
                 throw new Exception("There is some error in configuring dimensionality reduction");
             _cluster = new ImprovedKMedoids(data, _configuration.noOfClusters, dtwDistance);
             clusterOfObject = _cluster.do_clustering();
-            // check
-            nudTest3.Maximum = clusterOfObject.Length - 1;
-
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -221,20 +218,20 @@ namespace PDTW_clustering
                 _cts.Cancel();
         }
 
-        // TESTING
-        #region ManualTest
-        DtwDistance dtwDist;
-        TimeSeries ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8;
-
         private void btnViewResult_Click(object sender, EventArgs e)
         {
             FormView resultForm = new FormView(this, _data, _cluster, false);
-            resultForm.Times = _exeTime;
+            resultForm.Time = _exeTime;
             resultForm.Show();
             resultForm.Activate();
             resultForm.DrawData();
             this.Enabled = false;
         }
+
+        // TESTING
+        #region ManualTest
+        DtwDistance dtwDist;
+        TimeSeries ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8;
 
         int[] clusterOfObject;
         private void btnTest_Click(object sender, EventArgs e)
@@ -249,17 +246,23 @@ namespace PDTW_clustering
             ts8 = new TimeSeries(new List<float>(new float[] { 5, 7, 3, 2, 9, 5, 9, 4, 8, 5 }));
 
             dtwDist = new DtwDistance();
-            //dtwDist.Calculate(ts1, ts2);
             nudTest1.Maximum = ts1.Series.Count - 1;
             nudTest2.Maximum = ts2.Series.Count - 1;
 
-            List<object> tsList = new List<object>();
-            tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
-            tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
-            ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 3, dtwDist);
-            clusterOfObject = cls.do_clustering();
-            nudTest3.Maximum = clusterOfObject.Length - 1;
-            //lblTest.Text = dtwDist.Value.ToString();
+            // Test DTW distance
+            dtwDist.Calculate(ts1, ts2);
+            lblTest.Text = dtwDist.Value.ToString();
+
+            // Test clustering
+            //List<object> tsList = new List<object>();
+            //tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
+            //tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
+            //ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 2, dtwDist);
+            //clusterOfObject = cls.do_clustering();
+            //nudTest3.Maximum = clusterOfObject.Length - 1;
+
+
+
         }
 
         private void nudTest1_ValueChanged(object sender, EventArgs e)
@@ -276,12 +279,16 @@ namespace PDTW_clustering
 
         private void nudTest3_ValueChanged(object sender, EventArgs e)
         {
-            lblTest.Text = clusterOfObject[(int)nudTest3.Value].ToString();
-            //lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
-            //lblTest.Text += ": ";
-            //lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
-            //lblTest.Text += ", ";
-            //lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
+            // Test clustering
+            //nudTest3.Maximum = clusterOfObject.Length - 1;
+            //lblTest.Text = clusterOfObject[(int)nudTest3.Value].ToString();
+
+            // Test distance
+            lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
+            lblTest.Text += ": ";
+            lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
+            lblTest.Text += ", ";
+            lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
         }
 
         private void tuan()
@@ -291,4 +298,3 @@ namespace PDTW_clustering
         #endregion
     }
 }
-

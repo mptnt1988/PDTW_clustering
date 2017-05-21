@@ -19,8 +19,8 @@ namespace PDTW_clustering
         //private Cluster _cluster;
 
         #region PROPERTIES
-        // ??? Times
-        public long Times { get; set; }
+        // Clustering time (in millisecs)
+        public long Time { get; set; }
         // List of all time series to be viewed
         public List<TimeSeries> Data { get; private set; }
         #endregion
@@ -51,7 +51,7 @@ namespace PDTW_clustering
         {
             this._mainForm = mainForm;
             InitializeComponent();
-            string temp = "";
+            string labelCluster = "";
             m_graphPane = m_graph.GraphPane;
             tbLoadData.Visible = false;
             btnSaveClusters.Visible = true;
@@ -65,19 +65,17 @@ namespace PDTW_clustering
 
             for (int i = 0; i < clusters.Length; i++)  // for each cluster
             {
-                temp = "Cluster: " + (i + 1).ToString();
-                temp = temp + " : " + clusters[i].Count.ToString() + " Items";
-                //root.Nodes.Add(new ExTreeNode(clusters[i], i + 1, temp));
-                //TreeNode child = root.LastNode;
-                root.Nodes.Add(new ExTreeNode(new List<TimeSeries>(), i + 1, temp));
+                labelCluster = "Cluster " + (i + 1).ToString() + " : " + clusters[i].Count.ToString() + " Items";
+                root.Nodes.Add(new ExTreeNode(new List<TimeSeries>(), i + 1, labelCluster));
                 ExTreeNode child = (ExTreeNode)root.LastNode;
+                clusters[i].Sort();
                 List<int> tsIndices = clusters[i];  // all time series of current cluster
                 tsClusters[i] = new List<TimeSeries>();
                 for (int j = 0; j < tsIndices.Count; j++)
                 {
                     TimeSeries ts = data[tsIndices[j]];
                     tsClusters[i].Add(ts);
-                    child.Nodes.Add(new ExTreeNode(ts, "Item:" + ts.Index));
+                    child.Nodes.Add(new ExTreeNode(ts, "Item " + ts.Index));
                 }
                 child.Cluster = tsClusters[i];
             }

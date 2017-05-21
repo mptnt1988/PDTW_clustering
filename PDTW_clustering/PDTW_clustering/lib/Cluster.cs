@@ -55,7 +55,6 @@ namespace PDTW_clustering.lib
             for (int i = 0; i < _size; i++)
                 for (int j = 0; j < _size; j++)
                 {
-                    //Console.WriteLine("------ " + i.ToString() + " * " + j.ToString());
                     if (i == j)
                         _distanceMatrix[i, j] = 0;
                     else if (i < j)
@@ -67,7 +66,6 @@ namespace PDTW_clustering.lib
             //{
             //    for (int j = 0; j < _size; j++)
             //    {
-            //        Console.WriteLine("------ " + i.ToString() + " * " + j.ToString());
             //        if (i == j)
             //            _distanceMatrix[i, j] = 0;
             //        else if (i < j)
@@ -138,7 +136,6 @@ namespace PDTW_clustering.lib
         private void assign_objects_to_medoids()
         {
             _totalSumOld = _totalSum;
-            // Console.Write("Old: " + _totalSumOld.ToString() + " --- ");
             _totalSum = 0;
             for (int i = 0; i < _size; i++)  // foreach object
             {
@@ -157,7 +154,6 @@ namespace PDTW_clustering.lib
                 }
                 _totalSum += nearestMedoid.value;
             }
-            // Console.WriteLine("New: " + _totalSum.ToString());
         }
     }
 }
