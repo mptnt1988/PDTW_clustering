@@ -6,29 +6,43 @@ using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
 {
+    public abstract class ClusteringObject
+    {
+        public abstract int Label { get; }
+    }
+
     public abstract class Cluster
     {
         public abstract int[] do_clustering();
-        public abstract List<int>[] Clusters { get; set; }
-        public abstract Evaluation Evaluation { get; set; }
+        public abstract Evaluation do_evaluating();
+        public abstract List<int>[] Clusters { get; }
+        public abstract int[] ClusterOfObject { get; }
+        public abstract List<ClusteringObject> Objects { get; }
+        public abstract Evaluation Evaluation { get; }
+        public abstract float TotalSum { get; }
     }
 
     class ImprovedKMedoids : Cluster
     {
-        private List<object> _data;
-        private float[,] _distanceMatrix;
-        private int[] _medoids;
-        private int[] _clusterOfObject;
-        private float _totalSum;
-        private float _totalSumOld;
-        private int _size;
-        private int _k;
-        private Distance _distance;
+        private List<ClusteringObject> _data;   // _data[i] : object with index i
+        private float[,] _distanceMatrix;       // _distanceMatrix[i,j] : distance between each pair of objects i & j
+        private int[] _medoids;                 // _medoids[i] : index of object which is medoid of cluster i
+        private int[] _clusterOfObject;         // _clusterOfObject[i] : cluster of object with index i
+        private int _size;                      // the number of objects to be clustered
+        private int _k;                         // the number of clusters
+        private Distance _distance;             // method to calculate distance
+        private List<int>[] _clusters;          // _clusters[i] : list of all object indices which belong to cluster i
+        private Evaluation _evaluation;         // custering evaluation
+        private float _totalSum;                // sum of all distances between object and its medoid
+        private float _totalSumOld;             // old value of sum to be compared later
 
-        public override List<int>[] Clusters { get; set; }
-        public override Evaluation Evaluation { get; set; }
+        public override List<int>[] Clusters { get { return _clusters; } }
+        public override Evaluation Evaluation { get { return _evaluation; } }
+        public override List<ClusteringObject> Objects { get { return _data; } }
+        public override int[] ClusterOfObject { get { return _clusterOfObject; } }
+        public override float TotalSum { get { return _totalSum; } }
 
-        public ImprovedKMedoids(List<object> data, int k, Distance distance)
+        public ImprovedKMedoids(List<ClusteringObject> data, int k, Distance distance)
         {
             this._data = data;
             this._k = k;
@@ -47,6 +61,12 @@ namespace PDTW_clustering.lib
             while (_totalSum != _totalSumOld);
             GC.Collect();
             return _clusterOfObject;
+        }
+
+        public override Evaluation do_evaluating()
+        {
+            _evaluation = new Evaluation(this);
+            return _evaluation;
         }
 
         private void select_initial_medoids()
@@ -97,7 +117,7 @@ namespace PDTW_clustering.lib
 
             // Select k objects having the first k smallest values as initial medoids
             _medoids = new int[_k];
-            Clusters = new List<int>[_k];
+            _clusters = new List<int>[_k];
             //_clusterOfObject = new int[_size];
             _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
             for (int i = 0; i < _k; i++)  // for each cluster
@@ -166,21 +186,101 @@ namespace PDTW_clustering.lib
         private int _c;
         private int _d;
 
-        public float InternalValidation { get; set; }
-        public ExtValidation ExternalValidation { get; set; }
+        public float internalValidation;
+        public ExtValidation externalValidation;
 
-        public Evaluation(int a, int b, int c, int d)
+        public Evaluation(Cluster cluster)
         {
-            _a = a;
-            _b = b;
-            _c = c;
-            _d = d;
-            evaluate();
+            evaluate(cluster);
         }
 
-        private void evaluate()
+        private void evaluate(Cluster cluster)
         {
+            // INTERNAL VALIDATION
+            internalValidation = cluster.TotalSum;
 
+            // EXTERNAL VALIDATION
+            // Calculate external validation parameters (a,b,c,d)
+            calc_ext_validation_params(cluster);
+            // Rand
+            externalValidation.rand = (float)(_a + _d) / (_a + _b + _c + _d);
+            // ARI
+            float index = (float)_a;
+            float expected_index = (float)(_a + _b) * (_a + _c) / (_a + _b + _c + _d);
+            float maximum_index = (float)((_a + _b) + (_a + _c)) / 2;
+            externalValidation.ari = (index - expected_index) / (maximum_index - expected_index);
+            // Jaccard
+            externalValidation.jaccard = (float)_a / (_a + _b + _c);
+            // Fowlkes and Mallow
+            externalValidation.fm = (float)Math.Sqrt(((double)_a / (_a + _b)) * ((double)_a / (_a + _c)));
+            // CSM
+            int M = cluster.Clusters.Length;
+            float csmSum = 0;
+            int[] a = new int[M];  // resulted clusters
+            int[] g = new int[M];  // real clusters
+            int[,] ag = new int[M, M];
+            for (int i = 0; i < M; i++)
+            {
+                a[i] = g[i] = 0;
+                for (int j = 0; j < M; j++)
+                    ag[i, j] = 0;
+            }
+            for (int i = 0; i < cluster.Objects.Count; i++)
+            {
+                int realCluster = cluster.Objects[i].Label;
+                int resultedCluster = cluster.ClusterOfObject[i];
+                g[realCluster]++;
+                a[resultedCluster]++;
+                ag[resultedCluster, realCluster]++;
+            }
+            for (int i = 0; i < M; i++)
+            {
+                float maxSim = 0;
+                for (int j = 0; j < M; j++)
+                {
+                    int aj, gi, giANDaj;
+                    aj = gi = giANDaj = 0;
+                }
+                csmSum += maxSim;
+            }
+            externalValidation.csm = csmSum / M;
+            // NMI
+            externalValidation.nmi = 0;
+        }
+
+        // Assume that: G = {G1, G2, ..., GM} is set of real clusters
+        //              A = {A1, A2, ..., AM} is set of resulted clusters
+        // Calculate:   a   number of pair of objects in the same G cluster and in the same A cluster
+        //              b   number of pair of objects in the same G cluster but NOT in the same A cluster
+        //              c   number of pair of objects in the same A cluster but NOT in the same G cluster
+        //              d   number of pair of objects NOT in the same G cluster and NOT in the same A cluster
+        private void calc_ext_validation_params(Cluster cluster)
+        {
+            int temp_a, temp_b, temp_c, temp_d;
+            temp_a = temp_b = temp_c = temp_d = 0;
+            int num = cluster.Objects.Count;
+            for (int i = 0; i < num - 1; i++)
+                for (int j = i + 1; j < num; j++)  // Check each pair of objects
+                {
+                    int iClusterInG = cluster.Objects[i].Label;
+                    int jClusterInG = cluster.Objects[j].Label;
+                    int iClusterInA = cluster.ClusterOfObject[i];
+                    int jClusterInA = cluster.ClusterOfObject[j];
+                    bool sameA = (iClusterInA == jClusterInA);
+                    bool sameG = (iClusterInG == jClusterInG);
+
+                    if (sameG)
+                    {
+                        if (sameA) temp_a++;
+                        else temp_b++;
+                    }
+                    else
+                    {
+                        if (sameA) temp_c++;
+                        else temp_d++;
+                    }
+                }
+            _a = temp_a; _b = temp_b; _c = temp_c; _d = temp_d;
         }
     }
 }

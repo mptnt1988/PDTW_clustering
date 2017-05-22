@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
 {
-    public class TimeSeries
+    public class TimeSeries : ClusteringObject
     {
+        private int _label;
+
         #region PROPERTIES
         // Length of this obj
         public int Length
@@ -28,10 +30,11 @@ namespace PDTW_clustering.lib
         public TimeSeries PaaSeries { get; private set; }
         // Indicate the compression rate of this time series
         public int CompressionRate { get; private set; }
-        // Label of this obj
-        public int Label { get; private set; }
         // Current cluster to which this obj belongs to
         public Cluster CurrentCluster { get; set; }
+
+        // Label of this obj
+        public override int Label { get { return _label; } }
         #endregion
 
         #region CONSTRUCTOR
@@ -71,7 +74,6 @@ namespace PDTW_clustering.lib
             this.Index = index;
             this.CurrentCluster = null;
             this.Series = new List<float>();
-            //_qseries = new ArrayList();
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
             {
@@ -80,12 +82,12 @@ namespace PDTW_clustering.lib
             string[] d = se.Split('@');
             if (d.Length > 1)
             {
-                this.Label = int.Parse(d[0]);
+                this._label = int.Parse(d[0]);
                 d = d[1].Split(' ');
             }
             else
             {
-                this.Label = 100;
+                this._label = -1;
                 d = d[0].Split(' ');
             }
 

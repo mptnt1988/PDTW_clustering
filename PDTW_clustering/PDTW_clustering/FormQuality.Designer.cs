@@ -64,7 +64,7 @@
             this.groupBox6.Controls.Add(this.lblJaccard);
             this.groupBox6.Location = new System.Drawing.Point(12, 12);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(317, 174);
+            this.groupBox6.Size = new System.Drawing.Size(468, 174);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Result";
@@ -72,7 +72,7 @@
             // lblObjFuncValue
             // 
             this.lblObjFuncValue.AutoSize = true;
-            this.lblObjFuncValue.Location = new System.Drawing.Point(273, 104);
+            this.lblObjFuncValue.Location = new System.Drawing.Point(342, 98);
             this.lblObjFuncValue.Name = "lblObjFuncValue";
             this.lblObjFuncValue.Size = new System.Drawing.Size(22, 13);
             this.lblObjFuncValue.TabIndex = 24;
@@ -81,7 +81,7 @@
             // lblAdjustedRandValue
             // 
             this.lblAdjustedRandValue.AutoSize = true;
-            this.lblAdjustedRandValue.Location = new System.Drawing.Point(254, 54);
+            this.lblAdjustedRandValue.Location = new System.Drawing.Point(323, 48);
             this.lblAdjustedRandValue.Name = "lblAdjustedRandValue";
             this.lblAdjustedRandValue.Size = new System.Drawing.Size(22, 13);
             this.lblAdjustedRandValue.TabIndex = 23;
@@ -90,7 +90,7 @@
             // lblNormalMutualValue
             // 
             this.lblNormalMutualValue.AutoSize = true;
-            this.lblNormalMutualValue.Location = new System.Drawing.Point(249, 22);
+            this.lblNormalMutualValue.Location = new System.Drawing.Point(318, 16);
             this.lblNormalMutualValue.Name = "lblNormalMutualValue";
             this.lblNormalMutualValue.Size = new System.Drawing.Size(22, 13);
             this.lblNormalMutualValue.TabIndex = 22;
@@ -135,7 +135,7 @@
             // lblObjFunc
             // 
             this.lblObjFunc.AutoSize = true;
-            this.lblObjFunc.Location = new System.Drawing.Point(162, 104);
+            this.lblObjFunc.Location = new System.Drawing.Point(231, 98);
             this.lblObjFunc.Name = "lblObjFunc";
             this.lblObjFunc.Size = new System.Drawing.Size(105, 13);
             this.lblObjFunc.TabIndex = 17;
@@ -144,7 +144,7 @@
             // lblAdjustedRand
             // 
             this.lblAdjustedRand.AutoSize = true;
-            this.lblAdjustedRand.Location = new System.Drawing.Point(162, 54);
+            this.lblAdjustedRand.Location = new System.Drawing.Point(231, 48);
             this.lblAdjustedRand.Name = "lblAdjustedRand";
             this.lblAdjustedRand.Size = new System.Drawing.Size(86, 13);
             this.lblAdjustedRand.TabIndex = 16;
@@ -153,7 +153,7 @@
             // lblNormalMutual
             // 
             this.lblNormalMutual.AutoSize = true;
-            this.lblNormalMutual.Location = new System.Drawing.Point(162, 22);
+            this.lblNormalMutual.Location = new System.Drawing.Point(231, 16);
             this.lblNormalMutual.Name = "lblNormalMutual";
             this.lblNormalMutual.Size = new System.Drawing.Size(84, 13);
             this.lblNormalMutual.TabIndex = 15;
@@ -199,7 +199,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(349, 210);
+            this.ClientSize = new System.Drawing.Size(618, 210);
             this.Controls.Add(this.groupBox6);
             this.Name = "FormQuality";
             this.Text = "Quality";

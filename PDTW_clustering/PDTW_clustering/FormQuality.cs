@@ -14,8 +14,7 @@ namespace PDTW_clustering
     public partial class FormQuality : Form
     {
         FormView _mainForm = null;
-        Cluster _cluster;
-        List<TimeSeries>[] _tsClusters;
+        Evaluation _evaluation;
 
         #region CONSTRUCTOR
         public FormQuality()
@@ -23,12 +22,18 @@ namespace PDTW_clustering
             InitializeComponent();
         }
 
-        public FormQuality(FormView mainForm, Cluster cluster, List<TimeSeries>[] tsClusters)
+        public FormQuality(FormView mainForm, Evaluation evaluation)
         {
             this._mainForm = mainForm;
             InitializeComponent();
-            _cluster = cluster;
-            _tsClusters = tsClusters;
+            _evaluation = evaluation;
+            lblAdjustedRandValue.Text = _evaluation.externalValidation.ari.ToString();
+            lblCSMValue.Text = _evaluation.externalValidation.csm.ToString();
+            lblFowlkesMalowValue.Text = _evaluation.externalValidation.fm.ToString();
+            lblJaccardValue.Text = _evaluation.externalValidation.jaccard.ToString();
+            lblNormalMutualValue.Text = _evaluation.externalValidation.nmi.ToString();
+            lblRandValue.Text = _evaluation.externalValidation.rand.ToString();
+            lblObjFuncValue.Text = _evaluation.internalValidation.ToString();
         }
         #endregion
 

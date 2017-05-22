@@ -461,7 +461,7 @@ namespace PDTW_clustering
 
         private void tbViewQuality_Click(object sender, EventArgs e)
         {
-            FormQuality formView = new FormQuality(this, _cluster, _tsClusters);
+            FormQuality formView = new FormQuality(this, _cluster.do_evaluating());
             formView.Show();
             formView.Activate();
             this.Enabled = false;

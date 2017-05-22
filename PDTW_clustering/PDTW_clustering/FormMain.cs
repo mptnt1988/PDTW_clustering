@@ -199,15 +199,15 @@ namespace PDTW_clustering
             //token.ThrowIfCancellationRequested();
             DtwDistance dtwDistance = new DtwDistance();
             dtwDistance.IsMultithreading = _configuration.multithreading;
-            List<object> data;
+            List<ClusteringObject> data;
             if (_configuration.dimensionalityReduction == EnumDimentionalityReduction.DISABLED)
-                data = new List<object>(_data);
+                data = new List<ClusteringObject>(_data);
             else if (_configuration.dimensionalityReduction == EnumDimentionalityReduction.PAA)
-                data = new List<object>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
+                data = new List<ClusteringObject>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
             else
                 throw new Exception("There is some error in configuring dimensionality reduction");
             _cluster = new ImprovedKMedoids(data, _configuration.noOfClusters, dtwDistance);
-            clusterOfObject = _cluster.do_clustering();
+            clusterOfObject = _cluster.do_clustering();  // for testing only
         }
 
         private void btnStop_Click(object sender, EventArgs e)
