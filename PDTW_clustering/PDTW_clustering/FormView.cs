@@ -39,15 +39,6 @@ namespace PDTW_clustering
             this.Data = data;
         }
 
-        //public FormView(ArrayList mean)
-        //{
-        //    InitializeComponent();
-        //    m_graphPane = m_graph.GraphPane;
-        //    toolBar.Visible = false;
-        //    splitContainer.Panel1Collapsed = true;
-        //    _data = mean;
-        //}
-
         public FormView(FormMain mainForm, List<TimeSeries> data, Cluster cluster, bool ap)
         {
             this._mainForm = mainForm;
@@ -63,7 +54,7 @@ namespace PDTW_clustering
             _tsClusters = new List<TimeSeries>[clusters.Length];
 
             treeView.Nodes.Clear();
-            ExTreeNode root = new ExTreeNode(null, 0, "Cluster Result");
+            ExTreeNode root = new ExTreeNode(data, 0, "Cluster Result");
 
             for (int i = 0; i < clusters.Length; i++)  // for each cluster
             {
@@ -85,7 +76,6 @@ namespace PDTW_clustering
             treeView.AfterSelect += treeView_AfterSelect;
             treeView.SelectedNode = root.Nodes[0];
         }
-
         #endregion
 
         #region METHODS: Drawing
@@ -129,6 +119,30 @@ namespace PDTW_clustering
             //this.Refresh();
             // MessageBox.Show(t);
 
+        }
+
+        private void InitGraph()
+        {
+            m_graphPane.CurveList.Clear();
+            string _graphTitle = "TimeSeries Clustering", _xTitle = "Time", _yTitle = "Value";
+            // Set the titles and axis labels
+            SetLineBarTitleAndAxisDetails(ref _graphTitle, ref _xTitle, ref _yTitle);
+            m_graphPane.Title.Text = "TimeSeries Clustering";
+            m_graphPane.XAxis.Title.Text = "Time";
+            m_graphPane.YAxis.Title.Text = "Value";
+            m_graphPane.XAxis.MajorGrid.IsVisible = true;
+            m_graphPane.YAxis.MajorGrid.IsVisible = true;
+            m_graphPane.XAxis.Scale.FontSpec.Size = 12;
+            m_graphPane.XAxis.Title.FontSpec.Size = 12;
+            m_graphPane.XAxis.MinorTic.IsOutside = false;
+            m_graphPane.XAxis.MinorTic.IsOpposite = false;
+            m_graphPane.XAxis.MinorTic.IsInside = false;
+            m_graphPane.YAxis.Scale.FontSpec.Size = 12;
+            m_graphPane.YAxis.Title.FontSpec.Size = 12;
+            m_graphPane.YAxis.MinorTic.IsOutside = false;
+            m_graphPane.YAxis.MinorTic.IsOpposite = false;
+            m_graphPane.YAxis.MinorTic.IsInside = false;
+            FillPaneBackground();
         }
 
         private void FillPaneBackground()
@@ -229,28 +243,9 @@ namespace PDTW_clustering
                 DrawData();
         }
 
-        private void InitGraph()
+        private void FormView_FormClosed(object sender, FormClosedEventArgs e)
         {
-            m_graphPane.CurveList.Clear();
-            string _graphTitle = "TimeSeries Clustering", _xTitle = "Time", _yTitle = "Value";
-            // Set the titles and axis labels
-            SetLineBarTitleAndAxisDetails(ref _graphTitle, ref _xTitle, ref _yTitle);
-            m_graphPane.Title.Text = "TimeSeries Clustering";
-            m_graphPane.XAxis.Title.Text = "Time";
-            m_graphPane.YAxis.Title.Text = "Value";
-            m_graphPane.XAxis.MajorGrid.IsVisible = true;
-            m_graphPane.YAxis.MajorGrid.IsVisible = true;
-            m_graphPane.XAxis.Scale.FontSpec.Size = 12;
-            m_graphPane.XAxis.Title.FontSpec.Size = 12;
-            m_graphPane.XAxis.MinorTic.IsOutside = false;
-            m_graphPane.XAxis.MinorTic.IsOpposite = false;
-            m_graphPane.XAxis.MinorTic.IsInside = false;
-            m_graphPane.YAxis.Scale.FontSpec.Size = 12;
-            m_graphPane.YAxis.Title.FontSpec.Size = 12;
-            m_graphPane.YAxis.MinorTic.IsOutside = false;
-            m_graphPane.YAxis.MinorTic.IsOpposite = false;
-            m_graphPane.YAxis.MinorTic.IsInside = false;
-            FillPaneBackground();
+            _mainForm.Enabled = true;
         }
 
         private void btPath_Click(object sender, EventArgs e)
@@ -297,11 +292,60 @@ namespace PDTW_clustering
             DrawData();
         }
 
-        private void FormView_FormClosed(object sender, FormClosedEventArgs e)
+        private void btnSaveClusters_Click(object sender, EventArgs e)
         {
-            _mainForm.Enabled = true;
+            if (_cluster != null && _cluster.Clusters != null)
+            {
+                //List<int>[] clusters = _cluster.Clusters;
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    StreamWriter writer = null;
+                    try
+                    {
+                        // Open selected file
+                        String labelCluster = "Cluster ";
+                        writer = new StreamWriter(File.OpenWrite(saveFile.FileName));
+                        int clusterNumber = 1;
+                        TimeSeries timeSeries;
+                        for (int i = 0; i < _tsClusters.Length; i++)
+                        {
+                            clusterNumber = i + 1;
+                            writer.WriteLine(labelCluster + clusterNumber.ToString() + ":");
+                            for (int j = 0; j < _tsClusters[i].Count; j++)
+                            {
+                                timeSeries = _tsClusters[i][j];
+                                string data2Write = clusterNumber.ToString() + "@";
+                                for (int k = 0; k < timeSeries.Series.Count; k++)
+                                {
+                                    data2Write = data2Write + " " + timeSeries.Series[k].ToString();
+                                }
+                                writer.WriteLine(data2Write);
+                            }
+                        }
+                        MessageBox.Show("Data Saved", "Information");
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Failed Writing the file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    finally
+                    {
+                        // Close file
+                        if (writer != null)
+                            writer.Close();
+                    }
+                }
+            }
         }
-        #endregion
+
+        private void tbViewQuality_Click(object sender, EventArgs e)
+        {
+            FormQuality formView = new FormQuality(this, _cluster.do_evaluating());
+            formView.Show();
+            formView.Activate();
+            this.Enabled = false;
+        }
 
         private void treeView_AfterSelect(object sender, EventArgs e)
         {
@@ -320,39 +364,7 @@ namespace PDTW_clustering
             }
             DrawData();
         }
-
-        //private void tbResult_Click(object sender, EventArgs e)
-        //{
-        //    Cursor olcursor = this.Cursor;
-        //    this.Cursor = Cursors.WaitCursor;
-
-        //    CCQualMeasure qm = new CCQualMeasure();
-        //    CCluster initc = qm.RebuildCluster(_cluster);
-        //    qm.Evalue(_cluster);
-
-        //    ResultForm rform = new ResultForm();
-        //    rform.times = _times;
-        //    rform.jaccard = qm.Jaccard();
-        //    rform.rand = qm.Rand();
-        //    rform.fm = qm.FolkesMallow();
-        //    if (initc.Clusters.Count == _cluster.Clusters.Count)
-        //    {
-        //        rform.csm = qm.ClusterSim(_cluster.Clusters.Count, initc, _cluster);
-        //        rform.nmi = qm.NormalMutual(_cluster.Clusters.Count, initc, _cluster);
-        //    }
-        //    else 
-        //    {
-        //        rform.csm = "0";
-        //        rform.nmi = "0";
-        //    }
-        //    rform.adjrand = qm.AdjustedRI(_cluster);
-        //    rform.ofr = qm.ObjFun(_cluster);
-        //    rform.run = _cluster.Run;
-        //   // rform.dval = qm.DiffFun(_cluster);
-        //    this.Cursor = olcursor;
-        //    rform.ShowData();
-
-        //}
+        #endregion
 
         //private void tbNormalize_Click(object sender, EventArgs e)
         //{
@@ -411,60 +423,5 @@ namespace PDTW_clustering
         //        }
         //    }
         //}
-
-        private void btnSaveClusters_Click(object sender, EventArgs e)
-        {
-            if (_cluster != null && _cluster.Clusters != null)
-            {
-                //List<int>[] clusters = _cluster.Clusters;
-                if (saveFile.ShowDialog() == DialogResult.OK)
-                {
-                    StreamWriter writer = null;
-                    try
-                    {
-                        // Open selected file
-                        String labelCluster = "Cluster ";
-                        writer = new StreamWriter(File.OpenWrite(saveFile.FileName));
-                        int clusterNumber = 1;
-                        TimeSeries timeSeries;
-                        for (int i = 0; i < _tsClusters.Length; i++)
-                        {
-                            clusterNumber = i + 1;
-                            writer.WriteLine(labelCluster + clusterNumber.ToString() + ":");
-                            for (int j = 0; j < _tsClusters[i].Count; j++)
-                            {
-                                timeSeries = _tsClusters[i][j];
-                                string data2Write = clusterNumber.ToString() + "@";
-                                for (int k = 0; k < timeSeries.Series.Count; k++)
-                                {
-                                    data2Write = data2Write + " " + timeSeries.Series[k].ToString();
-                                }
-                                writer.WriteLine(data2Write);
-                            }
-                        }
-                        MessageBox.Show("Data Saved", "Information");
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Failed Writing the file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    finally
-                    {
-                        // Close file
-                        if (writer != null)
-                            writer.Close();
-                    }
-                }
-            }
-        }
-
-        private void tbViewQuality_Click(object sender, EventArgs e)
-        {
-            FormQuality formView = new FormQuality(this, _cluster.do_evaluating());
-            formView.Show();
-            formView.Activate();
-            this.Enabled = false;
-        }
     }
 }

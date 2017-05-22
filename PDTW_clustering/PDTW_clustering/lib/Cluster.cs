@@ -213,8 +213,9 @@ namespace PDTW_clustering.lib
             externalValidation.jaccard = (float)_a / (_a + _b + _c);
             // Fowlkes and Mallow
             externalValidation.fm = (float)Math.Sqrt(((double)_a / (_a + _b)) * ((double)_a / (_a + _c)));
-            // CSM
+            // CSM & NMI
             int M = cluster.Clusters.Length;
+            int N = cluster.Objects.Count;
             float csmSum = 0;
             int[] a = new int[M];  // resulted clusters
             int[] g = new int[M];  // real clusters
@@ -235,17 +236,32 @@ namespace PDTW_clustering.lib
             }
             for (int i = 0; i < M; i++)
             {
+                Console.WriteLine("Cluster " + i.ToString() + ":");
+                Console.Write(a[i].ToString() + ", ");
+                Console.Write(g[i].ToString() + ", ");
                 float maxSim = 0;
                 for (int j = 0; j < M; j++)
                 {
-                    int aj, gi, giANDaj;
-                    aj = gi = giANDaj = 0;
+                    Console.Write(ag[j, i].ToString() + "  ");
+                    float sim = 2 * (float)ag[j, i] / (g[i] + a[j]);
+                    if (maxSim < sim) maxSim = sim;
                 }
+                Console.WriteLine("");
                 csmSum += maxSim;
             }
             externalValidation.csm = csmSum / M;
             // NMI
-            externalValidation.nmi = 0;
+            float numerator = 0;
+            float denominatorG = 0;
+            float denominatorA = 0;
+            for (int i = 0; i < M; i++)
+            {
+                denominatorA += average_log(a[i], a[i], N);
+                denominatorG += average_log(g[i], g[i], N);
+                for (int j = 0; j < M; j++)
+                    numerator += average_log(ag[j, i], N * ag[j, i], g[i] * a[j]);
+            }
+            externalValidation.nmi = numerator / (float)Math.Sqrt(denominatorA * denominatorG);
         }
 
         // Assume that: G = {G1, G2, ..., GM} is set of real clusters
@@ -256,8 +272,8 @@ namespace PDTW_clustering.lib
         //              d   number of pair of objects NOT in the same G cluster and NOT in the same A cluster
         private void calc_ext_validation_params(Cluster cluster)
         {
-            int temp_a, temp_b, temp_c, temp_d;
-            temp_a = temp_b = temp_c = temp_d = 0;
+            int tempA, tempB, tempC, tempD;
+            tempA = tempB = tempC = tempD = 0;
             int num = cluster.Objects.Count;
             for (int i = 0; i < num - 1; i++)
                 for (int j = i + 1; j < num; j++)  // Check each pair of objects
@@ -271,16 +287,24 @@ namespace PDTW_clustering.lib
 
                     if (sameG)
                     {
-                        if (sameA) temp_a++;
-                        else temp_b++;
+                        if (sameA) tempA++;
+                        else tempB++;
                     }
                     else
                     {
-                        if (sameA) temp_c++;
-                        else temp_d++;
+                        if (sameA) tempC++;
+                        else tempD++;
                     }
                 }
-            _a = temp_a; _b = temp_b; _c = temp_c; _d = temp_d;
+            _a = tempA; _b = tempB; _c = tempC; _d = tempD;
+        }
+
+        private float average_log(float factor, float numerator, float denominator)
+        {
+            if (factor == 0)
+                return 0;
+            else
+                return factor * (float)Math.Log(numerator / denominator);
         }
     }
 }

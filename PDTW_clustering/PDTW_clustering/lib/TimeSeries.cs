@@ -82,7 +82,7 @@ namespace PDTW_clustering.lib
             string[] d = se.Split('@');
             if (d.Length > 1)
             {
-                this._label = int.Parse(d[0]);
+                this._label = int.Parse(d[0]) - 1;
                 d = d[1].Split(' ');
             }
             else

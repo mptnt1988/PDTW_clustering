@@ -81,7 +81,7 @@
             // lblAdjustedRandValue
             // 
             this.lblAdjustedRandValue.AutoSize = true;
-            this.lblAdjustedRandValue.Location = new System.Drawing.Point(323, 48);
+            this.lblAdjustedRandValue.Location = new System.Drawing.Point(271, 48);
             this.lblAdjustedRandValue.Name = "lblAdjustedRandValue";
             this.lblAdjustedRandValue.Size = new System.Drawing.Size(22, 13);
             this.lblAdjustedRandValue.TabIndex = 23;
@@ -90,7 +90,7 @@
             // lblNormalMutualValue
             // 
             this.lblNormalMutualValue.AutoSize = true;
-            this.lblNormalMutualValue.Location = new System.Drawing.Point(318, 16);
+            this.lblNormalMutualValue.Location = new System.Drawing.Point(273, 16);
             this.lblNormalMutualValue.Name = "lblNormalMutualValue";
             this.lblNormalMutualValue.Size = new System.Drawing.Size(22, 13);
             this.lblNormalMutualValue.TabIndex = 22;
@@ -108,7 +108,7 @@
             // lblFowlkesMalowValue
             // 
             this.lblFowlkesMalowValue.AutoSize = true;
-            this.lblFowlkesMalowValue.Location = new System.Drawing.Point(110, 78);
+            this.lblFowlkesMalowValue.Location = new System.Drawing.Point(125, 78);
             this.lblFowlkesMalowValue.Name = "lblFowlkesMalowValue";
             this.lblFowlkesMalowValue.Size = new System.Drawing.Size(22, 13);
             this.lblFowlkesMalowValue.TabIndex = 20;
@@ -146,18 +146,18 @@
             this.lblAdjustedRand.AutoSize = true;
             this.lblAdjustedRand.Location = new System.Drawing.Point(231, 48);
             this.lblAdjustedRand.Name = "lblAdjustedRand";
-            this.lblAdjustedRand.Size = new System.Drawing.Size(86, 13);
+            this.lblAdjustedRand.Size = new System.Drawing.Size(34, 13);
             this.lblAdjustedRand.TabIndex = 16;
-            this.lblAdjustedRand.Text = "Adjusted Rand =";
+            this.lblAdjustedRand.Text = "ARI =";
             // 
             // lblNormalMutual
             // 
             this.lblNormalMutual.AutoSize = true;
             this.lblNormalMutual.Location = new System.Drawing.Point(231, 16);
             this.lblNormalMutual.Name = "lblNormalMutual";
-            this.lblNormalMutual.Size = new System.Drawing.Size(84, 13);
+            this.lblNormalMutual.Size = new System.Drawing.Size(36, 13);
             this.lblNormalMutual.TabIndex = 15;
-            this.lblNormalMutual.Text = "Normal Mutual =";
+            this.lblNormalMutual.Text = "NMI =";
             // 
             // lblCSM
             // 
@@ -171,11 +171,11 @@
             // lblFowlkesMalow
             // 
             this.lblFowlkesMalow.AutoSize = true;
-            this.lblFowlkesMalow.Location = new System.Drawing.Point(15, 78);
+            this.lblFowlkesMalow.Location = new System.Drawing.Point(12, 78);
             this.lblFowlkesMalow.Name = "lblFowlkesMalow";
-            this.lblFowlkesMalow.Size = new System.Drawing.Size(89, 13);
+            this.lblFowlkesMalow.Size = new System.Drawing.Size(98, 13);
             this.lblFowlkesMalow.TabIndex = 13;
-            this.lblFowlkesMalow.Text = "Fowlkes Malow =";
+            this.lblFowlkesMalow.Text = "Fowlkes && Malow =";
             // 
             // lblRand
             // 
