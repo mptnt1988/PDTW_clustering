@@ -65,6 +65,12 @@ namespace PDTW_clustering.lib
                     parallel_dtw();
                     break;
             }
+
+            int compressionRate = X.CompressionRate;
+            if(compressionRate == 1)
+                dtw_update_path();
+            else
+                Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1] / compressionRate);
             return Value;
         }
 
@@ -99,7 +105,6 @@ namespace PDTW_clustering.lib
                         }
                     }
             });
-            dtw_update_path();
         }
 
         public void dtw()
@@ -126,7 +131,6 @@ namespace PDTW_clustering.lib
                         DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
                     }
                 }
-            dtw_update_path();
         }
 
         private void dtw_update_path()

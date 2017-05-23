@@ -53,6 +53,7 @@ namespace PDTW_clustering.lib
         {
             this._index = ts.Index;
             this.Series = new List<float>();
+            this._label = ts.Label;
             this.PaaSeries = null;
             this.CompressionRate = c;
         }
@@ -61,6 +62,7 @@ namespace PDTW_clustering.lib
             string se = s;
             this._index = index;
             this.Series = new List<float>();
+            this.CompressionRate = 1;
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
             {
