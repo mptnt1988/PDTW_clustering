@@ -166,11 +166,6 @@ namespace PDTW_clustering
             _cluster = null;
             _exeTimeStart = System.Environment.TickCount;
 
-            //if (_threadExe != null)
-            //    _threadExe.Abort();
-            //_threadExe = new Thread(new ThreadStart(run_execution));
-            //_threadExe.Start();
-
             _cts = new CancellationTokenSource();
             var task = Task.Factory.StartNew(() => do_clustering(_cts.Token), _cts.Token);
             task.ContinueWith(t => Invoke(new Action(() => do_post_clustering())));
@@ -200,13 +195,30 @@ namespace PDTW_clustering
             DtwDistance dtwDistance = new DtwDistance();
             dtwDistance.IsMultithreading = _configuration.multithreading;
             List<ClusteringObject> data;
-            if (_configuration.dimensionalityReduction == EnumDimentionalityReduction.DISABLED)
-                data = new List<ClusteringObject>(_data);
-            else if (_configuration.dimensionalityReduction == EnumDimentionalityReduction.PAA)
-                data = new List<ClusteringObject>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
-            else
-                throw new Exception("There is some error in configuring dimensionality reduction");
-            _cluster = new ImprovedKMedoids(data, _configuration.noOfClusters, dtwDistance);
+
+            switch (_configuration.dimensionalityReduction)
+            {
+                case EnumDimentionalityReduction.DISABLED:
+                    data = new List<ClusteringObject>(_data);
+                    break;
+                case EnumDimentionalityReduction.PAA:
+                    data = new List<ClusteringObject>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
+                    break;
+                default:
+                    throw new Exception("There is some error in configuring dimensionality reduction");
+            }
+
+            switch (_configuration.clusteringAlgorithm)
+            {
+                case EnumClusteringAlgorithm.IMPROVED_KMEDOIDS:
+                    _cluster = new ImprovedKMedoids(data, dtwDistance, _configuration.noOfClusters);
+                    break;
+                case EnumClusteringAlgorithm.DENSITY_PEAKS:
+                    _cluster = new DensityPeaks(data, dtwDistance, _configuration.noOfClusters);
+                    break;
+                default:
+                    throw new Exception("There is some error in configuring clustering algorithm");
+            }
             clusterOfObject = _cluster.do_clustering();  // for testing only
         }
 
@@ -248,8 +260,8 @@ namespace PDTW_clustering
             nudTest2.Maximum = ts2.Series.Count - 1;
 
             // Test DTW distance
-            dtwDist.Calculate(ts1, ts2);
-            lblTest.Text = dtwDist.Value.ToString();
+            //dtwDist.Calculate(ts1, ts2);
+            //lblTest.Text = dtwDist.Value.ToString();
 
             // Test clustering
             //List<object> tsList = new List<object>();
@@ -259,7 +271,13 @@ namespace PDTW_clustering
             //clusterOfObject = cls.do_clustering();
             //nudTest3.Maximum = clusterOfObject.Length - 1;
 
-
+            // Test Density Peaks
+            List<ClusteringObject> tsList = new List<ClusteringObject>();
+            tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
+            tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
+            DensityPeaks cls = new DensityPeaks(tsList, dtwDist, 2);
+            clusterOfObject = cls.do_clustering();
+            nudTest3.Maximum = clusterOfObject.Length - 1;
 
         }
 

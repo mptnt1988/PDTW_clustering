@@ -10,6 +10,7 @@ namespace PDTW_clustering.lib
     public class TimeSeries : ClusteringObject
     {
         private int _label;
+        private int _index;
 
         #region PROPERTIES
         // Length of this obj
@@ -20,49 +21,37 @@ namespace PDTW_clustering.lib
                 return this.Series == null ? 0 : this.Series.Count;
             }
         }
-        // Index of this obj in the data read from file
-        public int Index { get; private set; }
-        // ??? Value
-        // public int Value { get; set; }
         // An ArrayList obj of data points read from file for this obj
         public List<float> Series { get; private set; }
         // An ArrayList obj of PAA data points
         public TimeSeries PaaSeries { get; private set; }
         // Indicate the compression rate of this time series
         public int CompressionRate { get; private set; }
-        // Current cluster to which this obj belongs to
-        public Cluster CurrentCluster { get; set; }
 
         // Label of this obj
         public override int Label { get { return _label; } }
+        // Index of this obj in the data read from file
+        public override int Index { get { return _index; } }
         #endregion
 
         #region CONSTRUCTOR
         public TimeSeries()
         {
-            this.Index = -1;
-            // this.Length = 0;
-            // this.Value = 1;
-            this.CurrentCluster = null;
+            this._index = -1;
             this.Series = new List<float>();
             this.PaaSeries = null;
             this.CompressionRate = 1;
         }
         public TimeSeries(List<float> series)
         {
-            this.Index = -1;
-            // this.Length = 0;
-            // this.Value = 1;
-            this.CurrentCluster = null;
+            this._index = -1;
             this.Series = series;
             this.PaaSeries = null;
             this.CompressionRate = 1;
         }
         public TimeSeries(TimeSeries ts, int c)
         {
-            this.Index = ts.Index;
-            // this.Length = 0;
-            this.CurrentCluster = ts.CurrentCluster;
+            this._index = ts.Index;
             this.Series = new List<float>();
             this.PaaSeries = null;
             this.CompressionRate = c;
@@ -70,9 +59,7 @@ namespace PDTW_clustering.lib
         public TimeSeries(string s, int index)
         {
             string se = s;
-            // this.Value = 1;
-            this.Index = index;
-            this.CurrentCluster = null;
+            this._index = index;
             this.Series = new List<float>();
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
@@ -98,17 +85,10 @@ namespace PDTW_clustering.lib
                     this.Series.Add(float.Parse(d[i].Trim()));
                 }
             }
-            //this.Length = this.Series.Count;
         }
         #endregion
 
         #region METHODS
-        // Get data point value at specified index
-        //public float get_at(int index)
-        //{
-        //    return (float)this.Series[index];
-        //}
-
         // Calculate PAA time series
         public TimeSeries get_paa(int c)  // c is compression rate
         {

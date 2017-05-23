@@ -8,7 +8,8 @@ namespace PDTW_clustering.lib
 {
     public abstract class ClusteringObject
     {
-        public abstract int Label { get; }
+        public abstract int Label { get; }  // Label of the obj given from file
+        public abstract int Index { get; }  // Index of this obj in the data read from file
     }
 
     public abstract class Cluster
@@ -20,6 +21,35 @@ namespace PDTW_clustering.lib
         public abstract List<ClusteringObject> Objects { get; }
         public abstract Evaluation Evaluation { get; }
         public abstract float TotalSum { get; }
+
+        public float[,] calculate_distance_matrix(List<ClusteringObject> data, Distance distance)
+        {
+            int size = data.Count;
+            float[,] distanceMatrix = new float[size, size];
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                {
+                    if (i == j)
+                        distanceMatrix[i, j] = 0;
+                    else if (i < j)
+                        distanceMatrix[i, j] = distance.Calculate(data[i], data[j]);
+                    else
+                        distanceMatrix[i, j] = distanceMatrix[j, i];
+                }
+            //for (int i = 0; i < size; i++)
+            //{
+            //    Parallel.For(0, size, delegate (int j)
+            //    {
+            //            if (i == j)
+            //                distanceMatrix[i, j] = 0;
+            //            else if (i < j)
+            //                distanceMatrix[i, j] = distance.Calculate(data[i], data[j]);
+            //            else
+            //                distanceMatrix[i, j] = distanceMatrix[j, i];
+            //    });
+            //}
+            return distanceMatrix;
+        }
     }
 
     class ImprovedKMedoids : Cluster
@@ -42,12 +72,13 @@ namespace PDTW_clustering.lib
         public override int[] ClusterOfObject { get { return _clusterOfObject; } }
         public override float TotalSum { get { return _totalSum; } }
 
-        public ImprovedKMedoids(List<ClusteringObject> data, int k, Distance distance)
+        public ImprovedKMedoids(List<ClusteringObject> data, Distance distance, int k)
         {
-            this._data = data;
-            this._k = k;
-            this._distance = distance;
-            this._totalSumOld = this._totalSum = 0;
+            _data = data;
+            _k = k;
+            _distance = distance;
+            _totalSumOld = _totalSum = 0;
+            _size = _data.Count;
         }
 
         public override int[] do_clustering()
@@ -72,31 +103,8 @@ namespace PDTW_clustering.lib
         private void select_initial_medoids()
         {
             // Calculate the distance between every pair of all objects
-            _size = _data.Count;  // the number of all time series
-            _distanceMatrix = new float[_size, _size];
-            for (int i = 0; i < _size; i++)
-                for (int j = 0; j < _size; j++)
-                {
-                    if (i == j)
-                        _distanceMatrix[i, j] = 0;
-                    else if (i < j)
-                        _distanceMatrix[i, j] = _distance.Calculate(_data[i], _data[j]);
-                    else
-                        _distanceMatrix[i, j] = _distanceMatrix[j, i];
-                }
-            //Parallel.For(0, _size, delegate (int i)
-            //{
-            //    for (int j = 0; j < _size; j++)
-            //    {
-            //        if (i == j)
-            //            _distanceMatrix[i, j] = 0;
-            //        else if (i < j)
-            //            _distanceMatrix[i, j] = _distance.Calculate(_data[i], _data[j]);
-            //        else
-            //            _distanceMatrix[i, j] = _distanceMatrix[j, i];
-            //    }
-            //});
-
+            _distanceMatrix = calculate_distance_matrix(_data, _distance);
+            
             // Calculate v[j] for each object j
             // Store them to variable 'v'
             List<ValueIndex> v = new List<ValueIndex>();
@@ -176,6 +184,137 @@ namespace PDTW_clustering.lib
                 }
                 _totalSum += nearestMedoid.value;
             }
+        }
+    }
+
+    class DensityPeaks : Cluster
+    {
+        private List<ClusteringObject> _data;   // _data[i] : object with index i
+        private float[,] _distanceMatrix;       // _distanceMatrix[i,j] : distance between each pair of objects i & j
+        private List<int>[] _clusters;          // _clusters[i] : list of all object indices which belong to cluster i
+        private int[] _clusterOfObject;         // _clusterOfObject[i] : cluster of object with index i
+        private Evaluation _evaluation;         // custering evaluation
+        private float _totalSum;                // sum of all distances between object and its medoid
+        private float _totalSumOld;             // old value of sum to be compared later
+        private int _size;                      // the number of objects to be clustered
+        private int _k;                         // the number of clusters
+        private float _dC;                      // cutoff distance
+        private int[] _localDensity;            // _localDensity[i]: local density of object i
+        private float[] _deltaDistance;           // _deltaDistance[i]: distance from object i to nearest object with higher local density
+        private Distance _distance;             // method to calculate distance
+
+        public override List<int>[] Clusters { get { return _clusters; } }
+        public override Evaluation Evaluation { get { return _evaluation; } }
+        public override List<ClusteringObject> Objects { get { return _data; } }
+        public override int[] ClusterOfObject { get { return _clusterOfObject; } }
+        public override float TotalSum { get { return _totalSum; } }
+
+        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k)
+        {
+            _data = data;
+            _k = k;
+            _dC = 0.02f;
+            _distance = distance;
+            _totalSumOld = _totalSum = 0;
+            _size = _data.Count;
+        }
+
+        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k, float dC)
+        {
+            _data = data;
+            _k = k;
+            _dC = dC;
+            _distance = distance;
+            _totalSumOld = _totalSum = 0;
+            _size = _data.Count;
+        }
+
+        public override int[] do_clustering()
+        {
+            _distanceMatrix = calculate_distance_matrix(_data, _distance);
+            calculate_local_density();
+            calculate_distance_to_higher_density_points();
+            _clusterOfObject = new int[] { 1, 2, 3};
+            return _clusterOfObject;
+        }
+
+        private void calculate_local_density()
+        {
+            _localDensity = new int[_size];
+            for (int i = 0; i < _size; i++)
+                _localDensity[i] = 0;
+            for (int i = 0; i < _size; i++)
+                for (int j = 0; j < _size; j++)
+                    if (i > j && _distanceMatrix[i, j] < _dC)
+                    {
+                        _localDensity[i]++;
+                        _localDensity[j]++;
+                    }
+        }
+
+        private void calculate_distance_to_higher_density_points()
+        {
+            _deltaDistance = new float[_size];
+
+            // deltaDistanceList[i]: list of distances from object i to other objects,
+            //                       which have higher local density
+            List<float>[] deltaDistanceList = new List<float>[_size];
+
+            // Create iteration list for each object,
+            // which is list of other object indices
+            List<int> seqOfIndices = Enumerable.Range(0, _size).ToList();
+            List<int>[] iterationList = new List<int>[_size];
+            for (int i = 0; i < _size; i++)
+            {
+                iterationList[i] = new List<int>(seqOfIndices);
+                iterationList[i].Remove(i);
+            }
+
+            for (int i = 0; i < _size; i++)  // foreach object
+            {
+                deltaDistanceList[i] = new List<float>();  // create deltaList[i] for this object
+                foreach (int j in iterationList[i])  // foreach other object
+                {
+                    if (_localDensity[j] > _localDensity[i])
+                    {
+                        deltaDistanceList[i].Add(_distanceMatrix[i, j]);
+                        iterationList[j].Remove(i);
+                    }
+                }
+                if (deltaDistanceList[i].Count == 0)
+                {
+                    Console.WriteLine("Sepecial case: " + i.ToString());
+                    float maxJ = 0;
+                    for (int j = 0; j < _size; j++)
+                        if (_distanceMatrix[i, j] > maxJ)
+                            maxJ = _distanceMatrix[i, j];
+                    _deltaDistance[i] = maxJ;
+                }
+                else
+                {
+                    Console.WriteLine("Normal case: " + i.ToString());
+                    _deltaDistance[i] = deltaDistanceList[i].Min();
+                }
+            }
+
+            // testing only
+            for (int i = 0; i < _size; i++)
+            {
+                Console.WriteLine(i.ToString() + ": " + _deltaDistance[i].ToString());
+            }
+            Console.WriteLine("Distance matrix:");
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                    Console.Write(_distanceMatrix[i, j].ToString() + ", ");
+                Console.WriteLine();
+            }
+                    
+        }
+
+        public override Evaluation do_evaluating()
+        {
+            return _evaluation;
         }
     }
 
