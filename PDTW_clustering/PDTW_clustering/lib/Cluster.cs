@@ -126,7 +126,6 @@ namespace PDTW_clustering.lib
             // Select k objects having the first k smallest values as initial medoids
             _medoids = new int[_k];
             _clusters = new List<int>[_k];
-            //_clusterOfObject = new int[_size];
             _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
             for (int i = 0; i < _k; i++)  // for each cluster
             {
@@ -191,6 +190,7 @@ namespace PDTW_clustering.lib
     {
         private List<ClusteringObject> _data;   // _data[i] : object with index i
         private float[,] _distanceMatrix;       // _distanceMatrix[i,j] : distance between each pair of objects i & j
+        private int[] _medoids;                 // _medoids[i] : index of object which is medoid of cluster i
         private List<int>[] _clusters;          // _clusters[i] : list of all object indices which belong to cluster i
         private int[] _clusterOfObject;         // _clusterOfObject[i] : cluster of object with index i
         private Evaluation _evaluation;         // custering evaluation
@@ -234,6 +234,9 @@ namespace PDTW_clustering.lib
             _distanceMatrix = calculate_distance_matrix(_data, _distance);
             calculate_local_density();
             calculate_distance_to_higher_density_points();
+            select_cluster_centers();
+            assign_objects_to_clusters();
+
             _clusterOfObject = new int[] { 1, 2, 3};
             return _clusterOfObject;
         }
@@ -298,19 +301,42 @@ namespace PDTW_clustering.lib
             }
 
             // testing only
-            for (int i = 0; i < _size; i++)
-            {
-                Console.WriteLine(i.ToString() + ": " + _deltaDistance[i].ToString());
-            }
-            Console.WriteLine("Distance matrix:");
-            for (int i = 0; i < _size; i++)
-            {
-                for (int j = 0; j < _size; j++)
-                    Console.Write(_distanceMatrix[i, j].ToString() + ", ");
-                Console.WriteLine();
-            }
+            //for (int i = 0; i < _size; i++)
+            //{
+            //    Console.WriteLine(i.ToString() + ": " + _deltaDistance[i].ToString());
+            //}
+            //Console.WriteLine("Distance matrix:");
+            //for (int i = 0; i < _size; i++)
+            //{
+            //    for (int j = 0; j < _size; j++)
+            //        Console.Write(_distanceMatrix[i, j].ToString() + ", ");
+            //    Console.WriteLine();
+            //}
                     
         }
+
+        private void select_cluster_centers()
+        {
+            _medoids = new int[_k];
+            List<ValueIndex> heuristicValueList = new List<ValueIndex>();
+            for (int i=0;i<_size;i++)
+                heuristicValueList.Add(new ValueIndex(_localDensity[i] * _deltaDistance[i], i));
+            _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
+            for (int i = 0; i<_k; i++)
+            {
+                ValueIndex maxObj = heuristicValueList.Max();
+                int maxObjIndex = maxObj.index;
+                _medoids[i] = maxObjIndex;
+                _clusterOfObject[maxObjIndex] = i;  // cluster of obj's index is i
+                Clusters[i] = new List<int>();
+                Clusters[i].Add(maxObjIndex);  // add obj's index to cluster i
+                heuristicValueList.Remove(maxObj);
+                Console.WriteLine("Cluster " + i.ToString() + ": " + maxObjIndex.ToString());
+            }
+        }
+
+        private void assign_objects_to_clusters()
+        { }
 
         public override Evaluation do_evaluating()
         {
