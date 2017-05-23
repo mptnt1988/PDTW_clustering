@@ -133,8 +133,8 @@ namespace PDTW_clustering.lib
                 int minObjIndex = minObj.index;
                 _medoids[i] = minObjIndex;  // medoid of cluster i is the obj's index
                 _clusterOfObject[minObjIndex] = i;  // cluster of obj's index is i
-                Clusters[i] = new List<int>();
-                Clusters[i].Add(minObjIndex);  // add obj's index to cluster i
+                _clusters[i] = new List<int>();
+                _clusters[i].Add(minObjIndex);  // add obj's index to cluster i
                 v.Remove(minObj);
             }
 
@@ -150,10 +150,10 @@ namespace PDTW_clustering.lib
             for (int i = 0; i < _k; i++)  // foreach cluster
             {
                 List<ValueIndex> v = new List<ValueIndex>();  // store value & index for comparison
-                foreach (int objIndexFrom in Clusters[i])  // foreach obj in cluster i
+                foreach (int objIndexFrom in _clusters[i])  // foreach obj in cluster i
                 {
                     float sum = 0;
-                    foreach (int objIndexTo in Clusters[i])  // sum all distances from the obj to others
+                    foreach (int objIndexTo in _clusters[i])  // sum all distances from the obj to others
                         sum += _distanceMatrix[objIndexFrom, objIndexTo];
                     v.Add(new ValueIndex(sum, objIndexFrom));
                 }
@@ -177,9 +177,9 @@ namespace PDTW_clustering.lib
                 if (nearestMedoid.index != _clusterOfObject[i])  // if nearest medoid is different from the object's medoid
                 {
                     if (_clusterOfObject[i] != _k)
-                        Clusters[_clusterOfObject[i]].Remove(i);  // remove object of index i from old cluster
+                        _clusters[_clusterOfObject[i]].Remove(i);  // remove object of index i from old cluster
                     _clusterOfObject[i] = nearestMedoid.index;  // update new cluster for object of index i
-                    Clusters[nearestMedoid.index].Add(i);  // update object of index i into new cluster
+                    _clusters[nearestMedoid.index].Add(i);  // update object of index i into new cluster
                 }
                 _totalSum += nearestMedoid.value;
             }
@@ -200,20 +200,30 @@ namespace PDTW_clustering.lib
         private int _k;                         // the number of clusters
         private float _dC;                      // cutoff distance
         private int[] _localDensity;            // _localDensity[i]: local density of object i
-        private float[] _deltaDistance;           // _deltaDistance[i]: distance from object i to nearest object with higher local density
+        private float[] _deltaDistance;         // _deltaDistance[i]: distance from object i to nearest object with higher local density
+        private int[] _adjacentOfObject;         // _adjacentOfObject[i]: nearest neighbor of object i
         private Distance _distance;             // method to calculate distance
 
         public override List<int>[] Clusters { get { return _clusters; } }
         public override Evaluation Evaluation { get { return _evaluation; } }
         public override List<ClusteringObject> Objects { get { return _data; } }
         public override int[] ClusterOfObject { get { return _clusterOfObject; } }
-        public override float TotalSum { get { return _totalSum; } }
+        public override float TotalSum
+        {
+            get
+            {
+                _totalSum = 0;
+                for (int i = 0; i < _size; i++)
+                    _totalSum += _distanceMatrix[i, _clusterOfObject[i]];
+                return _totalSum;
+            }
+        }
 
         public DensityPeaks(List<ClusteringObject> data, Distance distance, int k)
         {
             _data = data;
             _k = k;
-            _dC = 0.02f;
+            //_dC = 0.018f;
             _distance = distance;
             _totalSumOld = _totalSum = 0;
             _size = _data.Count;
@@ -236,54 +246,107 @@ namespace PDTW_clustering.lib
             calculate_distance_to_higher_density_points();
             select_cluster_centers();
             assign_objects_to_clusters();
-
-            _clusterOfObject = new int[] { 1, 2, 3};
             return _clusterOfObject;
         }
 
         private void calculate_local_density()
         {
-            _localDensity = new int[_size];
-            for (int i = 0; i < _size; i++)
-                _localDensity[i] = 0;
+            int[] localDensity = new int[_size];
+            float sum = 0;
             for (int i = 0; i < _size; i++)
                 for (int j = 0; j < _size; j++)
-                    if (i > j && _distanceMatrix[i, j] < _dC)
-                    {
-                        _localDensity[i]++;
-                        _localDensity[j]++;
-                    }
+                {
+                    if (i < j) sum += _distanceMatrix[i, j];
+                }
+            float dCHi = sum / (_size * (_size - 1) / 2);
+            float dCLo = 0;
+            float dC = (dCHi + dCLo) / 2;
+            bool isContinued = true;
+            float averageLocalDensity = 0;
+            float percent = (float)_size / 100;
+            float lBound = 0.5f * percent;
+            float uBound = 1 * percent;
+            do
+            {
+                for (int i = 0; i < _size; i++)
+                    localDensity[i] = 0;
+                for (int i = 0; i < _size; i++)
+                    for (int j = 0; j < _size; j++)
+                        if (i > j && _distanceMatrix[i, j] < dC)
+                        {
+                            localDensity[i]++;
+                            localDensity[j]++;
+                        }
+                averageLocalDensity = (float)localDensity.Average();
+                if (averageLocalDensity < lBound)
+                {
+                    dCLo = dC;
+                    dC = (dCHi + dCLo) / 2;
+                }
+                else if (averageLocalDensity > uBound)
+                {
+                    dCHi = dC;
+                    dC = (dCHi + dCLo) / 2;
+                }
+                else isContinued = false;
+            }
+            while (isContinued);
+            _dC = dC;
+            _localDensity = localDensity;
+            Console.WriteLine("CUTOFF: " + _dC.ToString());
+
+            //_localDensity = new int[_size];
+            //for (int i = 0; i < _size; i++)
+            //    _localDensity[i] = 0;
+            //for (int i = 0; i < _size; i++)
+            //    for (int j = 0; j < _size; j++)
+            //        if (i > j && _distanceMatrix[i, j] < _dC)
+            //        {
+            //            _localDensity[i]++;
+            //            _localDensity[j]++;
+            //        }
         }
 
         private void calculate_distance_to_higher_density_points()
         {
             _deltaDistance = new float[_size];
-
-            // deltaDistanceList[i]: list of distances from object i to other objects,
-            //                       which have higher local density
+            // deltaDistanceList[i]: list of (distance, index)s of nearest higher local density objects
+            //                       from object i
             List<float>[] deltaDistanceList = new List<float>[_size];
+            _adjacentOfObject = new int[_size];
 
             // Create iteration list for each object,
             // which is list of other object indices
             List<int> seqOfIndices = Enumerable.Range(0, _size).ToList();
             List<int>[] iterationList = new List<int>[_size];
+            Console.WriteLine("LOCAL DENSITY:");
             for (int i = 0; i < _size; i++)
             {
                 iterationList[i] = new List<int>(seqOfIndices);
                 iterationList[i].Remove(i);
+                Console.WriteLine(i.ToString() + ": " + _localDensity[i].ToString());
             }
 
             for (int i = 0; i < _size; i++)  // foreach object
             {
-                deltaDistanceList[i] = new List<float>();  // create deltaList[i] for this object
+                deltaDistanceList[i] = new List<float>();
+                int nearestNeighbor = -1;
+                float nearestNeigborDistance = float.PositiveInfinity;
                 foreach (int j in iterationList[i])  // foreach other object
                 {
                     if (_localDensity[j] > _localDensity[i])
                     {
                         deltaDistanceList[i].Add(_distanceMatrix[i, j]);
                         iterationList[j].Remove(i);
+                        if (_distanceMatrix[i, j] < nearestNeigborDistance)
+                        {
+                            nearestNeigborDistance = _distanceMatrix[i, j];
+                            nearestNeighbor = j;
+                        }
                     }
                 }
+                _adjacentOfObject[i] = nearestNeighbor;
+                Console.WriteLine("Adjacent of " + i.ToString() + ": " + nearestNeighbor.ToString());
                 if (deltaDistanceList[i].Count == 0)
                 {
                     Console.WriteLine("Sepecial case: " + i.ToString());
@@ -295,51 +358,68 @@ namespace PDTW_clustering.lib
                 }
                 else
                 {
-                    Console.WriteLine("Normal case: " + i.ToString());
                     _deltaDistance[i] = deltaDistanceList[i].Min();
                 }
             }
 
             // testing only
-            //for (int i = 0; i < _size; i++)
-            //{
-            //    Console.WriteLine(i.ToString() + ": " + _deltaDistance[i].ToString());
-            //}
-            //Console.WriteLine("Distance matrix:");
+            //Console.WriteLine("DISTANCE MATRIX:");
             //for (int i = 0; i < _size; i++)
             //{
             //    for (int j = 0; j < _size; j++)
             //        Console.Write(_distanceMatrix[i, j].ToString() + ", ");
             //    Console.WriteLine();
             //}
-                    
+
         }
 
         private void select_cluster_centers()
         {
             _medoids = new int[_k];
             List<ValueIndex> heuristicValueList = new List<ValueIndex>();
-            for (int i=0;i<_size;i++)
+            Console.WriteLine("HEURISTIC");
+            for (int i = 0; i < _size; i++)
+            {
                 heuristicValueList.Add(new ValueIndex(_localDensity[i] * _deltaDistance[i], i));
+                Console.WriteLine(i.ToString() + ": " + heuristicValueList.Last().value.ToString());
+            }
+            _clusters = new List<int>[_k];
             _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
-            for (int i = 0; i<_k; i++)
+            for (int i = 0; i < _k; i++)
             {
                 ValueIndex maxObj = heuristicValueList.Max();
                 int maxObjIndex = maxObj.index;
                 _medoids[i] = maxObjIndex;
                 _clusterOfObject[maxObjIndex] = i;  // cluster of obj's index is i
-                Clusters[i] = new List<int>();
-                Clusters[i].Add(maxObjIndex);  // add obj's index to cluster i
+                _clusters[i] = new List<int>();
+                _clusters[i].Add(maxObjIndex);  // add obj's index to cluster i
                 heuristicValueList.Remove(maxObj);
                 Console.WriteLine("Cluster " + i.ToString() + ": " + maxObjIndex.ToString());
             }
         }
 
         private void assign_objects_to_clusters()
-        { }
+        {
+            for (int i = 0; i < _size; i++)
+                assign_object_to_cluster_of_adjacent_object(i);
+        }
+
+        private int assign_object_to_cluster_of_adjacent_object(int i)
+        {
+            if (_clusterOfObject[i] == _k)  // object i has NOT cluster yet
+            {
+                int clusterToAssign = assign_object_to_cluster_of_adjacent_object(_adjacentOfObject[i]);
+                _clusterOfObject[i] = clusterToAssign;
+                _clusters[clusterToAssign].Add(i);
+                return clusterToAssign;
+            }
+            else
+                return _clusterOfObject[i];
+        }
 
         public override Evaluation do_evaluating()
         {
+            _evaluation = new Evaluation(this);
             return _evaluation;
         }
     }
