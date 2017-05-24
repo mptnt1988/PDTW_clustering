@@ -84,23 +84,26 @@ namespace PDTW_clustering
         #region METHODS: Drawing
         public void DrawData()
         {
+            List<TimeSeries> data2Draw;
             if (_compressionRate != 1)
-                Data = new List<TimeSeries>(Data.Select(ts =>
+                data2Draw = new List<TimeSeries>(Data.Select(ts =>
                 {
                     ts.get_paa(_compressionRate);
                     return ts.PaaSeries;
                 }));
+            else
+                data2Draw = Data;
             int view = 0;
             TimeSeries t;
-            if (this.Data == null || this.Data.Count <= 0)
+            if (data2Draw == null || data2Draw.Count <= 0)
             {
                 return;
             }
             InitGraph();
-            view = Math.Min(_window, this.Data.Count);
+            view = Math.Min(_window, data2Draw.Count);
             for (int i = 0; i < view; i++)
             {
-                t = (TimeSeries)this.Data[i];
+                t = (TimeSeries)data2Draw[i];
                 DrawTimeSeries(t, Color.FromArgb((i * 100) % 255, Math.Abs((255 - i * 100) % 255), (i * 10) % 255));
             }
             m_graph.Refresh();
