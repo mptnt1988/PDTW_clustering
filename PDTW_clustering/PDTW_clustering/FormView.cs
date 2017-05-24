@@ -48,6 +48,7 @@ namespace PDTW_clustering
             InitializeComponent();
             string labelCluster = "";
             m_graphPane = m_graph.GraphPane;
+            tbViewData.Visible = false;
             tbLoadData.Visible = false;
             btnSaveClusters.Visible = true;
 
