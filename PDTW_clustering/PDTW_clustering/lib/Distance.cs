@@ -72,10 +72,16 @@ namespace PDTW_clustering.lib
                     throw new Exception("There is something wrong with configuring multithreading");
             }
 
-            if(CompressionRate == 1)
+            if (CompressionRate == 1)
+            {
                 dtw_update_path();
+                Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1]) / PathMatrix.Count;
+            }
             else
+            {
+                //dtw_update_path();
                 Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1] / CompressionRate);
+            }
             return Value;
         }
 
@@ -174,7 +180,6 @@ namespace PDTW_clustering.lib
                 }
             }
             PathMatrix.Reverse();
-            Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1])/PathMatrix.Count;
         }
 
         private float elems_distance(float e1, float e2)
