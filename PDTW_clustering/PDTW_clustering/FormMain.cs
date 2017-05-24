@@ -200,9 +200,16 @@ namespace PDTW_clustering
             {
                 case EnumDimentionalityReduction.DISABLED:
                     data = new List<ClusteringObject>(_data);
+                    dtwDistance.CompressionRate = 1;
                     break;
                 case EnumDimentionalityReduction.PAA:
-                    data = new List<ClusteringObject>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
+                    //data = new List<ClusteringObject>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
+                    data = new List<ClusteringObject>(_data.Select(ts =>
+                    {
+                        ts.get_paa(_configuration.paaCompressionRate);
+                        return ts;
+                    }));
+                    dtwDistance.CompressionRate = _configuration.paaCompressionRate;
                     break;
                 default:
                     throw new Exception("There is some error in configuring dimensionality reduction");

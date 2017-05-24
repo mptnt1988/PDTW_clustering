@@ -35,9 +35,9 @@
             this.tbLoadData = new System.Windows.Forms.ToolStripButton();
             this.tbViewData = new System.Windows.Forms.ToolStripButton();
             this.tbViewQuality = new System.Windows.Forms.ToolStripButton();
+            this.tbPaa = new System.Windows.Forms.ToolStripButton();
             this.btnSaveClusters = new System.Windows.Forms.ToolStripButton();
             this.tbNormalize = new System.Windows.Forms.ToolStripButton();
-            this.tbPaa = new System.Windows.Forms.ToolStripButton();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
             this.m_graph = new ZedGraph.ZedGraphControl();
@@ -59,9 +59,9 @@
             this.tbLoadData,
             this.tbViewData,
             this.tbViewQuality,
+            this.tbPaa,
             this.btnSaveClusters,
-            this.tbNormalize,
-            this.tbPaa});
+            this.tbNormalize});
             this.toolBar.Location = new System.Drawing.Point(0, 0);
             this.toolBar.Name = "toolBar";
             this.toolBar.Size = new System.Drawing.Size(970, 25);
@@ -100,6 +100,16 @@
             this.tbViewQuality.ToolTipText = "Clustering Quality";
             this.tbViewQuality.Click += new System.EventHandler(this.tbViewQuality_Click);
             // 
+            // tbPaa
+            // 
+            this.tbPaa.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPaa.Image = ((System.Drawing.Image)(resources.GetObject("tbPaa.Image")));
+            this.tbPaa.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPaa.Name = "tbPaa";
+            this.tbPaa.Size = new System.Drawing.Size(23, 22);
+            this.tbPaa.Text = "PAA";
+            this.tbPaa.Click += new System.EventHandler(this.tbPaa_Click);
+            // 
             // btnSaveClusters
             // 
             this.btnSaveClusters.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -120,15 +130,6 @@
             this.tbNormalize.Size = new System.Drawing.Size(23, 22);
             this.tbNormalize.Text = "Normalize Data";
             this.tbNormalize.Visible = false;
-            // 
-            // tbPaa
-            // 
-            this.tbPaa.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPaa.Image = ((System.Drawing.Image)(resources.GetObject("tbPaa.Image")));
-            this.tbPaa.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbPaa.Name = "tbPaa";
-            this.tbPaa.Size = new System.Drawing.Size(23, 22);
-            this.tbPaa.Text = "PAA";
             // 
             // splitContainer
             // 

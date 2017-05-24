@@ -67,6 +67,12 @@
     <Compile Include="FormView.designer.cs">
       <DependentUpon>FormView.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormInputPAA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormInputPAA.designer.cs">
+      <DependentUpon>FormInputPAA.cs</DependentUpon>
+    </Compile>
     <Compile Include="lib\Cluster.cs" />
     <Compile Include="lib\ClusteringEvaluation.cs" />
     <Compile Include="lib\DataStructure.cs" />
@@ -84,6 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormView.resx">
       <DependentUpon>FormView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormInputPAA.resx">
+      <DependentUpon>FormInputPAA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

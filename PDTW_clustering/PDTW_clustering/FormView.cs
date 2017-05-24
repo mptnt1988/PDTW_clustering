@@ -6,6 +6,7 @@ using System.Collections;
 using System.IO;
 using ZedGraph;
 using System.Drawing;
+using System.Linq;
 
 namespace PDTW_clustering
 {
@@ -18,6 +19,7 @@ namespace PDTW_clustering
         private PointPairList m_pointsList;
         private List<TimeSeries> _dataset;
         private List<TimeSeries>[] _tsClusters;
+        private int _compressionRate = 1;
 
         #region PROPERTIES
         // Clustering time (in millisecs)
@@ -81,6 +83,12 @@ namespace PDTW_clustering
         #region METHODS: Drawing
         public void DrawData()
         {
+            if (_compressionRate != 1)
+                Data = new List<TimeSeries>(Data.Select(ts =>
+                {
+                    ts.get_paa(_compressionRate);
+                    return ts.PaaSeries;
+                }));
             int view = 0;
             TimeSeries t;
             if (this.Data == null || this.Data.Count <= 0)
@@ -364,6 +372,21 @@ namespace PDTW_clustering
             }
             DrawData();
         }
+
+        private void tbPaa_Click(object sender, EventArgs e)
+        {
+            if (_dataset != null && _dataset.Count > 0)
+            {
+                FormInputPAA formPAA = new FormInputPAA();
+                formPAA.CompressionRate = _compressionRate;
+
+                if (formPAA.ShowDialog() == DialogResult.OK)
+                {
+                    _compressionRate = formPAA.CompressionRate;
+                    DrawData();
+                }
+            }
+        }
         #endregion
 
         //private void tbNormalize_Click(object sender, EventArgs e)
@@ -398,30 +421,5 @@ namespace PDTW_clustering
         //    }
         //}
 
-        //private void tBPaa_Click(object sender, EventArgs e)
-        //{
-        //    int length;
-        //    if (_data != null && _data.Count > 0)
-        //    {
-        //        length = ((TimeSeries)_data[0]).Length;
-        //        FPaa fpaa = new FPaa();
-        //        fpaa.Length = length;
-
-        //        if (fpaa.ShowDialog() == DialogResult.OK)
-        //        {
-        //            length = fpaa.Length;
-        //            ArrayList paa = new ArrayList();
-        //            for (int i = 0; i < _data.Count; i++)
-        //            {
-        //                ((TimeSeries)_data[i]).Paa(length);
-        //                paa.Add(((TimeSeries)_data[i]).Rseries);
-        //            }
-        //            FormView gform = new FormView(paa);
-        //            gform.MdiParent = this.MdiParent;
-        //            gform.Show();
-        //            gform.DrawData();
-        //        }
-        //    }
-        //}
     }
 }

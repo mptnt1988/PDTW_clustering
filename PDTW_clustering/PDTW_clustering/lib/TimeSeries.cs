@@ -39,29 +39,30 @@ namespace PDTW_clustering.lib
         {
             this._index = -1;
             this.Series = new List<float>();
-            this.PaaSeries = null;
+            this.PaaSeries = this;
             this.CompressionRate = 1;
         }
         public TimeSeries(List<float> series)
         {
             this._index = -1;
             this.Series = series;
-            this.PaaSeries = null;
+            this.PaaSeries = this;
             this.CompressionRate = 1;
         }
-        public TimeSeries(TimeSeries ts, int c)
+        public TimeSeries(TimeSeries ts)
         {
             this._index = ts.Index;
-            this.Series = new List<float>();
+            this.Series = new List<float>(ts.Series);
             this._label = ts.Label;
-            this.PaaSeries = null;
-            this.CompressionRate = c;
+            this.PaaSeries = this;
+            this.CompressionRate = 1;
         }
         public TimeSeries(string s, int index)
         {
             string se = s;
             this._index = index;
             this.Series = new List<float>();
+            this.PaaSeries = this;
             this.CompressionRate = 1;
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
@@ -92,11 +93,14 @@ namespace PDTW_clustering.lib
 
         #region METHODS
         // Calculate PAA time series
-        public TimeSeries get_paa(int c)  // c is compression rate
+        public TimeSeries get_paa(int c)  // c is compression rate, c >= 2
         {
-            if (this.PaaSeries == null || this.PaaSeries.CompressionRate != c)
+            if (c == 1)
+                this.PaaSeries = this;
+            else if (this.CompressionRate == 1 || this.CompressionRate != c)
             {
-                TimeSeries paaTimeSeries = new TimeSeries(this, c);
+                this.CompressionRate = c;
+                TimeSeries paaTimeSeries = new TimeSeries(this);
                 List<float> series = new List<float>();
                 int n = this.Length;
                 int noOfFullFrame = n / c;

@@ -33,15 +33,18 @@ namespace PDTW_clustering.lib
         public float[,] DistanceMatrix { get; private set; }
         public float Value { get; private set; }
         public EnumDtwMultithreading IsMultithreading { get; set; }
+        public int CompressionRate { get; set; }
 
         public DtwDistance() : base()
         {
             IsMultithreading = EnumDtwMultithreading.ENABLED;
+            CompressionRate = 1;
         }
 
         public DtwDistance(TimeSeries tsX, TimeSeries tsY) : base(tsX, tsY)
         {
             IsMultithreading = EnumDtwMultithreading.ENABLED;
+            CompressionRate = 1;
         }
 
         public override float Calculate()
@@ -54,8 +57,9 @@ namespace PDTW_clustering.lib
 
         public override float Calculate(object tsX, object tsY)
         {
-            X = (TimeSeries)tsX;
-            Y = (TimeSeries)tsY;
+            X = ((TimeSeries)tsX).PaaSeries;
+            Y = ((TimeSeries)tsY).PaaSeries;
+            
             switch (IsMultithreading)
             {
                 case EnumDtwMultithreading.DISABLED:
@@ -64,13 +68,14 @@ namespace PDTW_clustering.lib
                 case EnumDtwMultithreading.ENABLED:
                     parallel_dtw();
                     break;
+                default:
+                    throw new Exception("There is something wrong with configuring multithreading");
             }
 
-            int compressionRate = X.CompressionRate;
-            if(compressionRate == 1)
+            if(CompressionRate == 1)
                 dtw_update_path();
             else
-                Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1] / compressionRate);
+                Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1] / CompressionRate);
             return Value;
         }
 
