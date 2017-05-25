@@ -293,7 +293,7 @@ namespace PDTW_clustering.lib
             while (isContinued);
             _dC = dC;
             _localDensity = localDensity;
-            Console.WriteLine("CUTOFF: " + _dC.ToString());
+            //Console.WriteLine("CUTOFF: " + _dC.ToString());
 
             //_localDensity = new int[_size];
             //for (int i = 0; i < _size; i++)
@@ -319,12 +319,12 @@ namespace PDTW_clustering.lib
             // which is list of other object indices
             List<int> seqOfIndices = Enumerable.Range(0, _size).ToList();
             List<int>[] iterationList = new List<int>[_size];
-            Console.WriteLine("LOCAL DENSITY:");
+            //Console.WriteLine("LOCAL DENSITY:");
             for (int i = 0; i < _size; i++)
             {
                 iterationList[i] = new List<int>(seqOfIndices);
                 iterationList[i].Remove(i);
-                Console.WriteLine(i.ToString() + ": " + _localDensity[i].ToString());
+                //Console.WriteLine(i.ToString() + ": " + _localDensity[i].ToString());
             }
 
             for (int i = 0; i < _size; i++)  // foreach object
@@ -346,10 +346,10 @@ namespace PDTW_clustering.lib
                     }
                 }
                 _adjacentOfObject[i] = nearestNeighbor;
-                Console.WriteLine("Adjacent of " + i.ToString() + ": " + nearestNeighbor.ToString());
+                //Console.WriteLine("Adjacent of " + i.ToString() + ": " + nearestNeighbor.ToString());
                 if (deltaDistanceList[i].Count == 0)
                 {
-                    Console.WriteLine("Sepecial case: " + i.ToString());
+                    //Console.WriteLine("Sepecial case: " + i.ToString());
                     float maxJ = 0;
                     for (int j = 0; j < _size; j++)
                         if (_distanceMatrix[i, j] > maxJ)
@@ -377,11 +377,11 @@ namespace PDTW_clustering.lib
         {
             _medoids = new int[_k];
             List<ValueIndex> heuristicValueList = new List<ValueIndex>();
-            Console.WriteLine("HEURISTIC");
+            //Console.WriteLine("HEURISTIC");
             for (int i = 0; i < _size; i++)
             {
                 heuristicValueList.Add(new ValueIndex(_localDensity[i] * _deltaDistance[i], i));
-                Console.WriteLine(i.ToString() + ": " + heuristicValueList.Last().value.ToString());
+                //Console.WriteLine(i.ToString() + ": " + heuristicValueList.Last().value.ToString());
             }
             _clusters = new List<int>[_k];
             _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
@@ -394,7 +394,7 @@ namespace PDTW_clustering.lib
                 _clusters[i] = new List<int>();
                 _clusters[i].Add(maxObjIndex);  // add obj's index to cluster i
                 heuristicValueList.Remove(maxObj);
-                Console.WriteLine("Cluster " + i.ToString() + ": " + maxObjIndex.ToString());
+                //Console.WriteLine("Cluster " + i.ToString() + ": " + maxObjIndex.ToString());
             }
         }
 
@@ -481,17 +481,17 @@ namespace PDTW_clustering.lib
             }
             for (int i = 0; i < M; i++)
             {
-                Console.WriteLine("Cluster " + i.ToString() + ":");
-                Console.Write(a[i].ToString() + ", ");
-                Console.Write(g[i].ToString() + ", ");
+                //Console.WriteLine("Cluster " + i.ToString() + ":");
+                //Console.Write(a[i].ToString() + ", ");
+                //Console.Write(g[i].ToString() + ", ");
                 float maxSim = 0;
                 for (int j = 0; j < M; j++)
                 {
-                    Console.Write(ag[j, i].ToString() + "  ");
+                    //Console.Write(ag[j, i].ToString() + "  ");
                     float sim = 2 * (float)ag[j, i] / (g[i] + a[j]);
                     if (maxSim < sim) maxSim = sim;
                 }
-                Console.WriteLine("");
+                //Console.WriteLine("");
                 csmSum += maxSim;
             }
             externalValidation.csm = csmSum / M;

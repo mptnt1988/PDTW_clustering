@@ -34,6 +34,13 @@ namespace PDTW_clustering
             lblNormalMutualValue.Text = _evaluation.externalValidation.nmi.ToString();
             lblRandValue.Text = _evaluation.externalValidation.rand.ToString();
             lblObjFuncValue.Text = _evaluation.internalValidation.ToString();
+            Console.WriteLine("ARI: " + lblAdjustedRandValue.Text);
+            Console.WriteLine("CSM: " + lblCSMValue.Text);
+            Console.WriteLine("FM: " + lblFowlkesMalowValue.Text);
+            Console.WriteLine("Jaccard: " + lblJaccardValue.Text);
+            Console.WriteLine("NMI: " + lblNormalMutualValue.Text);
+            Console.WriteLine("Rand: " + lblRandValue.Text);
+            Console.WriteLine("ObjFunc: " + lblObjFuncValue.Text);
         }
         #endregion
 
