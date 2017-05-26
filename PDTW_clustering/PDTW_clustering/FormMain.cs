@@ -17,7 +17,7 @@ namespace PDTW_clustering
     public partial class FormMain : Form
     {
         private List<TimeSeries> _data;
-        private long _exeTime;
+        private TimeSpan _exeTime;
         private long _exeTimeStart;
         private Configuration _configuration;
         private Cluster _cluster;
@@ -26,10 +26,6 @@ namespace PDTW_clustering
         public FormMain()
         {
             InitializeComponent();
-            //_threadExe = null;
-            btnStop.Enabled = false;
-            btnViewResult.Enabled = false;
-            lblExeTimeValue.Text = "0";
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -111,7 +107,7 @@ namespace PDTW_clustering
 
         private void reset_statistics()
         {
-            _exeTime = 0;
+            pgbDoClustering.Value = 0;
         }
 
         private void load_configuration()
@@ -160,11 +156,11 @@ namespace PDTW_clustering
             btnRun.Enabled = false;
             btnStop.Enabled = true;
             btnViewResult.Enabled = false;
-            lblExeTimeValue.Text = "0";
 
             // Start executing thread
             _cluster = null;
             _exeTimeStart = System.Environment.TickCount;
+            tmrExeTime.Enabled = true;
 
             _cts = new CancellationTokenSource();
             var task = Task.Factory.StartNew(() => do_clustering(_cts.Token), _cts.Token);
@@ -185,8 +181,10 @@ namespace PDTW_clustering
 
         private void do_post_clustering_on_completion()
         {
-            _exeTime = System.Environment.TickCount - _exeTimeStart;
-            lblExeTimeValue.Text = _exeTime.ToString();
+            tmrExeTime.Enabled = false;
+            TimeSpan _exeTime = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
+            lblExeTimeValue.Text = display_time_string(_exeTime);
+            pgbDoClustering.Value = 100;
         }
 
         private void do_clustering(CancellationToken token)
@@ -226,6 +224,7 @@ namespace PDTW_clustering
                 default:
                     throw new Exception("There is some error in configuring clustering algorithm");
             }
+            _cluster.Token = token;
             clusterOfObject = _cluster.do_clustering();  // for testing only
         }
 
@@ -233,6 +232,11 @@ namespace PDTW_clustering
         {
             if (_cts != null)
                 _cts.Cancel();
+            GC.Collect();
+            tmrExeTime.Enabled = false;
+            _exeTime = TimeSpan.Zero;
+            lblExeTimeValue.Text = display_time_string(_exeTime);
+            pgbDoClustering.Value = 0;
         }
 
         private void btnViewResult_Click(object sender, EventArgs e)
@@ -245,10 +249,29 @@ namespace PDTW_clustering
             this.Enabled = false;
         }
 
+        private string display_time_string(TimeSpan timeSpan)
+        {
+            return timeSpan.ToString("hh':'mm':'ss'.'fff");
+        }
+
         // TESTING
         #region ManualTest
         DtwDistance dtwDist;
         TimeSeries ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8;
+
+        private void tmrExeTime_Tick(object sender, EventArgs e)
+        {
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
+            lblExeTimeValue.Text = timeSpan.ToString("hh':'mm':'ss'.'fff");
+            pgbDoClustering.Value = _cluster.Percentage;
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            btnStop.Enabled = false;
+            btnViewResult.Enabled = false;
+            lblExeTimeValue.Text = display_time_string(TimeSpan.Zero);
+        }
 
         int[] clusterOfObject;
         private void btnTest_Click(object sender, EventArgs e)

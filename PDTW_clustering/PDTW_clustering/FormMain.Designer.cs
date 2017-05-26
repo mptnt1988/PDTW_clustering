@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,6 +67,8 @@
             this.nudTest3 = new System.Windows.Forms.NumericUpDown();
             this.lblExeTimeLabel = new System.Windows.Forms.Label();
             this.lblExeTimeValue = new System.Windows.Forms.Label();
+            this.pgbDoClustering = new System.Windows.Forms.ProgressBar();
+            this.tmrExeTime = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.gbxDimRed.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -163,7 +166,7 @@
             this.gbxDimRed.Controls.Add(this.groupBox4);
             this.gbxDimRed.Controls.Add(this.radDimRed_Paa);
             this.gbxDimRed.Controls.Add(this.radDimRed_Disabled);
-            this.gbxDimRed.Location = new System.Drawing.Point(46, 153);
+            this.gbxDimRed.Location = new System.Drawing.Point(30, 122);
             this.gbxDimRed.Name = "gbxDimRed";
             this.gbxDimRed.Size = new System.Drawing.Size(249, 139);
             this.gbxDimRed.TabIndex = 2;
@@ -239,7 +242,7 @@
             this.gbxClusteringAlgo.Controls.Add(this.groupBox5);
             this.gbxClusteringAlgo.Controls.Add(this.radClusterAlgo_DensityPeaks);
             this.gbxClusteringAlgo.Controls.Add(this.radClusterAlgo_ImpKMedoids);
-            this.gbxClusteringAlgo.Location = new System.Drawing.Point(355, 41);
+            this.gbxClusteringAlgo.Location = new System.Drawing.Point(344, 34);
             this.gbxClusteringAlgo.Name = "gbxClusteringAlgo";
             this.gbxClusteringAlgo.Size = new System.Drawing.Size(275, 124);
             this.gbxClusteringAlgo.TabIndex = 4;
@@ -314,7 +317,7 @@
             // 
             this.gbxMultithreading.Controls.Add(this.radMultithreading_Disabled);
             this.gbxMultithreading.Controls.Add(this.radMultithreading_Enabled);
-            this.gbxMultithreading.Location = new System.Drawing.Point(65, 41);
+            this.gbxMultithreading.Location = new System.Drawing.Point(30, 27);
             this.gbxMultithreading.Name = "gbxMultithreading";
             this.gbxMultithreading.Size = new System.Drawing.Size(108, 75);
             this.gbxMultithreading.TabIndex = 6;
@@ -346,7 +349,7 @@
             // lblTest
             // 
             this.lblTest.AutoSize = true;
-            this.lblTest.Location = new System.Drawing.Point(492, 235);
+            this.lblTest.Location = new System.Drawing.Point(473, 184);
             this.lblTest.Name = "lblTest";
             this.lblTest.Size = new System.Drawing.Size(106, 13);
             this.lblTest.TabIndex = 7;
@@ -354,7 +357,7 @@
             // 
             // btnRun
             // 
-            this.btnRun.Location = new System.Drawing.Point(301, 337);
+            this.btnRun.Location = new System.Drawing.Point(412, 278);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(75, 23);
             this.btnRun.TabIndex = 11;
@@ -364,7 +367,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(382, 337);
+            this.btnStop.Location = new System.Drawing.Point(493, 278);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 23);
             this.btnStop.TabIndex = 12;
@@ -374,7 +377,7 @@
             // 
             // btnViewResult
             // 
-            this.btnViewResult.Location = new System.Drawing.Point(463, 337);
+            this.btnViewResult.Location = new System.Drawing.Point(574, 278);
             this.btnViewResult.Name = "btnViewResult";
             this.btnViewResult.Size = new System.Drawing.Size(75, 23);
             this.btnViewResult.TabIndex = 13;
@@ -384,7 +387,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(544, 337);
+            this.btnExit.Location = new System.Drawing.Point(655, 278);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 23);
             this.btnExit.TabIndex = 14;
@@ -394,7 +397,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(495, 269);
+            this.btnTest.Location = new System.Drawing.Point(476, 218);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(75, 23);
             this.btnTest.TabIndex = 15;
@@ -404,14 +407,14 @@
             // 
             // txtTest
             // 
-            this.txtTest.Location = new System.Drawing.Point(576, 269);
+            this.txtTest.Location = new System.Drawing.Point(557, 218);
             this.txtTest.Name = "txtTest";
             this.txtTest.Size = new System.Drawing.Size(100, 20);
             this.txtTest.TabIndex = 16;
             // 
             // nudTest2
             // 
-            this.nudTest2.Location = new System.Drawing.Point(369, 269);
+            this.nudTest2.Location = new System.Drawing.Point(350, 218);
             this.nudTest2.Maximum = new decimal(new int[] {
             9,
             0,
@@ -424,7 +427,7 @@
             // 
             // nudTest1
             // 
-            this.nudTest1.Location = new System.Drawing.Point(369, 248);
+            this.nudTest1.Location = new System.Drawing.Point(350, 197);
             this.nudTest1.Maximum = new decimal(new int[] {
             9,
             0,
@@ -437,7 +440,7 @@
             // 
             // nudTest3
             // 
-            this.nudTest3.Location = new System.Drawing.Point(613, 233);
+            this.nudTest3.Location = new System.Drawing.Point(594, 182);
             this.nudTest3.Name = "nudTest3";
             this.nudTest3.Size = new System.Drawing.Size(120, 20);
             this.nudTest3.TabIndex = 19;
@@ -446,7 +449,7 @@
             // lblExeTimeLabel
             // 
             this.lblExeTimeLabel.AutoSize = true;
-            this.lblExeTimeLabel.Location = new System.Drawing.Point(12, 308);
+            this.lblExeTimeLabel.Location = new System.Drawing.Point(16, 278);
             this.lblExeTimeLabel.Name = "lblExeTimeLabel";
             this.lblExeTimeLabel.Size = new System.Drawing.Size(83, 13);
             this.lblExeTimeLabel.TabIndex = 20;
@@ -455,17 +458,30 @@
             // lblExeTimeValue
             // 
             this.lblExeTimeValue.AutoSize = true;
-            this.lblExeTimeValue.Location = new System.Drawing.Point(114, 308);
+            this.lblExeTimeValue.Location = new System.Drawing.Point(129, 278);
             this.lblExeTimeValue.Name = "lblExeTimeValue";
             this.lblExeTimeValue.Size = new System.Drawing.Size(93, 13);
             this.lblExeTimeValue.TabIndex = 21;
             this.lblExeTimeValue.Text = "(exe_time_display)";
+            // 
+            // pgbDoClustering
+            // 
+            this.pgbDoClustering.Location = new System.Drawing.Point(19, 336);
+            this.pgbDoClustering.Name = "pgbDoClustering";
+            this.pgbDoClustering.Size = new System.Drawing.Size(260, 23);
+            this.pgbDoClustering.TabIndex = 24;
+            // 
+            // tmrExeTime
+            // 
+            this.tmrExeTime.Interval = 1000;
+            this.tmrExeTime.Tick += new System.EventHandler(this.tmrExeTime_Tick);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 411);
+            this.Controls.Add(this.pgbDoClustering);
             this.Controls.Add(this.lblExeTimeValue);
             this.Controls.Add(this.lblExeTimeLabel);
             this.Controls.Add(this.nudTest3);
@@ -485,6 +501,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FormMain";
             this.Text = "PDTW Clustering";
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.gbxDimRed.ResumeLayout(false);
@@ -547,6 +564,8 @@
         private System.Windows.Forms.NumericUpDown nudTest3;
         private System.Windows.Forms.Label lblExeTimeLabel;
         private System.Windows.Forms.Label lblExeTimeValue;
+        private System.Windows.Forms.ProgressBar pgbDoClustering;
+        private System.Windows.Forms.Timer tmrExeTime;
     }
 }
 

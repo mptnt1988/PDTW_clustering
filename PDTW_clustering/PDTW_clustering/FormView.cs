@@ -23,7 +23,7 @@ namespace PDTW_clustering
 
         #region PROPERTIES
         // Clustering time (in millisecs)
-        public long Time { get; set; }
+        public TimeSpan Time { get; set; }
         // List of all time series to be viewed
         public List<TimeSeries> Data { get; private set; }  // data to be drawn
         #endregion

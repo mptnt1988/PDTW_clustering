@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PDTW_clustering.lib
@@ -21,14 +22,21 @@ namespace PDTW_clustering.lib
         public abstract List<ClusteringObject> Objects { get; }
         public abstract Evaluation Evaluation { get; }
         public abstract float TotalSum { get; }
+        public abstract CancellationToken Token { get; set; }
+        public abstract int Percentage { get; }
+
+        protected int calcDistantMatrixPercentage { get; set; }
 
         public float[,] calculate_distance_matrix(List<ClusteringObject> data, Distance distance)
         {
             int size = data.Count;
             float[,] distanceMatrix = new float[size, size];
+            float percentageUnit = 100f / (size * size);
             for (int i = 0; i < size; i++)
                 for (int j = 0; j < size; j++)
                 {
+                    Token.ThrowIfCancellationRequested();
+                    calcDistantMatrixPercentage = (int)Math.Floor(percentageUnit * (i * size + j + 1));
                     if (i == j)
                         distanceMatrix[i, j] = 0;
                     else if (i < j)
@@ -65,12 +73,21 @@ namespace PDTW_clustering.lib
         private Evaluation _evaluation;         // custering evaluation
         private float _totalSum;                // sum of all distances between object and its medoid
         private float _totalSumOld;             // old value of sum to be compared later
+        private CancellationToken _token;       // token to cancel calculation
 
         public override List<int>[] Clusters { get { return _clusters; } }
         public override Evaluation Evaluation { get { return _evaluation; } }
         public override List<ClusteringObject> Objects { get { return _data; } }
         public override int[] ClusterOfObject { get { return _clusterOfObject; } }
         public override float TotalSum { get { return _totalSum; } }
+        public override CancellationToken Token { get { return _token; } set { _token = value; } }
+        public override int Percentage
+        {
+            get
+            {
+                return (int)calcDistantMatrixPercentage;
+            }
+        }
 
         public ImprovedKMedoids(List<ClusteringObject> data, Distance distance, int k)
         {
@@ -86,11 +103,11 @@ namespace PDTW_clustering.lib
             select_initial_medoids();
             do
             {
+                _token.ThrowIfCancellationRequested();
                 update_medoids();
                 assign_objects_to_medoids();
             }
             while (_totalSum != _totalSumOld);
-            GC.Collect();
             return _clusterOfObject;
         }
 
@@ -201,8 +218,9 @@ namespace PDTW_clustering.lib
         private float _dC;                      // cutoff distance
         private int[] _localDensity;            // _localDensity[i]: local density of object i
         private float[] _deltaDistance;         // _deltaDistance[i]: distance from object i to nearest object with higher local density
-        private int[] _adjacentOfObject;         // _adjacentOfObject[i]: nearest neighbor of object i
+        private int[] _adjacentOfObject;        // _adjacentOfObject[i]: nearest neighbor of object i
         private Distance _distance;             // method to calculate distance
+        private CancellationToken _token;       // token to cancel calculation
 
         public override List<int>[] Clusters { get { return _clusters; } }
         public override Evaluation Evaluation { get { return _evaluation; } }
@@ -216,6 +234,14 @@ namespace PDTW_clustering.lib
                 for (int i = 0; i < _size; i++)
                     _totalSum += _distanceMatrix[i, _clusterOfObject[i]];
                 return _totalSum;
+            }
+        }
+        public override CancellationToken Token { get { return _token; } set { _token = value; } }
+        public override int Percentage
+        {
+            get
+            {
+                return calcDistantMatrixPercentage;
             }
         }
 
@@ -268,6 +294,7 @@ namespace PDTW_clustering.lib
             float uBound = 1 * percent;
             do
             {
+                _token.ThrowIfCancellationRequested();
                 for (int i = 0; i < _size; i++)
                     localDensity[i] = 0;
                 for (int i = 0; i < _size; i++)
@@ -329,6 +356,7 @@ namespace PDTW_clustering.lib
 
             for (int i = 0; i < _size; i++)  // foreach object
             {
+                _token.ThrowIfCancellationRequested();
                 deltaDistanceList[i] = new List<float>();
                 int nearestNeighbor = -1;
                 float nearestNeigborDistance = float.PositiveInfinity;
