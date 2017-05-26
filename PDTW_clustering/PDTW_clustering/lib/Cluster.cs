@@ -334,7 +334,7 @@ namespace PDTW_clustering.lib
                 float nearestNeigborDistance = float.PositiveInfinity;
                 foreach (int j in iterationList[i])  // foreach other object
                 {
-                    if (_localDensity[j] > _localDensity[i])
+                    if (_localDensity[j] >= _localDensity[i])
                     {
                         deltaDistanceList[i].Add(_distanceMatrix[i, j]);
                         iterationList[j].Remove(i);

@@ -196,24 +196,24 @@ namespace PDTW_clustering
             dtwDistance.IsMultithreading = _configuration.multithreading;
             List<ClusteringObject> data;
 
+            int configCompressionRate;
             switch (_configuration.dimensionalityReduction)
             {
                 case EnumDimentionalityReduction.DISABLED:
-                    data = new List<ClusteringObject>(_data);
-                    dtwDistance.CompressionRate = 1;
+                    configCompressionRate = 1;
                     break;
                 case EnumDimentionalityReduction.PAA:
-                    //data = new List<ClusteringObject>(_data.Select(ts => ts.get_paa(_configuration.paaCompressionRate)).ToArray());
-                    data = new List<ClusteringObject>(_data.Select(ts =>
-                    {
-                        ts.get_paa(_configuration.paaCompressionRate);
-                        return ts;
-                    }));
-                    dtwDistance.CompressionRate = _configuration.paaCompressionRate;
+                    configCompressionRate = _configuration.paaCompressionRate;
                     break;
                 default:
                     throw new Exception("There is some error in configuring dimensionality reduction");
             }
+            data = new List<ClusteringObject>(_data.Select(ts =>
+            {
+                ts.get_paa(configCompressionRate);
+                return ts;
+            }));
+            dtwDistance.CompressionRate = configCompressionRate;
 
             switch (_configuration.clusteringAlgorithm)
             {

@@ -90,9 +90,9 @@ namespace PDTW_clustering.lib
             int nX = X.Length;
             int nY = Y.Length;
             DistanceMatrix = new float[nX, nY];
-            //int noOfBlocks = Environment.ProcessorCount * 4;
-            int noOfBlocks = Environment.ProcessorCount + 2;
-            //int noOfBlocks = 3;
+            //int noOfBlocksX = calc_number_of_blocks(nX);
+            //int noOfBlocksY = calc_number_of_blocks(nY);
+            int noOfBlocks = calc_number_of_blocks(nX);
             ParallelAlgorithms.Wavefront(nX, nY, noOfBlocks, noOfBlocks,
                 (start_i, end_i, start_j, end_j) =>
             {
@@ -204,6 +204,18 @@ namespace PDTW_clustering.lib
             }
             else
                 return new DtwMinPredecessor(left, EnumDtwPredecessorPosition.LEFT);
+        }
+
+        private int calc_number_of_blocks(int length)
+        {
+            int std = 10 * (Environment.ProcessorCount + 2);
+            int stdDouble = 2 * std;
+            if (length < stdDouble)
+                return 1;
+            else if (length == stdDouble)
+                return 2;
+            else
+                return (int)Math.Round((float)length / std);
         }
     }
 }
