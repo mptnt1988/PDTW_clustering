@@ -88,7 +88,7 @@ namespace PDTW_clustering
             if (_compressionRate != 1)
                 data2Draw = new List<TimeSeries>(Data.Select(ts =>
                 {
-                    ts.get_paa(_compressionRate);
+                    ts.get_paa(_compressionRate, false);
                     return ts.PaaSeries;
                 }));
             else

@@ -135,6 +135,14 @@ namespace PDTW_clustering
                 _configuration.clusteringAlgorithm = EnumClusteringAlgorithm.DENSITY_PEAKS;
 
             _configuration.noOfClusters = (int)nudNoOfClusters.Value;
+
+            // Configuration for normalization
+            if (radNormalization_None.Checked)
+                _configuration.normalization = EnumNormalization.NONE;
+            else if (radNormalization_MinMax.Checked)
+                _configuration.normalization = EnumNormalization.MIN_MAX;
+            else if (radNormalization_ZeroMean.Checked)
+                _configuration.normalization = EnumNormalization.ZERO_MIN;
         }
 
         private bool is_configuration_ok()
@@ -194,6 +202,28 @@ namespace PDTW_clustering
             dtwDistance.IsMultithreading = _configuration.multithreading;
             List<ClusteringObject> data;
 
+            // Normalization
+            bool isNormalized;
+            switch (_configuration.normalization)
+            {
+                case EnumNormalization.NONE:
+                    isNormalized = false;
+                    data = new List<ClusteringObject>(_data);
+                    break;
+                case EnumNormalization.MIN_MAX:
+                case EnumNormalization.ZERO_MIN:
+                    isNormalized = true;
+                    data = new List<ClusteringObject>(_data.Select(ts =>
+                    {
+                        ts.normalize(_configuration.normalization);
+                        return ts;
+                    }));
+                    break;
+                default:
+                    throw new Exception("There is some error in configuring normalization");
+            }
+
+            // Dimensionality Reduction
             int configCompressionRate;
             switch (_configuration.dimensionalityReduction)
             {
@@ -206,13 +236,14 @@ namespace PDTW_clustering
                 default:
                     throw new Exception("There is some error in configuring dimensionality reduction");
             }
-            data = new List<ClusteringObject>(_data.Select(ts =>
+            data = new List<ClusteringObject>(data.Select(ts =>
             {
-                ts.get_paa(configCompressionRate);
+                ((TimeSeries)ts).get_paa(configCompressionRate, isNormalized);
                 return ts;
             }));
             dtwDistance.CompressionRate = configCompressionRate;
 
+            // Clustering Algorithm
             switch (_configuration.clusteringAlgorithm)
             {
                 case EnumClusteringAlgorithm.IMPROVED_KMEDOIDS:

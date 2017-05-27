@@ -33,6 +33,13 @@ namespace PDTW_clustering.lib
         DENSITY_PEAKS
     }
 
+   public enum EnumNormalization
+    {
+        NONE,
+        MIN_MAX,
+        ZERO_MIN
+    }
+
     struct Configuration
     {
         public EnumDtwMultithreading multithreading;
@@ -40,6 +47,7 @@ namespace PDTW_clustering.lib
         public int paaCompressionRate;
         public EnumClusteringAlgorithm clusteringAlgorithm;
         public int noOfClusters;
+        public EnumNormalization normalization;
     }
 
     struct PathPoint

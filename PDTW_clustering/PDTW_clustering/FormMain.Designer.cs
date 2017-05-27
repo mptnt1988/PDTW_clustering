@@ -69,6 +69,10 @@
             this.lblExeTimeValue = new System.Windows.Forms.Label();
             this.pgbDoClustering = new System.Windows.Forms.ProgressBar();
             this.tmrExeTime = new System.Windows.Forms.Timer(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radNormalization_ZeroMean = new System.Windows.Forms.RadioButton();
+            this.radNormalization_MinMax = new System.Windows.Forms.RadioButton();
+            this.radNormalization_None = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             this.gbxDimRed.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -80,6 +84,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -168,7 +173,7 @@
             this.gbxDimRed.Controls.Add(this.radDimRed_Disabled);
             this.gbxDimRed.Location = new System.Drawing.Point(30, 122);
             this.gbxDimRed.Name = "gbxDimRed";
-            this.gbxDimRed.Size = new System.Drawing.Size(249, 139);
+            this.gbxDimRed.Size = new System.Drawing.Size(249, 131);
             this.gbxDimRed.TabIndex = 2;
             this.gbxDimRed.TabStop = false;
             this.gbxDimRed.Text = "Dimensionality Reduction";
@@ -242,9 +247,9 @@
             this.gbxClusteringAlgo.Controls.Add(this.groupBox5);
             this.gbxClusteringAlgo.Controls.Add(this.radClusterAlgo_DensityPeaks);
             this.gbxClusteringAlgo.Controls.Add(this.radClusterAlgo_ImpKMedoids);
-            this.gbxClusteringAlgo.Location = new System.Drawing.Point(344, 34);
+            this.gbxClusteringAlgo.Location = new System.Drawing.Point(308, 34);
             this.gbxClusteringAlgo.Name = "gbxClusteringAlgo";
-            this.gbxClusteringAlgo.Size = new System.Drawing.Size(275, 124);
+            this.gbxClusteringAlgo.Size = new System.Drawing.Size(224, 124);
             this.gbxClusteringAlgo.TabIndex = 4;
             this.gbxClusteringAlgo.TabStop = false;
             this.gbxClusteringAlgo.Text = "Clustering Algorithm";
@@ -255,7 +260,7 @@
             this.groupBox5.Controls.Add(this.label2);
             this.groupBox5.Location = new System.Drawing.Point(22, 39);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(213, 50);
+            this.groupBox5.Size = new System.Drawing.Size(185, 50);
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Parameters";
@@ -476,11 +481,58 @@
             this.tmrExeTime.Interval = 1000;
             this.tmrExeTime.Tick += new System.EventHandler(this.tmrExeTime_Tick);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radNormalization_ZeroMean);
+            this.groupBox1.Controls.Add(this.radNormalization_MinMax);
+            this.groupBox1.Controls.Add(this.radNormalization_None);
+            this.groupBox1.Location = new System.Drawing.Point(538, 43);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Normalization";
+            // 
+            // radNormalization_ZeroMean
+            // 
+            this.radNormalization_ZeroMean.AutoSize = true;
+            this.radNormalization_ZeroMean.Location = new System.Drawing.Point(19, 65);
+            this.radNormalization_ZeroMean.Name = "radNormalization_ZeroMean";
+            this.radNormalization_ZeroMean.Size = new System.Drawing.Size(77, 17);
+            this.radNormalization_ZeroMean.TabIndex = 2;
+            this.radNormalization_ZeroMean.TabStop = true;
+            this.radNormalization_ZeroMean.Text = "Zero Mean";
+            this.radNormalization_ZeroMean.UseVisualStyleBackColor = true;
+            // 
+            // radNormalization_MinMax
+            // 
+            this.radNormalization_MinMax.AutoSize = true;
+            this.radNormalization_MinMax.Location = new System.Drawing.Point(19, 42);
+            this.radNormalization_MinMax.Name = "radNormalization_MinMax";
+            this.radNormalization_MinMax.Size = new System.Drawing.Size(65, 17);
+            this.radNormalization_MinMax.TabIndex = 1;
+            this.radNormalization_MinMax.TabStop = true;
+            this.radNormalization_MinMax.Text = "Min Max";
+            this.radNormalization_MinMax.UseVisualStyleBackColor = true;
+            // 
+            // radNormalization_None
+            // 
+            this.radNormalization_None.AutoSize = true;
+            this.radNormalization_None.Checked = true;
+            this.radNormalization_None.Location = new System.Drawing.Point(19, 19);
+            this.radNormalization_None.Name = "radNormalization_None";
+            this.radNormalization_None.Size = new System.Drawing.Size(51, 17);
+            this.radNormalization_None.TabIndex = 0;
+            this.radNormalization_None.TabStop = true;
+            this.radNormalization_None.Text = "None";
+            this.radNormalization_None.UseVisualStyleBackColor = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(768, 411);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pgbDoClustering);
             this.Controls.Add(this.lblExeTimeValue);
             this.Controls.Add(this.lblExeTimeLabel);
@@ -519,6 +571,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -566,6 +620,10 @@
         private System.Windows.Forms.Label lblExeTimeValue;
         private System.Windows.Forms.ProgressBar pgbDoClustering;
         private System.Windows.Forms.Timer tmrExeTime;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radNormalization_ZeroMean;
+        private System.Windows.Forms.RadioButton radNormalization_MinMax;
+        private System.Windows.Forms.RadioButton radNormalization_None;
     }
 }
 
