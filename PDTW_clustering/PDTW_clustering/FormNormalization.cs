@@ -17,7 +17,7 @@ namespace PDTW_clustering
                 _normalization = value;
                 if (_normalization == EnumNormalization.MIN_MAX)
                     radNormalization_MinMax.Checked = true;
-                else if (_normalization == EnumNormalization.ZERO_MIN)
+                else if (_normalization == EnumNormalization.ZERO_MEAN)
                     radNormalization_ZeroMean.Checked = true;
             }
         }
@@ -38,7 +38,7 @@ namespace PDTW_clustering
             }
             else if (radNormalization_ZeroMean.Checked)
             {
-                _normalization = EnumNormalization.ZERO_MIN;
+                _normalization = EnumNormalization.ZERO_MEAN;
             }
             else if (radNormalization_None.Checked)
             {

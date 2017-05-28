@@ -170,7 +170,7 @@ namespace PDTW_clustering
             else if (radNormalization_MinMax.Checked)
                 _configuration.normalization = EnumNormalization.MIN_MAX;
             else if (radNormalization_ZeroMean.Checked)
-                _configuration.normalization = EnumNormalization.ZERO_MIN;
+                _configuration.normalization = EnumNormalization.ZERO_MEAN;
         }
 
         private bool is_configuration_ok()
@@ -239,7 +239,7 @@ namespace PDTW_clustering
                     data = new List<ClusteringObject>(_data);
                     break;
                 case EnumNormalization.MIN_MAX:
-                case EnumNormalization.ZERO_MIN:
+                case EnumNormalization.ZERO_MEAN:
                     isNormalized = true;
                     data = new List<ClusteringObject>(_data.Select(ts =>
                     {
@@ -269,7 +269,6 @@ namespace PDTW_clustering
                 ((TimeSeries)ts).paa(configCompressionRate, isNormalized);
                 return ts;
             }));
-            dtwDistance.CompressionRate = configCompressionRate;
 
             // Clustering Algorithm
             switch (_configuration.clusteringAlgorithm)
@@ -369,11 +368,11 @@ namespace PDTW_clustering
             //lblTest.Text = clusterOfObject[(int)nudTest3.Value].ToString();
 
             // Test distance
-            lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
-            lblTest.Text += ": ";
-            lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
-            lblTest.Text += ", ";
-            lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
+            //lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
+            //lblTest.Text += ": ";
+            //lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
+            //lblTest.Text += ", ";
+            //lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
         }
 
         private void tuan()

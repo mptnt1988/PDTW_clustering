@@ -11,8 +11,8 @@ namespace PDTW_clustering.lib
     public abstract class Distance
     {
         #region PROPERTIES
-        public object X { get; private set; }
-        public object Y { get; private set; }
+        protected object X;
+        protected object Y;
         #endregion
 
         #region CONSTRUCTORS
@@ -30,29 +30,30 @@ namespace PDTW_clustering.lib
         #endregion
     }
 
-    class DtwDistance : Distance
+    public class DtwDistance : Distance
     {
+        private TimeSeries _x;
+        private TimeSeries _y;
+        private int _compressionRate;
+
         #region PROPERTIES
-        public new TimeSeries X { get; private set; }
-        public new TimeSeries Y { get; private set; }
         public List<PathPoint> PathMatrix { get; private set; }
         public float[,] DistanceMatrix { get; private set; }
         public float Value { get; private set; }
         public EnumDtwMultithreading IsMultithreading { get; set; }
-        public int CompressionRate { get; set; }
         #endregion
 
         #region CONSTRUCTORS
         public DtwDistance() : base()
         {
             IsMultithreading = EnumDtwMultithreading.ENABLED;
-            CompressionRate = 1;
         }
 
         public DtwDistance(TimeSeries tsX, TimeSeries tsY) : base(tsX, tsY)
         {
             IsMultithreading = EnumDtwMultithreading.ENABLED;
-            CompressionRate = 1;
+            _x = (TimeSeries)tsX;
+            _y = (TimeSeries)tsY;
         }
         #endregion
 
@@ -62,13 +63,16 @@ namespace PDTW_clustering.lib
             if (this.X == null || this.Y == null)
                 throw new ArgumentNullException("At least one of time series is null");
             else
-                return Calculate(this.X, this.Y);
+                return Calculate(this._x, this._y);
         }
 
         public override float Calculate(object tsX, object tsY)
         {
-            X = ((TimeSeries)tsX).PaaSeries;
-            Y = ((TimeSeries)tsY).PaaSeries;
+            _x = ((TimeSeries)tsX).ClusteringSeries;
+            _y = ((TimeSeries)tsY).ClusteringSeries;
+            if (((TimeSeries)tsX).CompressionRate != ((TimeSeries)tsY).CompressionRate)
+                throw new Exception("Two time series must have the same compression rate");
+            _compressionRate = ((TimeSeries)tsX).CompressionRate;
             
             switch (IsMultithreading)
             {
@@ -82,15 +86,15 @@ namespace PDTW_clustering.lib
                     throw new Exception("There is something wrong with configuring multithreading");
             }
 
-            if (CompressionRate == 1)
+            if (_compressionRate == 1)
             {
                 dtw_update_path();
-                Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1]) / PathMatrix.Count;
+                Value = (float)Math.Sqrt(DistanceMatrix[_x.Length - 1, _y.Length - 1]) / PathMatrix.Count;
             }
             else
             {
                 //dtw_update_path();
-                Value = (float)Math.Sqrt(DistanceMatrix[X.Length - 1, Y.Length - 1] / CompressionRate);
+                Value = (float)Math.Sqrt(DistanceMatrix[_x.Length - 1, _y.Length - 1] / _compressionRate);
             }
             return Value;
         }
@@ -99,8 +103,8 @@ namespace PDTW_clustering.lib
         #region FUNCTIONS
         private void parallel_dtw()
         {
-            int nX = X.Length;
-            int nY = Y.Length;
+            int nX = _x.Length;
+            int nY = _y.Length;
             DistanceMatrix = new float[nX, nY];
             //int noOfBlocksX = calc_number_of_blocks(nX);
             //int noOfBlocksY = calc_number_of_blocks(nY);
@@ -113,18 +117,18 @@ namespace PDTW_clustering.lib
                     {
                         if (i == 0)
                             if (j == 0)
-                                DistanceMatrix[0, 0] = elems_distance(X.Series[0], Y.Series[0]);
+                                DistanceMatrix[0, 0] = elems_distance(_x.Series[0], _y.Series[0]);
                             else
-                                DistanceMatrix[0, j] = elems_distance(X.Series[0], Y.Series[j]) + DistanceMatrix[0, j - 1];
+                                DistanceMatrix[0, j] = elems_distance(_x.Series[0], _y.Series[j]) + DistanceMatrix[0, j - 1];
                         else if (j == 0)
-                            DistanceMatrix[i, 0] = elems_distance(X.Series[i], Y.Series[0]) + DistanceMatrix[i - 1, 0];
+                            DistanceMatrix[i, 0] = elems_distance(_x.Series[i], _y.Series[0]) + DistanceMatrix[i - 1, 0];
                         else
                         {
                             float minPredVal =
                                 find_min(DistanceMatrix[i - 1, j],
                                          DistanceMatrix[i, j - 1],
                                          DistanceMatrix[i - 1, j - 1]);
-                            DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
+                            DistanceMatrix[i, j] = elems_distance(_x.Series[i], _y.Series[j]) + minPredVal;
                         }
                     }
             });
@@ -132,26 +136,26 @@ namespace PDTW_clustering.lib
 
         private void dtw()
         {
-            int nY = Y.Length;
-            int nX = X.Length;
+            int nY = _y.Length;
+            int nX = _x.Length;
             DistanceMatrix = new float[nX, nY];
             for (int i = 0; i < nX; i++)
                 for (int j = 0; j < nY; j++)
                 {
                     if (i == 0)
                         if (j == 0)
-                            DistanceMatrix[0, 0] = elems_distance(X.Series[0], Y.Series[0]);
+                            DistanceMatrix[0, 0] = elems_distance(_x.Series[0], _y.Series[0]);
                         else
-                            DistanceMatrix[0, j] = elems_distance(X.Series[0], Y.Series[j]) + DistanceMatrix[0, j - 1];
+                            DistanceMatrix[0, j] = elems_distance(_x.Series[0], _y.Series[j]) + DistanceMatrix[0, j - 1];
                     else if (j == 0)
-                        DistanceMatrix[i, 0] = elems_distance(X.Series[i], Y.Series[0]) + DistanceMatrix[i - 1, 0];
+                        DistanceMatrix[i, 0] = elems_distance(_x.Series[i], _y.Series[0]) + DistanceMatrix[i - 1, 0];
                     else
                     {
                         float minPredVal =
                             find_min(DistanceMatrix[i - 1, j],
                                      DistanceMatrix[i, j - 1],
                                      DistanceMatrix[i - 1, j - 1]);
-                        DistanceMatrix[i, j] = elems_distance(X.Series[i], Y.Series[j]) + minPredVal;
+                        DistanceMatrix[i, j] = elems_distance(_x.Series[i], _y.Series[j]) + minPredVal;
                     }
                 }
         }

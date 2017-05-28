@@ -13,7 +13,7 @@ namespace PDTW_clustering.lib.Tests
     {
         // Initialize a time series with all default parameters
         [TestMethod()]
-        public void TimeSeriesTest()
+        public void TimeSeriesTest_NoArgument()
         {
             // Scenario
             TimeSeries ts = new TimeSeries();
@@ -29,7 +29,7 @@ namespace PDTW_clustering.lib.Tests
 
         // Initialize a time series with provided values
         [TestMethod()]
-        public void TimeSeriesTest1()
+        public void TimeSeriesTest_ListOfValues()
         {
             // Scenario
             TimeSeries ts = new TimeSeries(new List<float> { 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f });
@@ -45,7 +45,7 @@ namespace PDTW_clustering.lib.Tests
 
         // Initialize a time series with another time series
         [TestMethod()]
-        public void TimeSeriesTest2()
+        public void TimeSeriesTest_TimeSeries()
         {
             // Scenario
             TimeSeries ts = new TimeSeries(new List<float> { 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f });
@@ -63,7 +63,7 @@ namespace PDTW_clustering.lib.Tests
 
         // Initialize a time series with values represented as a string read from text file, with its ordinal number
         [TestMethod()]
-        public void TimeSeriesTest3()
+        public void TimeSeriesTest_StringAndIndex()
         {
             // Scenario
             string str = "3@ 1.0 2.1 3.2 4.3";
@@ -82,6 +82,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(4, ts.Length);
         }
         
+        // Test normalization
         [TestMethod()]
         public void normalizeTest()
         {
@@ -143,7 +144,7 @@ namespace PDTW_clustering.lib.Tests
             // Scenario 3: ZERO MIN
             List<float> listOfValues3 = new List<float> { -3f / 2, -1f / 2, -1f / 2, -1f / 2, 0f, 0f, 1f, 2f };
             TimeSeries ts3 = new TimeSeries(ts);
-            ts3.normalize(EnumNormalization.ZERO_MIN);
+            ts3.normalize(EnumNormalization.ZERO_MEAN);
 
             // Check 3a
             Assert.AreEqual(index, ts3.Index);
@@ -164,6 +165,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(1, normalizedTimeSeries3.CompressionRate);
         }
 
+        // Test PAA
         [TestMethod()]
         public void paaTest()
         {
@@ -233,7 +235,7 @@ namespace PDTW_clustering.lib.Tests
             bool isNormalized3 = true;
             int compressionRate3 = 8;
             TimeSeries ts3 = new TimeSeries(ts);
-            ts3.normalize(EnumNormalization.ZERO_MIN);
+            ts3.normalize(EnumNormalization.ZERO_MEAN);
             ts3.paa(compressionRate3, isNormalized3);
 
             // Check 3a

@@ -46,6 +46,7 @@ namespace PDTW_clustering.lib
             this.Series = new List<float>();
             this.NormalizedSeries = null;
             this.PaaSeries = null;
+            this.ClusteringSeries = this;
             this.CompressionRate = 1;
         }
 
@@ -56,6 +57,7 @@ namespace PDTW_clustering.lib
             this.Series = series;
             this.NormalizedSeries = null;
             this.PaaSeries = null;
+            this.ClusteringSeries = this;
             this.CompressionRate = 1;
         }
 
@@ -66,6 +68,7 @@ namespace PDTW_clustering.lib
             this.Series = new List<float>(ts.Series);
             this.NormalizedSeries = ts.NormalizedSeries;
             this.PaaSeries = ts.PaaSeries;
+            this.ClusteringSeries = this;
             this.CompressionRate = ts.CompressionRate;
         }
 
@@ -76,6 +79,7 @@ namespace PDTW_clustering.lib
             this.Series = new List<float>();
             this.NormalizedSeries = null;
             this.PaaSeries = null;
+            this.ClusteringSeries = this;
             this.CompressionRate = 1;
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
@@ -115,13 +119,14 @@ namespace PDTW_clustering.lib
                 case EnumNormalization.MIN_MAX:
                     normalizedSeries.Series = normalize_min_max();
                     break;
-                case EnumNormalization.ZERO_MIN:
+                case EnumNormalization.ZERO_MEAN:
                     normalizedSeries.Series = normalize_zero_mean();
                     break;
                 default:
                     throw new Exception("There is some error in configuring normalization");
             }
             this.NormalizedSeries = normalizedSeries;
+            this.ClusteringSeries = normalizedSeries;
         }
 
         // Calculate PAA time series
@@ -152,6 +157,7 @@ namespace PDTW_clustering.lib
             }
             paaTimeSeries.Series = series;
             this.PaaSeries = paaTimeSeries;
+            this.ClusteringSeries = paaTimeSeries;
             this.CompressionRate = c;
         }
         #endregion

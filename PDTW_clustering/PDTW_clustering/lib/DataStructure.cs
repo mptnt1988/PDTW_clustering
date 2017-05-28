@@ -15,7 +15,7 @@ namespace PDTW_clustering.lib
         UPLEFT
     }
 
-    enum EnumDtwMultithreading
+    public enum EnumDtwMultithreading
     {
         ENABLED,
         DISABLED
@@ -37,7 +37,7 @@ namespace PDTW_clustering.lib
     {
         NONE,
         MIN_MAX,
-        ZERO_MIN
+        ZERO_MEAN
     }
 
     public enum EnumViewMode
@@ -56,7 +56,7 @@ namespace PDTW_clustering.lib
         public EnumNormalization normalization;
     }
 
-    struct PathPoint
+    public struct PathPoint
     {
         public int x;
         public int y;
