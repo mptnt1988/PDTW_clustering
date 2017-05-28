@@ -28,9 +28,10 @@ namespace PDTW_clustering.lib
         // The time sereis after being normalized
         public TimeSeries NormalizedSeries { get; private set; }
         // The time series after being PAA-calculated
+        public int CompressionRate { get; private set; }
         public TimeSeries PaaSeries { get; private set; }
         // Indicate the compression rate of this time series
-        public int CompressionRate { get; private set; }
+        public TimeSeries ClusteringSeries { get; private set; }
         // Label of this obj
         public override int Label { get { return _label; } }
         // Index of this obj in the data read from file
@@ -41,15 +42,19 @@ namespace PDTW_clustering.lib
         public TimeSeries()
         {
             this._index = -1;
+            this._label = -1;
             this.Series = new List<float>();
-            this.PaaSeries = this;
+            this.NormalizedSeries = null;
+            this.PaaSeries = null;
             this.CompressionRate = 1;
         }
 
         public TimeSeries(List<float> series)
         {
             this._index = -1;
+            this._label = -1;
             this.Series = series;
+            this.NormalizedSeries = null;
             this.PaaSeries = this;
             this.CompressionRate = 1;
         }
@@ -57,11 +62,11 @@ namespace PDTW_clustering.lib
         public TimeSeries(TimeSeries ts)
         {
             this._index = ts.Index;
-            this.Series = new List<float>(ts.Series);
             this._label = ts.Label;
-            this.NormalizedSeries = this;
-            this.PaaSeries = this;
-            this.CompressionRate = 1;
+            this.Series = new List<float>(ts.Series);
+            this.NormalizedSeries = ts.NormalizedSeries;
+            this.PaaSeries = ts.PaaSeries;
+            this.CompressionRate = ts.CompressionRate;
         }
 
         public TimeSeries(string s, int index)
@@ -69,7 +74,8 @@ namespace PDTW_clustering.lib
             string se = s;
             this._index = index;
             this.Series = new List<float>();
-            this.PaaSeries = this;
+            this.NormalizedSeries = null;
+            this.PaaSeries = null;
             this.CompressionRate = 1;
             se = se.Replace(',', ' ');
             for (int i = 0; i < 5; i++)
@@ -101,55 +107,52 @@ namespace PDTW_clustering.lib
         #region BEHAVIORS
         // Calculate PAA time series
         // c is compression rate, c >= 2
-        public TimeSeries get_paa(int c, bool isNormalized)
+        public void paa(int c, bool isNormalized)
         {
-            this.CompressionRate = c; 
+            this.CompressionRate = c;
+            List<float> seriesFrom;
+            if (isNormalized)
+                seriesFrom = this.NormalizedSeries.Series;
+            else
+                seriesFrom = this.Series;
             TimeSeries paaTimeSeries = new TimeSeries(this);
             List<float> series = new List<float>();
             if (c == 1)
+                series = seriesFrom;
+            else
             {
-                if (isNormalized)
-                    series = this.NormalizedSeries.Series;
-                else
-                    series = this.Series;
-            }
-            else if (this.CompressionRate == 1 || this.CompressionRate != c)
-            {
-                
                 int n = this.Length;
                 int noOfFullFrame = n / c;
                 int j = 0;
                 for (int i = 0; i < noOfFullFrame; i++)
                 {
                     int ubound = j + c;
-                    paa_calculate_frame(series, ref j, ubound, c, isNormalized);
+                    paa_calculate_frame(series, ref j, ubound, c, seriesFrom);
                 }
                 if (j < n)
-                    paa_calculate_frame(series, ref j, n, n % c, isNormalized);
+                    paa_calculate_frame(series, ref j, n, n % c, seriesFrom);
             }
             paaTimeSeries.Series = series;
             this.PaaSeries = paaTimeSeries;
-            return this.PaaSeries;
         }
 
-        public TimeSeries normalize(EnumNormalization normalization)
+        public void normalize(EnumNormalization normalization)
         {
             TimeSeries normalizedSeries = new TimeSeries(this);
-            List<float> series;
             switch (normalization)
             {
+                case EnumNormalization.NONE:
+                    break;
                 case EnumNormalization.MIN_MAX:
-                    series = normalize_min_max();
+                    normalizedSeries.Series = normalize_min_max();
                     break;
                 case EnumNormalization.ZERO_MIN:
-                    series = normalize_zero_mean();
+                    normalizedSeries.Series = normalize_zero_mean();
                     break;
                 default:
                     throw new Exception("There is some error in configuring normalization");
             }
-            normalizedSeries.Series = series;
             this.NormalizedSeries = normalizedSeries;
-            return normalizedSeries;
         }
         #endregion
 
@@ -206,18 +209,11 @@ namespace PDTW_clustering.lib
             return series;
         }
 
-        private void paa_calculate_frame(List<float> series, ref int index, int ubound, int quantity, bool isNormalized)
+        private void paa_calculate_frame(List<float> series, ref int index, int ubound, int quantity, List<float> seriesFrom)
         {
             float sum = 0;
             for (; index < ubound; index++)
-            {
-                float addent;
-                if (isNormalized)
-                    addent = this.NormalizedSeries.Series[index];
-                else
-                    addent = this.Series[index];
-                sum += addent;
-            }
+                sum += seriesFrom[index];
             float avg = sum / quantity;
             series.Add(avg);
         }

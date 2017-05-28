@@ -79,6 +79,12 @@
     <Compile Include="lib\ExTreeNode.cs" />
     <Compile Include="lib\ParallelAlgorithms_Wavefront.cs" />
     <Compile Include="lib\TimeSeries.cs" />
+    <Compile Include="FormNormalization.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNormalization.designer.cs">
+      <DependentUpon>FormNormalization.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">
@@ -92,6 +98,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormInputPAA.resx">
       <DependentUpon>FormInputPAA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNormalization.resx">
+      <DependentUpon>FormNormalization.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

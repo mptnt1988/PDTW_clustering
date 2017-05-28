@@ -130,6 +130,7 @@
             this.tbNormalize.Size = new System.Drawing.Size(23, 22);
             this.tbNormalize.Text = "Normalize Data";
             this.tbNormalize.Visible = false;
+            this.tbNormalize.Click += new System.EventHandler(this.tbNormalize_Click);
             // 
             // splitContainer
             // 

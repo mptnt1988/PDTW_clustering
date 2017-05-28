@@ -40,6 +40,12 @@ namespace PDTW_clustering.lib
         ZERO_MIN
     }
 
+    public enum EnumViewMode
+    {
+        NORMAL,
+        RESULT
+    }
+
     struct Configuration
     {
         public EnumDtwMultithreading multithreading;

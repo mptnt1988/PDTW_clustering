@@ -266,7 +266,7 @@ namespace PDTW_clustering
             }
             data = new List<ClusteringObject>(data.Select(ts =>
             {
-                ((TimeSeries)ts).get_paa(configCompressionRate, isNormalized);
+                ((TimeSeries)ts).paa(configCompressionRate, isNormalized);
                 return ts;
             }));
             dtwDistance.CompressionRate = configCompressionRate;
