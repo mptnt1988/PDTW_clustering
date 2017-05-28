@@ -55,7 +55,7 @@ namespace PDTW_clustering.lib
             this._label = -1;
             this.Series = series;
             this.NormalizedSeries = null;
-            this.PaaSeries = this;
+            this.PaaSeries = null;
             this.CompressionRate = 1;
         }
 
@@ -105,11 +105,29 @@ namespace PDTW_clustering.lib
         #endregion
 
         #region BEHAVIORS
+        public void normalize(EnumNormalization normalization)
+        {
+            TimeSeries normalizedSeries = new TimeSeries(this);
+            switch (normalization)
+            {
+                case EnumNormalization.NONE:
+                    break;
+                case EnumNormalization.MIN_MAX:
+                    normalizedSeries.Series = normalize_min_max();
+                    break;
+                case EnumNormalization.ZERO_MIN:
+                    normalizedSeries.Series = normalize_zero_mean();
+                    break;
+                default:
+                    throw new Exception("There is some error in configuring normalization");
+            }
+            this.NormalizedSeries = normalizedSeries;
+        }
+
         // Calculate PAA time series
         // c is compression rate, c >= 2
         public void paa(int c, bool isNormalized)
         {
-            this.CompressionRate = c;
             List<float> seriesFrom;
             if (isNormalized)
                 seriesFrom = this.NormalizedSeries.Series;
@@ -134,25 +152,7 @@ namespace PDTW_clustering.lib
             }
             paaTimeSeries.Series = series;
             this.PaaSeries = paaTimeSeries;
-        }
-
-        public void normalize(EnumNormalization normalization)
-        {
-            TimeSeries normalizedSeries = new TimeSeries(this);
-            switch (normalization)
-            {
-                case EnumNormalization.NONE:
-                    break;
-                case EnumNormalization.MIN_MAX:
-                    normalizedSeries.Series = normalize_min_max();
-                    break;
-                case EnumNormalization.ZERO_MIN:
-                    normalizedSeries.Series = normalize_zero_mean();
-                    break;
-                default:
-                    throw new Exception("There is some error in configuring normalization");
-            }
-            this.NormalizedSeries = normalizedSeries;
+            this.CompressionRate = c;
         }
         #endregion
 
