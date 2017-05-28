@@ -13,7 +13,7 @@ namespace PDTW_clustering.lib.Tests
     {
         // Initialize a time series with all default parameters
         [TestMethod()]
-        public void TimeSeriesTest_NoArgument()
+        public void TimeSeriesTest_NoArguments()
         {
             // Scenario
             TimeSeries ts = new TimeSeries();

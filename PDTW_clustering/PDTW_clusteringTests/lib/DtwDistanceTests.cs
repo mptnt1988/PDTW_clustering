@@ -12,7 +12,7 @@ namespace PDTW_clustering.lib.Tests
     public class DtwDistanceTests
     {
         [TestMethod()]
-        public void DtwDistanceTest()
+        public void DtwDistanceTest_NoArguments()
         {
             DtwDistance distance = new DtwDistance();
             Assert.AreEqual(EnumDtwMultithreading.ENABLED, distance.IsMultithreading);
@@ -21,7 +21,7 @@ namespace PDTW_clustering.lib.Tests
         }
 
         [TestMethod()]
-        public void DtwDistanceTest1()
+        public void DtwDistanceTest_InitialTimeSeries()
         {
             TimeSeries ts1, ts2;
             ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
@@ -195,7 +195,48 @@ namespace PDTW_clustering.lib.Tests
         [TestMethod()]
         public void CalculateTest_PaaNormalizedTimeSeries()
         {
+            TimeSeries ts1, ts2;
+            ts1 = new TimeSeries(new List<float>(new float[] { 3, 1, 1, 3, 3, 3, 1, 1, 3, 1, 3, 1 }));
+            ts2 = new TimeSeries(new List<float>(new float[] { 4, 6, 6, 4, 6, 4, 4, 6, 4, 6, 6, 4 }));
+            DtwDistance distance = new DtwDistance();
+            bool isNormalized = true;
+            int compressionRate = 3;
 
+            // Scenario PAA MinMax
+            TimeSeries tsMinMax1, tsMinMax2;
+            tsMinMax1 = new TimeSeries(ts1);
+            tsMinMax2 = new TimeSeries(ts2);
+            EnumNormalization normalizationTypeMinMax = EnumNormalization.MIN_MAX;
+            tsMinMax1.normalize(normalizationTypeMinMax);
+            tsMinMax1.paa(compressionRate, isNormalized);
+            tsMinMax2.normalize(normalizationTypeMinMax);
+            tsMinMax2.paa(compressionRate, isNormalized);
+            distance.Calculate(tsMinMax1, tsMinMax2);
+
+            // Check PAA MinMax
+            float expectedEndPointValuePaaMinMax = 1f / 3;
+            float expectedValuePaaMinMax = (float)Math.Sqrt(expectedEndPointValuePaaMinMax / compressionRate);
+            Assert.IsNull(distance.PathMatrix);
+            Assert.IsTrue(Math.Abs(expectedEndPointValuePaaMinMax - distance.DistanceMatrix.Cast<float>().Last()) < 0.000001);
+            Assert.IsTrue(Math.Abs(expectedValuePaaMinMax - distance.Value) < 0.000001);
+
+            // Scenario PAA ZeroMean
+            TimeSeries tsZeroMean1, tsZeroMean2;
+            tsZeroMean1 = new TimeSeries(ts1);
+            tsZeroMean2 = new TimeSeries(ts2);
+            EnumNormalization normalizationTypeZeroMean = EnumNormalization.ZERO_MEAN;
+            tsZeroMean1.normalize(normalizationTypeZeroMean);
+            tsZeroMean1.paa(compressionRate, isNormalized);
+            tsZeroMean2.normalize(normalizationTypeZeroMean);
+            tsZeroMean2.paa(compressionRate, isNormalized);
+            distance.Calculate(tsZeroMean1, tsZeroMean2);
+
+            // Check PAA ZeroMean
+            float expectedEndPointValuePaaZeroMean = 4f / 3;
+            float expectedValuePaaZeroMean = (float)Math.Sqrt(expectedEndPointValuePaaZeroMean / compressionRate);
+            Assert.IsNull(distance.PathMatrix);
+            Assert.AreEqual(expectedEndPointValuePaaZeroMean, distance.DistanceMatrix.Cast<float>().Last());
+            Assert.AreEqual(expectedValuePaaZeroMean, distance.Value);
         }
     }
 }
