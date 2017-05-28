@@ -12,6 +12,7 @@ namespace PDTW_clustering
 {
     public partial class FormView : Form
     {
+        #region VARIABLES
         FormMain _mainForm = null;
         private int _window = 200;
         private Cluster _cluster;
@@ -20,6 +21,7 @@ namespace PDTW_clustering
         private List<TimeSeries> _dataset;
         private List<TimeSeries>[] _tsClusters;
         private int _compressionRate = 1;
+        #endregion
 
         #region PROPERTIES
         // Clustering time (in millisecs)
@@ -28,7 +30,7 @@ namespace PDTW_clustering
         public List<TimeSeries> Data { get; private set; }  // data to be drawn
         #endregion
 
-        #region CONSTRUCTOR
+        #region CONSTRUCTORS
         public FormView(FormMain mainForm, List<TimeSeries> data)
         {
             this._mainForm = mainForm;
@@ -81,172 +83,7 @@ namespace PDTW_clustering
         }
         #endregion
 
-        #region METHODS: Drawing
-        public void DrawData()
-        {
-            List<TimeSeries> data2Draw;
-            if (_compressionRate != 1)
-                data2Draw = new List<TimeSeries>(Data.Select(ts =>
-                {
-                    ts.get_paa(_compressionRate, false);
-                    return ts.PaaSeries;
-                }));
-            else
-                data2Draw = Data;
-            int view = 0;
-            TimeSeries t;
-            if (data2Draw == null || data2Draw.Count <= 0)
-            {
-                return;
-            }
-            InitGraph();
-            view = Math.Min(_window, data2Draw.Count);
-            for (int i = 0; i < view; i++)
-            {
-                t = (TimeSeries)data2Draw[i];
-                DrawTimeSeries(t, Color.FromArgb((i * 100) % 255, Math.Abs((255 - i * 100) % 255), (i * 10) % 255));
-            }
-            m_graph.Refresh();
-        }
-
-        private void DrawTimeSeries(TimeSeries ts, Color color)
-        {
-            LineItem myCurve;
-            //
-            m_pointsList = new PointPairList();
-            double t1 = 0.0;
-            //
-            for (int j = 0; j < ts.Length; j++)
-            {
-                //t1 = t1 + 0.1;
-                t1 = t1 + 1;
-                //m_pointsList.Add(t1, ts.get_at(j));
-                m_pointsList.Add(t1, ts.Series[j]);
-            }
-            //
-
-            myCurve = m_graphPane.AddCurve(null, m_pointsList, color, SymbolType.None);
-
-            m_graph.AxisChange();
-            //this.Refresh();
-            // MessageBox.Show(t);
-
-        }
-
-        private void InitGraph()
-        {
-            m_graphPane.CurveList.Clear();
-            string _graphTitle = "TimeSeries Clustering", _xTitle = "Time", _yTitle = "Value";
-            // Set the titles and axis labels
-            SetLineBarTitleAndAxisDetails(ref _graphTitle, ref _xTitle, ref _yTitle);
-            m_graphPane.Title.Text = "TimeSeries Clustering";
-            m_graphPane.XAxis.Title.Text = "Time";
-            m_graphPane.YAxis.Title.Text = "Value";
-            m_graphPane.XAxis.MajorGrid.IsVisible = true;
-            m_graphPane.YAxis.MajorGrid.IsVisible = true;
-            m_graphPane.XAxis.Scale.FontSpec.Size = 12;
-            m_graphPane.XAxis.Title.FontSpec.Size = 12;
-            m_graphPane.XAxis.MinorTic.IsOutside = false;
-            m_graphPane.XAxis.MinorTic.IsOpposite = false;
-            m_graphPane.XAxis.MinorTic.IsInside = false;
-            m_graphPane.YAxis.Scale.FontSpec.Size = 12;
-            m_graphPane.YAxis.Title.FontSpec.Size = 12;
-            m_graphPane.YAxis.MinorTic.IsOutside = false;
-            m_graphPane.YAxis.MinorTic.IsOpposite = false;
-            m_graphPane.YAxis.MinorTic.IsInside = false;
-            FillPaneBackground();
-        }
-
-        private void FillPaneBackground()
-        {
-            // Fill the axis background with a color gradient
-            m_graphPane.Chart.Fill = new Fill(Color.White, Color.LightGoldenrodYellow, 45F);
-            // Fill the pane background with a color gradient
-            m_graphPane.Fill = new Fill(Color.White, Color.FromArgb(220, 220, 255), 45F);
-        }
-
-        private void ProcessPointsData()
-        {
-            m_pointsList = new PointPairList();
-            m_pointsList.Add(0.1, 1.2);
-            m_pointsList.Add(0.2, 1.5);
-            m_pointsList.Add(0.3, 1.2);
-            m_pointsList.Add(0.4, 1.5);
-        }
-
-        private void CreateLineGraph()
-        {
-            //clear if anything exists.            
-            m_graphPane.CurveList.Clear();
-
-            string _graphTitle = "", _xTitle = "", _yTitle = "";
-
-            // Set the titles and axis labels
-            SetLineBarTitleAndAxisDetails(ref _graphTitle, ref _xTitle, ref _yTitle);
-            m_graphPane.Title.Text = _graphTitle;
-            m_graphPane.XAxis.Title.Text = _xTitle;
-            m_graphPane.YAxis.Title.Text = _yTitle;
-
-            // Generate a blue curve with Star symbols
-            LineItem myCurve = m_graphPane.AddCurve("test", m_pointsList, Color.Blue, SymbolType.None);
-            //
-
-
-            //
-            m_pointsList = new PointPairList();
-            m_pointsList.Add(0.1, 1.4);
-            m_pointsList.Add(0.2, 1.2);
-            m_pointsList.Add(0.3, 1.1);
-            m_pointsList.Add(0.4, 1.9);
-            myCurve = m_graphPane.AddCurve("test", m_pointsList, Color.Red, SymbolType.None);
-            //
-
-            //
-            m_graphPane.XAxis.Scale.Min = 0;
-            m_graphPane.XAxis.Scale.Max = 1;
-            m_graphPane.XAxis.Scale.MinorStep = 0.01;
-            m_graphPane.XAxis.Scale.MajorStep = 0.01;
-            m_graphPane.YAxis.Scale.Min = 0;
-            m_graphPane.YAxis.Scale.Max = 2;
-            m_graphPane.YAxis.Scale.MinorStep = 0.01;
-            m_graphPane.YAxis.Scale.MajorStep = 0.01;
-            // zg1.AxisChange();
-            // Calculate the Axis Scale Ranges
-            m_graph.AxisChange();
-        }
-
-        private void SetLineBarTitleAndAxisDetails(ref string _graphTitle, ref string _xTitle, ref string _yTitle)
-        {
-            _graphTitle = "Title";
-            string _xTitleTemp = "Title";
-            string _yTitleTemp = "Title";
-            string _xUnit = "Title";
-            string _yUnit = "Title";
-
-            if (_graphTitle == "")
-            {
-                _graphTitle = "Graph Test";
-            }
-            if (_xTitleTemp == "")
-            {
-                _xTitle = "X Axis";
-            }
-            if (_yTitleTemp == "")
-            {
-                _yTitle = "Y Axis";
-            }
-            if (_xUnit != "")
-            {
-                _xTitle = _xTitleTemp + " (" + _xUnit + " )";
-            }
-            if (_yUnit != "")
-            {
-                _yTitle = _yTitleTemp + " (" + _yUnit + " )";
-            }
-        }
-        #endregion
-
-        #region EVENTS
+        #region CALLBACKS
         private void FormView_Load(object sender, EventArgs e)
         {
             if (this.Data == null)
@@ -393,37 +230,171 @@ namespace PDTW_clustering
         }
         #endregion
 
-        //private void tbNormalize_Click(object sender, EventArgs e)
-        //{
-        //    if (_data != null && _data.Count > 0)
-        //    {
-        //        DialogResult rs;
-        //        NormalizeForm nform = new NormalizeForm();
-        //        nform.ShowDialog();
-        //        rs = nform.DialogResult;
-        //        if (rs == DialogResult.OK)
-        //        {
-        //            Cursor olcursor = this.Cursor;
-        //            this.Cursor = Cursors.WaitCursor;
-        //            if (nform.Ntype == NormalizeType.MinMax)
-        //            {
-        //                for (int i = 0; i < _data.Count; i++)
-        //                {
-        //                    ((TimeSeries)_data[i]).MinMaxNomalize();
-        //                }
-        //            }
-        //            else
-        //            {
-        //                for (int i = 0; i < _data.Count; i++)
-        //                {
-        //                    ((TimeSeries)_data[i]).ZeroMeanNomalize();
-        //                }
-        //            }
-        //            DrawData();
-        //            this.Cursor = olcursor;
-        //        }
-        //    }
-        //}
+        #region BEHAVIORS
+        public void DrawData()
+        {
+            List<TimeSeries> data2Draw;
+            if (_compressionRate != 1)
+                data2Draw = new List<TimeSeries>(Data.Select(ts =>
+                {
+                    ts.get_paa(_compressionRate, false);
+                    return ts.PaaSeries;
+                }));
+            else
+                data2Draw = Data;
+            int view = 0;
+            TimeSeries t;
+            if (data2Draw == null || data2Draw.Count <= 0)
+            {
+                return;
+            }
+            InitGraph();
+            view = Math.Min(_window, data2Draw.Count);
+            for (int i = 0; i < view; i++)
+            {
+                t = (TimeSeries)data2Draw[i];
+                DrawTimeSeries(t, Color.FromArgb((i * 100) % 255, Math.Abs((255 - i * 100) % 255), (i * 10) % 255));
+            }
+            m_graph.Refresh();
+        }
+        #endregion
 
+        #region FUNCTIONS
+        private void DrawTimeSeries(TimeSeries ts, Color color)
+        {
+            LineItem myCurve;
+            //
+            m_pointsList = new PointPairList();
+            double t1 = 0.0;
+            //
+            for (int j = 0; j < ts.Length; j++)
+            {
+                //t1 = t1 + 0.1;
+                t1 = t1 + 1;
+                //m_pointsList.Add(t1, ts.get_at(j));
+                m_pointsList.Add(t1, ts.Series[j]);
+            }
+            //
+
+            myCurve = m_graphPane.AddCurve(null, m_pointsList, color, SymbolType.None);
+
+            m_graph.AxisChange();
+            //this.Refresh();
+            // MessageBox.Show(t);
+
+        }
+
+        private void InitGraph()
+        {
+            m_graphPane.CurveList.Clear();
+            string _graphTitle = "TimeSeries Clustering", _xTitle = "Time", _yTitle = "Value";
+            // Set the titles and axis labels
+            SetLineBarTitleAndAxisDetails(ref _graphTitle, ref _xTitle, ref _yTitle);
+            m_graphPane.Title.Text = "TimeSeries Clustering";
+            m_graphPane.XAxis.Title.Text = "Time";
+            m_graphPane.YAxis.Title.Text = "Value";
+            m_graphPane.XAxis.MajorGrid.IsVisible = true;
+            m_graphPane.YAxis.MajorGrid.IsVisible = true;
+            m_graphPane.XAxis.Scale.FontSpec.Size = 12;
+            m_graphPane.XAxis.Title.FontSpec.Size = 12;
+            m_graphPane.XAxis.MinorTic.IsOutside = false;
+            m_graphPane.XAxis.MinorTic.IsOpposite = false;
+            m_graphPane.XAxis.MinorTic.IsInside = false;
+            m_graphPane.YAxis.Scale.FontSpec.Size = 12;
+            m_graphPane.YAxis.Title.FontSpec.Size = 12;
+            m_graphPane.YAxis.MinorTic.IsOutside = false;
+            m_graphPane.YAxis.MinorTic.IsOpposite = false;
+            m_graphPane.YAxis.MinorTic.IsInside = false;
+            FillPaneBackground();
+        }
+
+        private void FillPaneBackground()
+        {
+            // Fill the axis background with a color gradient
+            m_graphPane.Chart.Fill = new Fill(Color.White, Color.LightGoldenrodYellow, 45F);
+            // Fill the pane background with a color gradient
+            m_graphPane.Fill = new Fill(Color.White, Color.FromArgb(220, 220, 255), 45F);
+        }
+
+        private void ProcessPointsData()
+        {
+            m_pointsList = new PointPairList();
+            m_pointsList.Add(0.1, 1.2);
+            m_pointsList.Add(0.2, 1.5);
+            m_pointsList.Add(0.3, 1.2);
+            m_pointsList.Add(0.4, 1.5);
+        }
+
+        private void CreateLineGraph()
+        {
+            //clear if anything exists.            
+            m_graphPane.CurveList.Clear();
+
+            string _graphTitle = "", _xTitle = "", _yTitle = "";
+
+            // Set the titles and axis labels
+            SetLineBarTitleAndAxisDetails(ref _graphTitle, ref _xTitle, ref _yTitle);
+            m_graphPane.Title.Text = _graphTitle;
+            m_graphPane.XAxis.Title.Text = _xTitle;
+            m_graphPane.YAxis.Title.Text = _yTitle;
+
+            // Generate a blue curve with Star symbols
+            LineItem myCurve = m_graphPane.AddCurve("test", m_pointsList, Color.Blue, SymbolType.None);
+            //
+
+
+            //
+            m_pointsList = new PointPairList();
+            m_pointsList.Add(0.1, 1.4);
+            m_pointsList.Add(0.2, 1.2);
+            m_pointsList.Add(0.3, 1.1);
+            m_pointsList.Add(0.4, 1.9);
+            myCurve = m_graphPane.AddCurve("test", m_pointsList, Color.Red, SymbolType.None);
+            //
+
+            //
+            m_graphPane.XAxis.Scale.Min = 0;
+            m_graphPane.XAxis.Scale.Max = 1;
+            m_graphPane.XAxis.Scale.MinorStep = 0.01;
+            m_graphPane.XAxis.Scale.MajorStep = 0.01;
+            m_graphPane.YAxis.Scale.Min = 0;
+            m_graphPane.YAxis.Scale.Max = 2;
+            m_graphPane.YAxis.Scale.MinorStep = 0.01;
+            m_graphPane.YAxis.Scale.MajorStep = 0.01;
+            // zg1.AxisChange();
+            // Calculate the Axis Scale Ranges
+            m_graph.AxisChange();
+        }
+
+        private void SetLineBarTitleAndAxisDetails(ref string _graphTitle, ref string _xTitle, ref string _yTitle)
+        {
+            _graphTitle = "Title";
+            string _xTitleTemp = "Title";
+            string _yTitleTemp = "Title";
+            string _xUnit = "Title";
+            string _yUnit = "Title";
+
+            if (_graphTitle == "")
+            {
+                _graphTitle = "Graph Test";
+            }
+            if (_xTitleTemp == "")
+            {
+                _xTitle = "X Axis";
+            }
+            if (_yTitleTemp == "")
+            {
+                _yTitle = "Y Axis";
+            }
+            if (_xUnit != "")
+            {
+                _xTitle = _xTitleTemp + " (" + _xUnit + " )";
+            }
+            if (_yUnit != "")
+            {
+                _yTitle = _yTitleTemp + " (" + _yUnit + " )";
+            }
+        }
+        #endregion
     }
 }

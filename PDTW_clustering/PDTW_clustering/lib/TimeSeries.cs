@@ -9,8 +9,10 @@ namespace PDTW_clustering.lib
 {
     public class TimeSeries : ClusteringObject
     {
+        #region VARIABLES
         private int _label;
         private int _index;
+        #endregion
 
         #region PROPERTIES
         // Length of this obj
@@ -29,14 +31,13 @@ namespace PDTW_clustering.lib
         public TimeSeries PaaSeries { get; private set; }
         // Indicate the compression rate of this time series
         public int CompressionRate { get; private set; }
-
         // Label of this obj
         public override int Label { get { return _label; } }
         // Index of this obj in the data read from file
         public override int Index { get { return _index; } }
         #endregion
 
-        #region CONSTRUCTOR
+        #region CONSTRUCTORS
         public TimeSeries()
         {
             this._index = -1;
@@ -44,6 +45,7 @@ namespace PDTW_clustering.lib
             this.PaaSeries = this;
             this.CompressionRate = 1;
         }
+
         public TimeSeries(List<float> series)
         {
             this._index = -1;
@@ -51,6 +53,7 @@ namespace PDTW_clustering.lib
             this.PaaSeries = this;
             this.CompressionRate = 1;
         }
+
         public TimeSeries(TimeSeries ts)
         {
             this._index = ts.Index;
@@ -60,6 +63,7 @@ namespace PDTW_clustering.lib
             this.PaaSeries = this;
             this.CompressionRate = 1;
         }
+
         public TimeSeries(string s, int index)
         {
             string se = s;
@@ -94,11 +98,12 @@ namespace PDTW_clustering.lib
         }
         #endregion
 
-        #region METHODS
+        #region BEHAVIORS
         // Calculate PAA time series
-        public TimeSeries get_paa(int c, bool isNormalized)  // c is compression rate, c >= 2
+        // c is compression rate, c >= 2
+        public TimeSeries get_paa(int c, bool isNormalized)
         {
-            this.CompressionRate = c;
+            this.CompressionRate = c; 
             TimeSeries paaTimeSeries = new TimeSeries(this);
             List<float> series = new List<float>();
             if (c == 1)
@@ -148,6 +153,7 @@ namespace PDTW_clustering.lib
         }
         #endregion
 
+        #region FUNCTIONS
         private List<float> normalize_min_max()
         {
             float max = float.NegativeInfinity;
@@ -215,5 +221,6 @@ namespace PDTW_clustering.lib
             float avg = sum / quantity;
             series.Add(avg);
         }
+        #endregion
     }
 }

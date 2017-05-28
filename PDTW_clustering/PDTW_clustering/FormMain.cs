@@ -16,18 +16,23 @@ namespace PDTW_clustering
 {
     public partial class FormMain : Form
     {
+        #region VARIABLES
         private List<TimeSeries> _data;
         private TimeSpan _exeTime;
         private long _exeTimeStart;
         private Configuration _configuration;
         private Cluster _cluster;
         private CancellationTokenSource _cts;
+        #endregion
 
+        #region CONSTRUCTORS
         public FormMain()
         {
             InitializeComponent();
         }
+        #endregion
 
+        #region CALLBACKS
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int index = 1;
@@ -95,6 +100,29 @@ namespace PDTW_clustering
             run_execution();
         }
 
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            if (_cts != null)
+                _cts.Cancel();
+            GC.Collect();
+            tmrExeTime.Enabled = false;
+            _exeTime = TimeSpan.Zero;
+            lblExeTimeValue.Text = display_time_string(_exeTime);
+            pgbDoClustering.Value = 0;
+        }
+
+        private void btnViewResult_Click(object sender, EventArgs e)
+        {
+            FormView resultForm = new FormView(this, _data, _cluster, false);
+            resultForm.Time = _exeTime;
+            resultForm.Show();
+            resultForm.Activate();
+            resultForm.DrawData();
+            this.Enabled = false;
+        }
+        #endregion
+
+        #region FUNCTIONS
         private bool is_execution_allowed()
         {
             if (_data == null || _data.Count == 0)
@@ -259,31 +287,11 @@ namespace PDTW_clustering
             clusterOfObject = _cluster.do_clustering();  // for testing only
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            if (_cts != null)
-                _cts.Cancel();
-            GC.Collect();
-            tmrExeTime.Enabled = false;
-            _exeTime = TimeSpan.Zero;
-            lblExeTimeValue.Text = display_time_string(_exeTime);
-            pgbDoClustering.Value = 0;
-        }
-
-        private void btnViewResult_Click(object sender, EventArgs e)
-        {
-            FormView resultForm = new FormView(this, _data, _cluster, false);
-            resultForm.Time = _exeTime;
-            resultForm.Show();
-            resultForm.Activate();
-            resultForm.DrawData();
-            this.Enabled = false;
-        }
-
         private string display_time_string(TimeSpan timeSpan)
         {
             return timeSpan.ToString("hh':'mm':'ss'.'fff");
         }
+        #endregion
 
         // TESTING
         #region ManualTest

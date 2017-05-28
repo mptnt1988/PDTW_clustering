@@ -15,6 +15,7 @@ namespace PDTW_clustering.lib
 
     public abstract class Cluster
     {
+        #region ABSTRACTION
         public abstract int[] do_clustering();
         public abstract Evaluation do_evaluating();
         public abstract List<int>[] Clusters { get; }
@@ -24,10 +25,14 @@ namespace PDTW_clustering.lib
         public abstract float TotalSum { get; }
         public abstract CancellationToken Token { get; set; }
         public abstract int Percentage { get; }
+        #endregion
 
+        #region VARIABLES
         protected int calcDistantMatrixPercentage { get; set; }
+        #endregion
 
-        public float[,] calculate_distance_matrix(List<ClusteringObject> data, Distance distance)
+        #region FUNCTIONS
+        protected float[,] calculate_distance_matrix(List<ClusteringObject> data, Distance distance)
         {
             int size = data.Count;
             float[,] distanceMatrix = new float[size, size];
@@ -58,10 +63,12 @@ namespace PDTW_clustering.lib
             //}
             return distanceMatrix;
         }
+        #endregion
     }
 
     class ImprovedKMedoids : Cluster
     {
+        #region VARIABLES
         private List<ClusteringObject> _data;   // _data[i] : object with index i
         private float[,] _distanceMatrix;       // _distanceMatrix[i,j] : distance between each pair of objects i & j
         private int[] _medoids;                 // _medoids[i] : index of object which is medoid of cluster i
@@ -74,21 +81,9 @@ namespace PDTW_clustering.lib
         private float _totalSum;                // sum of all distances between object and its medoid
         private float _totalSumOld;             // old value of sum to be compared later
         private CancellationToken _token;       // token to cancel calculation
+        #endregion
 
-        public override List<int>[] Clusters { get { return _clusters; } }
-        public override Evaluation Evaluation { get { return _evaluation; } }
-        public override List<ClusteringObject> Objects { get { return _data; } }
-        public override int[] ClusterOfObject { get { return _clusterOfObject; } }
-        public override float TotalSum { get { return _totalSum; } }
-        public override CancellationToken Token { get { return _token; } set { _token = value; } }
-        public override int Percentage
-        {
-            get
-            {
-                return (int)calcDistantMatrixPercentage;
-            }
-        }
-
+        #region CONSTRUCTORS
         public ImprovedKMedoids(List<ClusteringObject> data, Distance distance, int k)
         {
             _data = data;
@@ -97,6 +92,16 @@ namespace PDTW_clustering.lib
             _totalSumOld = _totalSum = 0;
             _size = _data.Count;
         }
+        #endregion
+
+        #region BEHAVIORS
+        public override List<int>[] Clusters { get { return _clusters; } }
+        public override Evaluation Evaluation { get { return _evaluation; } }
+        public override List<ClusteringObject> Objects { get { return _data; } }
+        public override int[] ClusterOfObject { get { return _clusterOfObject; } }
+        public override float TotalSum { get { return _totalSum; } }
+        public override CancellationToken Token { get { return _token; } set { _token = value; } }
+        public override int Percentage { get { return (int)calcDistantMatrixPercentage; } }
 
         public override int[] do_clustering()
         {
@@ -116,7 +121,9 @@ namespace PDTW_clustering.lib
             _evaluation = new Evaluation(this);
             return _evaluation;
         }
+        #endregion
 
+        #region FUNCTIONS
         private void select_initial_medoids()
         {
             // Calculate the distance between every pair of all objects
@@ -201,10 +208,12 @@ namespace PDTW_clustering.lib
                 _totalSum += nearestMedoid.value;
             }
         }
+        #endregion
     }
 
     class DensityPeaks : Cluster
     {
+        #region VARIABLES
         private List<ClusteringObject> _data;   // _data[i] : object with index i
         private float[,] _distanceMatrix;       // _distanceMatrix[i,j] : distance between each pair of objects i & j
         private int[] _medoids;                 // _medoids[i] : index of object which is medoid of cluster i
@@ -221,7 +230,31 @@ namespace PDTW_clustering.lib
         private int[] _adjacentOfObject;        // _adjacentOfObject[i]: nearest neighbor of object i
         private Distance _distance;             // method to calculate distance
         private CancellationToken _token;       // token to cancel calculation
+        #endregion
 
+        #region CONSTRUCTORS
+        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k)
+        {
+            _data = data;
+            _k = k;
+            //_dC = 0.018f;
+            _distance = distance;
+            _totalSumOld = _totalSum = 0;
+            _size = _data.Count;
+        }
+
+        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k, float dC)
+        {
+            _data = data;
+            _k = k;
+            _dC = dC;
+            _distance = distance;
+            _totalSumOld = _totalSum = 0;
+            _size = _data.Count;
+        }
+        #endregion
+
+        #region BEHAVIORS
         public override List<int>[] Clusters { get { return _clusters; } }
         public override Evaluation Evaluation { get { return _evaluation; } }
         public override List<ClusteringObject> Objects { get { return _data; } }
@@ -245,26 +278,6 @@ namespace PDTW_clustering.lib
             }
         }
 
-        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k)
-        {
-            _data = data;
-            _k = k;
-            //_dC = 0.018f;
-            _distance = distance;
-            _totalSumOld = _totalSum = 0;
-            _size = _data.Count;
-        }
-
-        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k, float dC)
-        {
-            _data = data;
-            _k = k;
-            _dC = dC;
-            _distance = distance;
-            _totalSumOld = _totalSum = 0;
-            _size = _data.Count;
-        }
-
         public override int[] do_clustering()
         {
             _distanceMatrix = calculate_distance_matrix(_data, _distance);
@@ -275,6 +288,14 @@ namespace PDTW_clustering.lib
             return _clusterOfObject;
         }
 
+        public override Evaluation do_evaluating()
+        {
+            _evaluation = new Evaluation(this);
+            return _evaluation;
+        }
+        #endregion
+        
+        #region FUNCTIONS
         private void calculate_local_density()
         {
             int[] localDensity = new int[_size];
@@ -444,29 +465,31 @@ namespace PDTW_clustering.lib
             else
                 return _clusterOfObject[i];
         }
-
-        public override Evaluation do_evaluating()
-        {
-            _evaluation = new Evaluation(this);
-            return _evaluation;
-        }
+        #endregion
     }
 
     public class Evaluation
     {
+        #region VARIABLES
         private int _a;
         private int _b;
         private int _c;
         private int _d;
+        #endregion
 
+        #region ATTRIBUTES
         public float internalValidation;
         public ExtValidation externalValidation;
+        #endregion
 
+        #region CONSTRUCTORS
         public Evaluation(Cluster cluster)
         {
             evaluate(cluster);
         }
+        #endregion
 
+        #region FUNCTIONS
         private void evaluate(Cluster cluster)
         {
             // INTERNAL VALIDATION
@@ -579,5 +602,6 @@ namespace PDTW_clustering.lib
             else
                 return factor * (float)Math.Log(numerator / denominator);
         }
+        #endregion
     }
 }

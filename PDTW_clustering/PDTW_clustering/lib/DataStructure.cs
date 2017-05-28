@@ -33,7 +33,7 @@ namespace PDTW_clustering.lib
         DENSITY_PEAKS
     }
 
-   public enum EnumNormalization
+    public enum EnumNormalization
     {
         NONE,
         MIN_MAX,

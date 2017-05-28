@@ -13,10 +13,12 @@ namespace PDTW_clustering
 {
     public partial class FormQuality : Form
     {
+        #region VARIABLES
         FormView _mainForm = null;
         Evaluation _evaluation;
+        #endregion
 
-        #region CONSTRUCTOR
+        #region CONSTRUCTORS
         public FormQuality()
         {
             InitializeComponent();
@@ -44,9 +46,11 @@ namespace PDTW_clustering
         }
         #endregion
 
+        #region CALLBACKS
         private void FormQuality_FormClosed(object sender, FormClosedEventArgs e)
         {
             _mainForm.Enabled = true;
         }
+        #endregion
     }
 }

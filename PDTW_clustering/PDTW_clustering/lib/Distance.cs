@@ -10,31 +10,39 @@ namespace PDTW_clustering.lib
 {
     public abstract class Distance
     {
+        #region PROPERTIES
         public object X { get; private set; }
         public object Y { get; private set; }
+        #endregion
 
+        #region CONSTRUCTORS
         public Distance() { }
         public Distance(object objX, object objY)
         {
             this.X = objX;
             this.Y = objY;
         }
+        #endregion
 
+        #region ABSTRACTION
         public abstract float Calculate();
         public abstract float Calculate(object X, object Y);
+        #endregion
     }
 
     class DtwDistance : Distance
     {
+        #region PROPERTIES
         public new TimeSeries X { get; private set; }
         public new TimeSeries Y { get; private set; }
-
         public List<PathPoint> PathMatrix { get; private set; }
         public float[,] DistanceMatrix { get; private set; }
         public float Value { get; private set; }
         public EnumDtwMultithreading IsMultithreading { get; set; }
         public int CompressionRate { get; set; }
+        #endregion
 
+        #region CONSTRUCTORS
         public DtwDistance() : base()
         {
             IsMultithreading = EnumDtwMultithreading.ENABLED;
@@ -46,7 +54,9 @@ namespace PDTW_clustering.lib
             IsMultithreading = EnumDtwMultithreading.ENABLED;
             CompressionRate = 1;
         }
+        #endregion
 
+        #region BEHAVIORS
         public override float Calculate()
         {
             if (this.X == null || this.Y == null)
@@ -84,8 +94,10 @@ namespace PDTW_clustering.lib
             }
             return Value;
         }
+        #endregion
 
-        public void parallel_dtw()
+        #region FUNCTIONS
+        private void parallel_dtw()
         {
             int nX = X.Length;
             int nY = Y.Length;
@@ -118,7 +130,7 @@ namespace PDTW_clustering.lib
             });
         }
 
-        public void dtw()
+        private void dtw()
         {
             int nY = Y.Length;
             int nX = X.Length;
@@ -217,5 +229,6 @@ namespace PDTW_clustering.lib
             else
                 return (int)Math.Round((float)length / std);
         }
+        #endregion
     }
 }
