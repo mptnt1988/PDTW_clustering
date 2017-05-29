@@ -114,7 +114,7 @@ namespace PDTW_clustering
 
         private void btnViewResult_Click(object sender, EventArgs e)
         {
-            FormView resultForm = new FormView(this, _clusteringData, _cluster, false);
+            FormView resultForm = new FormView(this, _cluster, false);
             resultForm.Show();
             resultForm.Activate();
             resultForm.DrawData();

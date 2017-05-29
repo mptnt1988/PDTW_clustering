@@ -46,6 +46,12 @@ namespace PDTW_clustering.lib
         RESULT
     }
 
+    enum EnumViewTimeSeriesType
+    {
+        ORIGINAL,
+        CLUSTERING
+    }
+
     struct Configuration
     {
         public EnumDtwMultithreading multithreading;

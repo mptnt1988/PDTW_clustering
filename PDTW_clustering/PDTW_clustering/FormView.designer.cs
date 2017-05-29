@@ -34,7 +34,6 @@
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.tbLoadData = new System.Windows.Forms.ToolStripButton();
             this.tbSaveClusters = new System.Windows.Forms.ToolStripButton();
-            this.tbViewData = new System.Windows.Forms.ToolStripButton();
             this.tbViewQuality = new System.Windows.Forms.ToolStripButton();
             this.tbNormalize = new System.Windows.Forms.ToolStripButton();
             this.tbPaa = new System.Windows.Forms.ToolStripButton();
@@ -42,6 +41,7 @@
             this.treeView = new System.Windows.Forms.TreeView();
             this.m_graph = new ZedGraph.ZedGraphControl();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
+            this.tbToggleClusteringView = new System.Windows.Forms.ToolStripButton();
             this.toolBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -58,10 +58,10 @@
             this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tbLoadData,
             this.tbSaveClusters,
-            this.tbViewData,
             this.tbViewQuality,
             this.tbNormalize,
-            this.tbPaa});
+            this.tbPaa,
+            this.tbToggleClusteringView});
             this.toolBar.Location = new System.Drawing.Point(0, 0);
             this.toolBar.Name = "toolBar";
             this.toolBar.Size = new System.Drawing.Size(970, 25);
@@ -88,17 +88,6 @@
             this.tbSaveClusters.Text = "Save Clusters";
             this.tbSaveClusters.Visible = false;
             this.tbSaveClusters.Click += new System.EventHandler(this.tbSaveClusters_Click);
-            // 
-            // tbViewData
-            // 
-            this.tbViewData.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbViewData.Image = ((System.Drawing.Image)(resources.GetObject("tbViewData.Image")));
-            this.tbViewData.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbViewData.Name = "tbViewData";
-            this.tbViewData.Size = new System.Drawing.Size(23, 22);
-            this.tbViewData.Text = "View Data";
-            this.tbViewData.ToolTipText = "Display Data";
-            this.tbViewData.Click += new System.EventHandler(this.tbViewData_Click);
             // 
             // tbViewQuality
             // 
@@ -178,6 +167,16 @@
             this.saveFile.DefaultExt = "dat";
             this.saveFile.FileName = "Cluster.dat";
             // 
+            // tbToggleClusteringView
+            // 
+            this.tbToggleClusteringView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbToggleClusteringView.Image = ((System.Drawing.Image)(resources.GetObject("tbToggleClusteringView.Image")));
+            this.tbToggleClusteringView.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbToggleClusteringView.Name = "tbToggleClusteringView";
+            this.tbToggleClusteringView.Size = new System.Drawing.Size(23, 22);
+            this.tbToggleClusteringView.Text = "Toggle Clustering View";
+            this.tbToggleClusteringView.Click += new System.EventHandler(this.tbToggleClusteringView_Click);
+            // 
             // FormView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -214,12 +213,12 @@
         private System.Windows.Forms.ToolStripButton tbLoadData;
         private System.Windows.Forms.SplitContainer splitContainer;
         private ZedGraph.ZedGraphControl m_graph;
-        private System.Windows.Forms.ToolStripButton tbViewData;
         private System.Windows.Forms.TreeView treeView;
         private System.Windows.Forms.ToolStripButton tbViewQuality;
         private System.Windows.Forms.ToolStripButton tbNormalize;
         private System.Windows.Forms.ToolStripButton tbPaa;
         private System.Windows.Forms.ToolStripButton tbSaveClusters;
         private System.Windows.Forms.SaveFileDialog saveFile;
+        private System.Windows.Forms.ToolStripButton tbToggleClusteringView;
     }
 }
