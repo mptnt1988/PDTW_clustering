@@ -11,8 +11,9 @@ namespace PDTW_clustering
 {
     public partial class FormInputPAA : Form
     {
-        #region PRIVATE VARIABLES
+        #region VARIABLES
         private int _compressionRate;
+        private FormView _mainForm;
         #endregion
 
         #region PROPERTIES
@@ -24,9 +25,13 @@ namespace PDTW_clustering
         #endregion
 
         #region CONSTRUCTORS
-        public FormInputPAA()
+        public FormInputPAA(FormView mainForm, bool editable)
         {
             InitializeComponent();
+            _mainForm = mainForm;
+            _mainForm.Enabled = false;
+            nudPaa.Enabled = editable;
+            btnOk.Enabled = editable;
         }
         #endregion
 
@@ -35,6 +40,11 @@ namespace PDTW_clustering
         {
             CompressionRate = (int)nudPaa.Value;
             DialogResult = DialogResult.OK;
+        }
+
+        private void FormInputPAA_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _mainForm.Enabled = true;
         }
         #endregion
     }

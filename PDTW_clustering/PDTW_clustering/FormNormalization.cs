@@ -6,9 +6,12 @@ namespace PDTW_clustering
 {
     public partial class FormNormalization : Form
     {
+        #region VARIABLES
         private EnumNormalization _normalization;
         private Form _mainForm;
+        #endregion
 
+        #region ATTRIBUTES
         public EnumNormalization Normalization
         {
             get { return _normalization; }
@@ -21,15 +24,21 @@ namespace PDTW_clustering
                     radNormalization_ZeroMean.Checked = true;
             }
         }
+        #endregion
 
-        public FormNormalization(Form mainForm)
+        #region CONSTRUCTORS
+        public FormNormalization(Form mainForm, bool editable)
         {
             InitializeComponent();
             _mainForm = mainForm;
             _mainForm.Enabled = false;
+            gbxNormalizationMethod.Enabled = editable;
+            btnOk.Enabled = editable;
         }
+        #endregion
 
-        private void btnOke_Click(object sender, EventArgs e)
+        #region CALLBACKS
+        private void btnOk_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             if (radNormalization_MinMax.Checked)
@@ -56,5 +65,6 @@ namespace PDTW_clustering
         {
             _mainForm.Enabled = true;
         }
+        #endregion
     }
 }

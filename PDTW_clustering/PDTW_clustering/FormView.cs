@@ -24,10 +24,8 @@ namespace PDTW_clustering
         #endregion
 
         #region PROPERTIES
-        // Clustering time (in millisecs)
-        public TimeSpan Time { get; set; }
-        // List of all time series to be viewed
-        public List<TimeSeries> Data { get; private set; }  // data to be drawn
+        // List of time series to be drawn
+        public List<TimeSeries> Data { get; private set; }
         // Mode of view: NormalView or ResultView
         public EnumViewMode Mode { get;  set; }
         public EnumNormalization Normalization { get; set; }
@@ -36,30 +34,27 @@ namespace PDTW_clustering
         #region CONSTRUCTORS
         public FormView(FormMain mainForm, List<TimeSeries> data)
         {
+            InitializeComponent();
+            // Data
             this._mainForm = mainForm;
-            this._dataset = data == null?null:new List<TimeSeries>(data);
+            this._dataset = data == null ? null : new List<TimeSeries>(data);
+            this.Data = data;
             Mode = EnumViewMode.NORMAL;
             Normalization = EnumNormalization.NONE;
-            InitializeComponent();
-            m_graphPane = m_graph.GraphPane;
-            splitContainer.Panel1Collapsed = true;
-            tbViewQuality.Visible = false;
-            tbNormalize.Visible = true;
-            this.Data = data;
+            // Displaying
+            display_based_on_mode(Mode);
         }
 
         public FormView(FormMain mainForm, List<TimeSeries> data, Cluster cluster, bool ap)
         {
+            InitializeComponent();
+            // Data
             this._mainForm = mainForm;
             this._dataset = new List<TimeSeries>(data);
             Mode = EnumViewMode.RESULT;
             Normalization = EnumNormalization.NONE;
-            InitializeComponent();
-            string labelCluster = "";
-            m_graphPane = m_graph.GraphPane;
-            tbViewData.Visible = false;
-            tbLoadData.Visible = false;
-            btnSaveClusters.Visible = true;
+            // Displaying
+            display_based_on_mode(Mode);
 
             _cluster = cluster;
             List<int>[] clusters = _cluster.Clusters;
@@ -67,7 +62,7 @@ namespace PDTW_clustering
 
             treeView.Nodes.Clear();
             ExTreeNode root = new ExTreeNode(data, 0, "Cluster Result");
-
+            string labelCluster = "";
             for (int i = 0; i < clusters.Length; i++)  // for each cluster
             {
                 labelCluster = "Cluster " + (i + 1).ToString() + " : " + clusters[i].Count.ToString() + " objects";
@@ -104,7 +99,7 @@ namespace PDTW_clustering
             _mainForm.Enabled = true;
         }
 
-        private void btPath_Click(object sender, EventArgs e)
+        private void tbLoadData_Click(object sender, EventArgs e)
         {
             int index = 1;
             List<TimeSeries> _temp = new List<TimeSeries>();
@@ -144,12 +139,12 @@ namespace PDTW_clustering
             }
         }
 
-        private void btnViewData_Click(object sender, EventArgs e)
+        private void tbViewData_Click(object sender, EventArgs e)
         {
             DrawData();
         }
 
-        private void btnSaveClusters_Click(object sender, EventArgs e)
+        private void tbSaveClusters_Click(object sender, EventArgs e)
         {
             if (_cluster != null && _cluster.Clusters != null)
             {
@@ -226,7 +221,8 @@ namespace PDTW_clustering
         {
             if (_dataset != null && _dataset.Count > 0)
             {
-                FormInputPAA formPAA = new FormInputPAA();
+                bool formPAAEditable = Mode == EnumViewMode.NORMAL ? true : false;
+                FormInputPAA formPAA = new FormInputPAA(this, formPAAEditable);
                 formPAA.CompressionRate = _compressionRate;
                 if (formPAA.ShowDialog() == DialogResult.OK)
                 {
@@ -248,7 +244,8 @@ namespace PDTW_clustering
         {
             if (_dataset != null && _dataset.Count > 0)
             {
-                FormNormalization formNormalization = new FormNormalization(this);
+                bool formNormalizationEditable = Mode == EnumViewMode.NORMAL ? true : false;
+                FormNormalization formNormalization = new FormNormalization(this, formNormalizationEditable);
                 formNormalization.Normalization = this.Normalization;
                 if (formNormalization.ShowDialog() == DialogResult.OK)
                 {
@@ -427,6 +424,33 @@ namespace PDTW_clustering
             if (_yUnit != "")
             {
                 _yTitle = _yTitleTemp + " (" + _yUnit + " )";
+            }
+        }
+
+        private void display_based_on_mode(EnumViewMode Mode)
+        {
+            switch (Mode)
+            {
+                case EnumViewMode.NORMAL:
+                    m_graphPane = m_graph.GraphPane;
+                    splitContainer.Panel1Collapsed = true;
+                    tbLoadData.Visible = true;
+                    tbSaveClusters.Visible = false;
+                    tbViewData.Visible = true;
+                    tbViewQuality.Visible = false;
+                    tbNormalize.Visible = true;
+                    tbPaa.Visible = true;
+                    break;
+                case EnumViewMode.RESULT:
+                    m_graphPane = m_graph.GraphPane;
+                    splitContainer.Panel1Collapsed = false;
+                    tbLoadData.Visible = false;
+                    tbSaveClusters.Visible = true;
+                    tbViewData.Visible = false;
+                    tbViewQuality.Visible = true;
+                    tbNormalize.Visible = true;
+                    tbPaa.Visible = true;
+                    break;
             }
         }
         #endregion

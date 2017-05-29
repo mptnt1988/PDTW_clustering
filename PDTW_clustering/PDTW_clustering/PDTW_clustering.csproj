@@ -125,42 +125,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Clustering.ICO" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\DisplayIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folder.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\graph.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Mean.ICO" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\normalize.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\paa.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\pause.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\play.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\result.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Save.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TimeSeries.ico" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

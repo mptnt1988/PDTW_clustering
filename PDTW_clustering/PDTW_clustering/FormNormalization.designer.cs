@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormNormalization));
             this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOke = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnOk = new System.Windows.Forms.Button();
+            this.gbxNormalizationMethod = new System.Windows.Forms.GroupBox();
+            this.radNormalization_None = new System.Windows.Forms.RadioButton();
             this.radNormalization_ZeroMean = new System.Windows.Forms.RadioButton();
             this.radNormalization_MinMax = new System.Windows.Forms.RadioButton();
-            this.radNormalization_None = new System.Windows.Forms.RadioButton();
-            this.groupBox5.SuspendLayout();
+            this.gbxNormalizationMethod.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -48,27 +49,39 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // btnOke
+            // btnOk
             // 
-            this.btnOke.Location = new System.Drawing.Point(49, 94);
-            this.btnOke.Name = "btnOke";
-            this.btnOke.Size = new System.Drawing.Size(81, 29);
-            this.btnOke.TabIndex = 20;
-            this.btnOke.Text = "OK";
-            this.btnOke.UseVisualStyleBackColor = true;
-            this.btnOke.Click += new System.EventHandler(this.btnOke_Click);
+            this.btnOk.Location = new System.Drawing.Point(49, 94);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(81, 29);
+            this.btnOk.TabIndex = 20;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
-            // groupBox5
+            // gbxNormalizationMethod
             // 
-            this.groupBox5.Controls.Add(this.radNormalization_None);
-            this.groupBox5.Controls.Add(this.radNormalization_ZeroMean);
-            this.groupBox5.Controls.Add(this.radNormalization_MinMax);
-            this.groupBox5.Location = new System.Drawing.Point(12, 11);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(254, 62);
-            this.groupBox5.TabIndex = 19;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Method";
+            this.gbxNormalizationMethod.Controls.Add(this.radNormalization_None);
+            this.gbxNormalizationMethod.Controls.Add(this.radNormalization_ZeroMean);
+            this.gbxNormalizationMethod.Controls.Add(this.radNormalization_MinMax);
+            this.gbxNormalizationMethod.Location = new System.Drawing.Point(12, 11);
+            this.gbxNormalizationMethod.Name = "gbxNormalizationMethod";
+            this.gbxNormalizationMethod.Size = new System.Drawing.Size(254, 62);
+            this.gbxNormalizationMethod.TabIndex = 19;
+            this.gbxNormalizationMethod.TabStop = false;
+            this.gbxNormalizationMethod.Text = "Method";
+            // 
+            // radNormalization_None
+            // 
+            this.radNormalization_None.AutoSize = true;
+            this.radNormalization_None.Checked = true;
+            this.radNormalization_None.Location = new System.Drawing.Point(19, 24);
+            this.radNormalization_None.Name = "radNormalization_None";
+            this.radNormalization_None.Size = new System.Drawing.Size(51, 17);
+            this.radNormalization_None.TabIndex = 11;
+            this.radNormalization_None.TabStop = true;
+            this.radNormalization_None.Text = "None";
+            this.radNormalization_None.UseVisualStyleBackColor = true;
             // 
             // radNormalization_ZeroMean
             // 
@@ -90,18 +103,6 @@
             this.radNormalization_MinMax.Text = "Min Max";
             this.radNormalization_MinMax.UseVisualStyleBackColor = true;
             // 
-            // radNormalization_None
-            // 
-            this.radNormalization_None.AutoSize = true;
-            this.radNormalization_None.Checked = true;
-            this.radNormalization_None.Location = new System.Drawing.Point(19, 24);
-            this.radNormalization_None.Name = "radNormalization_None";
-            this.radNormalization_None.Size = new System.Drawing.Size(51, 17);
-            this.radNormalization_None.TabIndex = 11;
-            this.radNormalization_None.TabStop = true;
-            this.radNormalization_None.Text = "None";
-            this.radNormalization_None.UseVisualStyleBackColor = true;
-            // 
             // FormNormalization
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -109,14 +110,18 @@
             this.ClientSize = new System.Drawing.Size(278, 144);
             this.ControlBox = false;
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOke);
-            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.btnOk);
+            this.Controls.Add(this.gbxNormalizationMethod);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormNormalization";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Normalization";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormNormalization_FormClosed);
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
+            this.gbxNormalizationMethod.ResumeLayout(false);
+            this.gbxNormalizationMethod.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -124,8 +129,8 @@
         #endregion
 
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOke;
-        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.GroupBox gbxNormalizationMethod;
         private System.Windows.Forms.RadioButton radNormalization_ZeroMean;
         private System.Windows.Forms.RadioButton radNormalization_MinMax;
         private System.Windows.Forms.RadioButton radNormalization_None;

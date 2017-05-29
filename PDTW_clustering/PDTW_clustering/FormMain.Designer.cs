@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,16 +56,10 @@
             this.gbxMultithreading = new System.Windows.Forms.GroupBox();
             this.radMultithreading_Disabled = new System.Windows.Forms.RadioButton();
             this.radMultithreading_Enabled = new System.Windows.Forms.RadioButton();
-            this.lblTest = new System.Windows.Forms.Label();
             this.btnRun = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnViewResult = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
-            this.btnTest = new System.Windows.Forms.Button();
-            this.txtTest = new System.Windows.Forms.TextBox();
-            this.nudTest2 = new System.Windows.Forms.NumericUpDown();
-            this.nudTest1 = new System.Windows.Forms.NumericUpDown();
-            this.nudTest3 = new System.Windows.Forms.NumericUpDown();
             this.lblExeTimeLabel = new System.Windows.Forms.Label();
             this.lblExeTimeValue = new System.Windows.Forms.Label();
             this.pgbDoClustering = new System.Windows.Forms.ProgressBar();
@@ -81,9 +76,6 @@
             this.groupBox5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNoOfClusters)).BeginInit();
             this.gbxMultithreading.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -351,15 +343,6 @@
             this.radMultithreading_Enabled.Text = "Enabled";
             this.radMultithreading_Enabled.UseVisualStyleBackColor = true;
             // 
-            // lblTest
-            // 
-            this.lblTest.AutoSize = true;
-            this.lblTest.Location = new System.Drawing.Point(473, 184);
-            this.lblTest.Name = "lblTest";
-            this.lblTest.Size = new System.Drawing.Size(106, 13);
-            this.lblTest.TabIndex = 7;
-            this.lblTest.Text = "This text is for testing";
-            // 
             // btnRun
             // 
             this.btnRun.Location = new System.Drawing.Point(412, 278);
@@ -399,57 +382,6 @@
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            // 
-            // btnTest
-            // 
-            this.btnTest.Location = new System.Drawing.Point(476, 218);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(75, 23);
-            this.btnTest.TabIndex = 15;
-            this.btnTest.Text = "Test";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-            // 
-            // txtTest
-            // 
-            this.txtTest.Location = new System.Drawing.Point(557, 218);
-            this.txtTest.Name = "txtTest";
-            this.txtTest.Size = new System.Drawing.Size(100, 20);
-            this.txtTest.TabIndex = 16;
-            // 
-            // nudTest2
-            // 
-            this.nudTest2.Location = new System.Drawing.Point(350, 218);
-            this.nudTest2.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.nudTest2.Name = "nudTest2";
-            this.nudTest2.Size = new System.Drawing.Size(120, 20);
-            this.nudTest2.TabIndex = 17;
-            this.nudTest2.ValueChanged += new System.EventHandler(this.nudTest2_ValueChanged);
-            // 
-            // nudTest1
-            // 
-            this.nudTest1.Location = new System.Drawing.Point(350, 197);
-            this.nudTest1.Maximum = new decimal(new int[] {
-            9,
-            0,
-            0,
-            0});
-            this.nudTest1.Name = "nudTest1";
-            this.nudTest1.Size = new System.Drawing.Size(120, 20);
-            this.nudTest1.TabIndex = 18;
-            this.nudTest1.ValueChanged += new System.EventHandler(this.nudTest1_ValueChanged);
-            // 
-            // nudTest3
-            // 
-            this.nudTest3.Location = new System.Drawing.Point(594, 182);
-            this.nudTest3.Name = "nudTest3";
-            this.nudTest3.Size = new System.Drawing.Size(120, 20);
-            this.nudTest3.TabIndex = 19;
-            this.nudTest3.ValueChanged += new System.EventHandler(this.nudTest3_ValueChanged);
             // 
             // lblExeTimeLabel
             // 
@@ -536,21 +468,18 @@
             this.Controls.Add(this.pgbDoClustering);
             this.Controls.Add(this.lblExeTimeValue);
             this.Controls.Add(this.lblExeTimeLabel);
-            this.Controls.Add(this.nudTest3);
-            this.Controls.Add(this.nudTest1);
-            this.Controls.Add(this.nudTest2);
-            this.Controls.Add(this.txtTest);
-            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnViewResult);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnRun);
-            this.Controls.Add(this.lblTest);
             this.Controls.Add(this.gbxMultithreading);
             this.Controls.Add(this.gbxClusteringAlgo);
             this.Controls.Add(this.gbxDimRed);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "PDTW Clustering";
             this.Load += new System.EventHandler(this.FormMain_Load);
@@ -568,9 +497,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudNoOfClusters)).EndInit();
             this.gbxMultithreading.ResumeLayout(false);
             this.gbxMultithreading.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTest2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTest1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudTest3)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -606,16 +532,10 @@
         private System.Windows.Forms.GroupBox gbxMultithreading;
         private System.Windows.Forms.RadioButton radMultithreading_Disabled;
         private System.Windows.Forms.RadioButton radMultithreading_Enabled;
-        private System.Windows.Forms.Label lblTest;
         private System.Windows.Forms.Button btnRun;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnViewResult;
         private System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.Button btnTest;
-        private System.Windows.Forms.TextBox txtTest;
-        private System.Windows.Forms.NumericUpDown nudTest2;
-        private System.Windows.Forms.NumericUpDown nudTest1;
-        private System.Windows.Forms.NumericUpDown nudTest3;
         private System.Windows.Forms.Label lblExeTimeLabel;
         private System.Windows.Forms.Label lblExeTimeValue;
         private System.Windows.Forms.ProgressBar pgbDoClustering;

@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormInputPAA));
             this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOke = new System.Windows.Forms.Button();
+            this.btnOk = new System.Windows.Forms.Button();
             this.nudPaa = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudPaa)).BeginInit();
@@ -45,16 +46,16 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // btnOke
+            // btnOk
             // 
-            this.btnOke.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOke.Location = new System.Drawing.Point(97, 79);
-            this.btnOke.Name = "btnOke";
-            this.btnOke.Size = new System.Drawing.Size(81, 29);
-            this.btnOke.TabIndex = 19;
-            this.btnOke.Text = "OK";
-            this.btnOke.UseVisualStyleBackColor = true;
-            this.btnOke.Click += new System.EventHandler(this.btnOke_Click);
+            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOk.Location = new System.Drawing.Point(97, 79);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(81, 29);
+            this.btnOk.TabIndex = 19;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOke_Click);
             // 
             // nudPaa
             // 
@@ -83,7 +84,7 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "Compression Rate";
             // 
-            // FPaa
+            // FormInputPAA
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -92,10 +93,15 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.nudPaa);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOke);
-            this.Name = "FPaa";
+            this.Controls.Add(this.btnOk);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "FormInputPAA";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Input PAA";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormInputPAA_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.nudPaa)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -105,7 +111,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOke;
+        private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.NumericUpDown nudPaa;
         private System.Windows.Forms.Label label1;
     }

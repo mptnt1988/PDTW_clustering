@@ -114,11 +114,24 @@ namespace PDTW_clustering
         private void btnViewResult_Click(object sender, EventArgs e)
         {
             FormView resultForm = new FormView(this, _data, _cluster, false);
-            resultForm.Time = _exeTime;
             resultForm.Show();
             resultForm.Activate();
             resultForm.DrawData();
             this.Enabled = false;
+        }
+
+        private void tmrExeTime_Tick(object sender, EventArgs e)
+        {
+            TimeSpan timeSpan = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
+            lblExeTimeValue.Text = timeSpan.ToString("hh':'mm':'ss'.'fff");
+            pgbDoClustering.Value = _cluster.Percentage;
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            btnStop.Enabled = false;
+            btnViewResult.Enabled = false;
+            lblExeTimeValue.Text = display_time_string(TimeSpan.Zero);
         }
         #endregion
 
@@ -283,101 +296,12 @@ namespace PDTW_clustering
                     throw new Exception("There is some error in configuring clustering algorithm");
             }
             _cluster.Token = token;
-            clusterOfObject = _cluster.do_clustering();  // for testing only
+            _cluster.do_clustering();  // for testing only
         }
 
         private string display_time_string(TimeSpan timeSpan)
         {
             return timeSpan.ToString("hh':'mm':'ss'.'fff");
-        }
-        #endregion
-
-        // TESTING
-        #region ManualTest
-        DtwDistance dtwDist;
-        TimeSeries ts1, ts2, ts3, ts4, ts5, ts6, ts7, ts8;
-
-        private void tmrExeTime_Tick(object sender, EventArgs e)
-        {
-            TimeSpan timeSpan = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
-            lblExeTimeValue.Text = timeSpan.ToString("hh':'mm':'ss'.'fff");
-            pgbDoClustering.Value = _cluster.Percentage;
-        }
-
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            btnStop.Enabled = false;
-            btnViewResult.Enabled = false;
-            lblExeTimeValue.Text = display_time_string(TimeSpan.Zero);
-        }
-
-        int[] clusterOfObject;
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-            ts1 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
-            ts2 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
-            ts3 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 5, 4, 8, 2 }));
-            ts4 = new TimeSeries(new List<float>(new float[] { 5, 7, 3, 2, 9, 5, 9, 4, 8, 5 }));
-            ts5 = new TimeSeries(new List<float>(new float[] { 5, 6, 3, 2, 9, 5, 9, 4, 8, 5 }));
-            ts6 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 4, 4, 8, 2 }));
-            ts7 = new TimeSeries(new List<float>(new float[] { 3, 4, 1, 8, 3, 7, 5, 4, 8, 2 }));
-            ts8 = new TimeSeries(new List<float>(new float[] { 5, 7, 3, 2, 9, 5, 9, 4, 8, 5 }));
-
-            dtwDist = new DtwDistance();
-            nudTest1.Maximum = ts1.Series.Count - 1;
-            nudTest2.Maximum = ts2.Series.Count - 1;
-
-            // Test DTW distance
-            //dtwDist.Calculate(ts1, ts2);
-            //lblTest.Text = dtwDist.Value.ToString();
-
-            // Test clustering
-            //List<object> tsList = new List<object>();
-            //tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
-            //tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
-            //ImprovedKMedoids cls = new ImprovedKMedoids(tsList, 2, dtwDist);
-            //clusterOfObject = cls.do_clustering();
-            //nudTest3.Maximum = clusterOfObject.Length - 1;
-
-            // Test Density Peaks
-            List<ClusteringObject> tsList = new List<ClusteringObject>();
-            tsList.Add(ts1); tsList.Add(ts2); tsList.Add(ts3); tsList.Add(ts4);
-            tsList.Add(ts5); tsList.Add(ts6); tsList.Add(ts7); tsList.Add(ts8);
-            DensityPeaks cls = new DensityPeaks(tsList, dtwDist, 2);
-            clusterOfObject = cls.do_clustering();
-            nudTest3.Maximum = clusterOfObject.Length - 1;
-
-        }
-
-        private void nudTest1_ValueChanged(object sender, EventArgs e)
-        {
-            tuan();
-            //lblTest.Text = ts1.Series[(int)nudTest1.Value].ToString();
-        }
-
-        private void nudTest2_ValueChanged(object sender, EventArgs e)
-        {
-            tuan();
-            //lblTest.Text = ts2.Series[(int)nudTest2.Value].ToString();
-        }
-
-        private void nudTest3_ValueChanged(object sender, EventArgs e)
-        {
-            // Test clustering
-            //nudTest3.Maximum = clusterOfObject.Length - 1;
-            //lblTest.Text = clusterOfObject[(int)nudTest3.Value].ToString();
-
-            // Test distance
-            //lblTest.Text = dtwDist.PathMatrix[(int)nudTest3.Value].value.ToString();
-            //lblTest.Text += ": ";
-            //lblTest.Text += dtwDist.X.Series[dtwDist.PathMatrix[(int)nudTest3.Value].x].ToString();
-            //lblTest.Text += ", ";
-            //lblTest.Text += dtwDist.Y.Series[dtwDist.PathMatrix[(int)nudTest3.Value].y].ToString();
-        }
-
-        private void tuan()
-        {
-            lblTest.Text = dtwDist.DistanceMatrix[(int)nudTest1.Value, (int)nudTest2.Value].ToString();
         }
         #endregion
     }

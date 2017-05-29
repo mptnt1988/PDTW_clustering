@@ -33,11 +33,11 @@
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.tbLoadData = new System.Windows.Forms.ToolStripButton();
+            this.tbSaveClusters = new System.Windows.Forms.ToolStripButton();
             this.tbViewData = new System.Windows.Forms.ToolStripButton();
             this.tbViewQuality = new System.Windows.Forms.ToolStripButton();
-            this.tbPaa = new System.Windows.Forms.ToolStripButton();
-            this.btnSaveClusters = new System.Windows.Forms.ToolStripButton();
             this.tbNormalize = new System.Windows.Forms.ToolStripButton();
+            this.tbPaa = new System.Windows.Forms.ToolStripButton();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
             this.m_graph = new ZedGraph.ZedGraphControl();
@@ -57,11 +57,11 @@
             // 
             this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tbLoadData,
+            this.tbSaveClusters,
             this.tbViewData,
             this.tbViewQuality,
-            this.tbPaa,
-            this.btnSaveClusters,
-            this.tbNormalize});
+            this.tbNormalize,
+            this.tbPaa});
             this.toolBar.Location = new System.Drawing.Point(0, 0);
             this.toolBar.Name = "toolBar";
             this.toolBar.Size = new System.Drawing.Size(970, 25);
@@ -76,7 +76,18 @@
             this.tbLoadData.Name = "tbLoadData";
             this.tbLoadData.Size = new System.Drawing.Size(23, 22);
             this.tbLoadData.Text = "Load Data";
-            this.tbLoadData.Click += new System.EventHandler(this.btPath_Click);
+            this.tbLoadData.Click += new System.EventHandler(this.tbLoadData_Click);
+            // 
+            // tbSaveClusters
+            // 
+            this.tbSaveClusters.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbSaveClusters.Image = ((System.Drawing.Image)(resources.GetObject("tbSaveClusters.Image")));
+            this.tbSaveClusters.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbSaveClusters.Name = "tbSaveClusters";
+            this.tbSaveClusters.Size = new System.Drawing.Size(23, 22);
+            this.tbSaveClusters.Text = "Save Clusters";
+            this.tbSaveClusters.Visible = false;
+            this.tbSaveClusters.Click += new System.EventHandler(this.tbSaveClusters_Click);
             // 
             // tbViewData
             // 
@@ -87,7 +98,7 @@
             this.tbViewData.Size = new System.Drawing.Size(23, 22);
             this.tbViewData.Text = "View Data";
             this.tbViewData.ToolTipText = "Display Data";
-            this.tbViewData.Click += new System.EventHandler(this.btnViewData_Click);
+            this.tbViewData.Click += new System.EventHandler(this.tbViewData_Click);
             // 
             // tbViewQuality
             // 
@@ -100,27 +111,6 @@
             this.tbViewQuality.ToolTipText = "Clustering Quality";
             this.tbViewQuality.Click += new System.EventHandler(this.tbViewQuality_Click);
             // 
-            // tbPaa
-            // 
-            this.tbPaa.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPaa.Image = ((System.Drawing.Image)(resources.GetObject("tbPaa.Image")));
-            this.tbPaa.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbPaa.Name = "tbPaa";
-            this.tbPaa.Size = new System.Drawing.Size(23, 22);
-            this.tbPaa.Text = "PAA";
-            this.tbPaa.Click += new System.EventHandler(this.tbPaa_Click);
-            // 
-            // btnSaveClusters
-            // 
-            this.btnSaveClusters.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSaveClusters.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveClusters.Image")));
-            this.btnSaveClusters.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSaveClusters.Name = "btnSaveClusters";
-            this.btnSaveClusters.Size = new System.Drawing.Size(23, 22);
-            this.btnSaveClusters.Text = "Save Clusters";
-            this.btnSaveClusters.Visible = false;
-            this.btnSaveClusters.Click += new System.EventHandler(this.btnSaveClusters_Click);
-            // 
             // tbNormalize
             // 
             this.tbNormalize.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -131,6 +121,16 @@
             this.tbNormalize.Text = "Normalize Data";
             this.tbNormalize.Visible = false;
             this.tbNormalize.Click += new System.EventHandler(this.tbNormalize_Click);
+            // 
+            // tbPaa
+            // 
+            this.tbPaa.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPaa.Image = ((System.Drawing.Image)(resources.GetObject("tbPaa.Image")));
+            this.tbPaa.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPaa.Name = "tbPaa";
+            this.tbPaa.Size = new System.Drawing.Size(23, 22);
+            this.tbPaa.Text = "PAA";
+            this.tbPaa.Click += new System.EventHandler(this.tbPaa_Click);
             // 
             // splitContainer
             // 
@@ -219,7 +219,7 @@
         private System.Windows.Forms.ToolStripButton tbViewQuality;
         private System.Windows.Forms.ToolStripButton tbNormalize;
         private System.Windows.Forms.ToolStripButton tbPaa;
-        private System.Windows.Forms.ToolStripButton btnSaveClusters;
+        private System.Windows.Forms.ToolStripButton tbSaveClusters;
         private System.Windows.Forms.SaveFileDialog saveFile;
     }
 }
