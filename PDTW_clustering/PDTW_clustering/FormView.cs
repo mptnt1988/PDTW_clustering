@@ -20,7 +20,7 @@ namespace PDTW_clustering
         private PointPairList m_pointsList;
         private List<TimeSeries> _dataset;
         private List<TimeSeries>[] _tsClusters;
-        private int _compressionRate = 1;
+        private int _compressionRate;
         #endregion
 
         #region PROPERTIES
@@ -41,6 +41,7 @@ namespace PDTW_clustering
             this.Data = data;
             Mode = EnumViewMode.NORMAL;
             Normalization = EnumNormalization.NONE;
+            _compressionRate = 1;
             // Displaying
             display_based_on_mode(Mode);
         }
@@ -52,7 +53,9 @@ namespace PDTW_clustering
             this._mainForm = mainForm;
             this._dataset = new List<TimeSeries>(data);
             Mode = EnumViewMode.RESULT;
-            Normalization = EnumNormalization.NONE;
+            TimeSeries anClusteredObject = (TimeSeries)cluster.Objects[0];
+            Normalization = anClusteredObject.NormalizedType;
+            _compressionRate = anClusteredObject.CompressionRate;
             // Displaying
             display_based_on_mode(Mode);
 
@@ -137,6 +140,7 @@ namespace PDTW_clustering
                         reader.Close();
                 }
             }
+            DrawData();
         }
 
         private void tbViewData_Click(object sender, EventArgs e)

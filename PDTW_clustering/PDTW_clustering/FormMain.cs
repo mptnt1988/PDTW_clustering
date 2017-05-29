@@ -18,6 +18,7 @@ namespace PDTW_clustering
     {
         #region VARIABLES
         private List<TimeSeries> _data;
+        private List<TimeSeries> _clusteringData;
         private TimeSpan _exeTime;
         private long _exeTimeStart;
         private Configuration _configuration;
@@ -113,7 +114,7 @@ namespace PDTW_clustering
 
         private void btnViewResult_Click(object sender, EventArgs e)
         {
-            FormView resultForm = new FormView(this, _data, _cluster, false);
+            FormView resultForm = new FormView(this, _clusteringData, _cluster, false);
             resultForm.Show();
             resultForm.Activate();
             resultForm.DrawData();
@@ -123,7 +124,7 @@ namespace PDTW_clustering
         private void tmrExeTime_Tick(object sender, EventArgs e)
         {
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
-            lblExeTimeValue.Text = timeSpan.ToString("hh':'mm':'ss'.'fff");
+            lblExeTimeValue.Text = display_time_string(timeSpan);
             pgbDoClustering.Value = _cluster.Percentage;
         }
 
@@ -224,8 +225,6 @@ namespace PDTW_clustering
             // Change GUI status to idle
             btnRun.Enabled = true;
             btnStop.Enabled = false;
-            //if (_result != null) btnViewResult.Enabled = true;
-            btnViewResult.Enabled = true;
         }
 
         private void do_post_clustering_on_completion()
@@ -234,6 +233,7 @@ namespace PDTW_clustering
             TimeSpan _exeTime = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
             lblExeTimeValue.Text = display_time_string(_exeTime);
             pgbDoClustering.Value = 100;
+            btnViewResult.Enabled = true;
         }
 
         private void do_clustering(CancellationToken token)
@@ -284,6 +284,10 @@ namespace PDTW_clustering
             }));
 
             // Clustering Algorithm
+            _clusteringData = new List<TimeSeries>(data.Select(ts =>
+            {
+                return (TimeSeries)ts;
+            }));
             switch (_configuration.clusteringAlgorithm)
             {
                 case EnumClusteringAlgorithm.IMPROVED_KMEDOIDS:

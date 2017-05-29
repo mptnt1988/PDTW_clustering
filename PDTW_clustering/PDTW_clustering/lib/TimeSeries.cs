@@ -25,7 +25,8 @@ namespace PDTW_clustering.lib
         }
         // A time sereis - series of data points read from file for this obj
         public List<float> Series { get; private set; }
-        // The time sereis after being normalized
+        // The time series after being normalized
+        public EnumNormalization NormalizedType { get; private set; }
         public TimeSeries NormalizedSeries { get; private set; }
         // The time series after being PAA-calculated
         public int CompressionRate { get; private set; }
@@ -44,10 +45,11 @@ namespace PDTW_clustering.lib
             this._index = -1;
             this._label = -1;
             this.Series = new List<float>();
+            this.NormalizedType = EnumNormalization.NONE;
             this.NormalizedSeries = null;
+            this.CompressionRate = 1;
             this.PaaSeries = null;
             this.ClusteringSeries = this;
-            this.CompressionRate = 1;
         }
 
         public TimeSeries(List<float> series)
@@ -55,6 +57,7 @@ namespace PDTW_clustering.lib
             this._index = -1;
             this._label = -1;
             this.Series = series;
+            this.NormalizedType = EnumNormalization.NONE;
             this.NormalizedSeries = null;
             this.PaaSeries = null;
             this.ClusteringSeries = this;
@@ -66,6 +69,7 @@ namespace PDTW_clustering.lib
             this._index = ts.Index;
             this._label = ts.Label;
             this.Series = new List<float>(ts.Series);
+            this.NormalizedType = ts.NormalizedType;
             this.NormalizedSeries = ts.NormalizedSeries;
             this.PaaSeries = ts.PaaSeries;
             this.ClusteringSeries = this;
@@ -77,6 +81,7 @@ namespace PDTW_clustering.lib
             string se = s;
             this._index = index;
             this.Series = new List<float>();
+            this.NormalizedType = EnumNormalization.NONE;
             this.NormalizedSeries = null;
             this.PaaSeries = null;
             this.ClusteringSeries = this;
@@ -125,6 +130,7 @@ namespace PDTW_clustering.lib
                 default:
                     throw new Exception("There is some error in configuring normalization");
             }
+            this.NormalizedType = normalization;
             this.NormalizedSeries = normalizedSeries;
             this.ClusteringSeries = normalizedSeries;
         }

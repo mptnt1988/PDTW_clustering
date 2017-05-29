@@ -22,6 +22,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(-1, ts.Index);
             Assert.AreEqual(-1, ts.Label);
             CollectionAssert.AreEqual(new List<float>(), ts.Series);
+            Assert.AreEqual(EnumNormalization.NONE, ts.NormalizedType);
             Assert.IsNull(ts.NormalizedSeries);
             Assert.IsNull(ts.PaaSeries);
             Assert.AreEqual(1, ts.CompressionRate);
@@ -38,6 +39,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(-1, ts.Index);
             Assert.AreEqual(-1, ts.Label);
             CollectionAssert.AreEqual(new List<float> { 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f }, ts.Series);
+            Assert.AreEqual(EnumNormalization.NONE, ts.NormalizedType);
             Assert.IsNull(ts.NormalizedSeries);
             Assert.IsNull(ts.PaaSeries);
             Assert.AreEqual(1, ts.CompressionRate);
@@ -56,6 +58,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(-1, tsNew.Index);
             Assert.AreEqual(-1, tsNew.Label);
             CollectionAssert.AreEqual(new List<float> { 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f }, tsNew.Series);
+            Assert.AreEqual(EnumNormalization.NONE, tsNew.NormalizedType);
             Assert.IsNull(tsNew.NormalizedSeries);
             Assert.IsNull(tsNew.PaaSeries);
             Assert.AreEqual(1, tsNew.CompressionRate);
@@ -76,6 +79,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts.Index);
             Assert.AreEqual(label - 1, ts.Label);  // label in code is started from 0, while real label is started from 1
             CollectionAssert.AreEqual(new List<float> { 1.0f, 2.1f, 3.2f, 4.3f }, ts.Series);
+            Assert.AreEqual(EnumNormalization.NONE, ts.NormalizedType);
             Assert.IsNull(ts.NormalizedSeries);
             Assert.IsNull(ts.PaaSeries);
             Assert.AreEqual(1, ts.CompressionRate);
@@ -102,6 +106,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts1.Index);
             Assert.AreEqual(label - 1, ts1.Label);
             CollectionAssert.AreEqual(listOfValues, ts1.Series);
+            Assert.AreEqual(EnumNormalization.NONE, ts.NormalizedType);
             Assert.IsNotNull(ts1.NormalizedSeries);
             Assert.IsNull(ts1.PaaSeries);
             Assert.AreEqual(1, ts1.CompressionRate);
@@ -112,6 +117,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, normalizedTimeSeries1.Index);
             Assert.AreEqual(label - 1, normalizedTimeSeries1.Label);
             CollectionAssert.AreEqual(listOfValues, normalizedTimeSeries1.Series);
+            Assert.AreEqual(EnumNormalization.NONE, ts.NormalizedType);
             Assert.IsNull(normalizedTimeSeries1.NormalizedSeries);
             Assert.IsNull(normalizedTimeSeries1.PaaSeries);
             Assert.AreEqual(1, normalizedTimeSeries1.CompressionRate);
@@ -126,6 +132,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts2.Index);
             Assert.AreEqual(label - 1, ts2.Label);
             CollectionAssert.AreEqual(listOfValues, ts2.Series);
+            Assert.AreEqual(EnumNormalization.MIN_MAX, ts2.NormalizedType);
             Assert.IsNotNull(ts1.NormalizedSeries);
             Assert.IsNull(ts2.PaaSeries);
             Assert.AreEqual(1, ts2.CompressionRate);
@@ -136,6 +143,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, normalizedTimeSeries2.Index);
             Assert.AreEqual(label - 1, normalizedTimeSeries2.Label);
             CollectionAssert.AreEqual(listOfValues2, normalizedTimeSeries2.Series);
+            Assert.AreEqual(EnumNormalization.NONE, normalizedTimeSeries2.NormalizedType);
             Assert.IsNull(normalizedTimeSeries2.NormalizedSeries);
             Assert.IsNull(normalizedTimeSeries2.PaaSeries);
             Assert.AreEqual(1, normalizedTimeSeries2.CompressionRate);
@@ -150,6 +158,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts3.Index);
             Assert.AreEqual(label - 1, ts3.Label);
             CollectionAssert.AreEqual(listOfValues, ts3.Series);
+            Assert.AreEqual(EnumNormalization.ZERO_MEAN, ts3.NormalizedType);
             Assert.IsNotNull(ts3.NormalizedSeries);
             Assert.IsNull(ts3.PaaSeries);
             Assert.AreEqual(1, ts3.CompressionRate);
@@ -160,6 +169,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, normalizedTimeSeries3.Index);
             Assert.AreEqual(label - 1, normalizedTimeSeries3.Label);
             CollectionAssert.AreEqual(listOfValues3, normalizedTimeSeries3.Series);
+            Assert.AreEqual(EnumNormalization.NONE, normalizedTimeSeries3.NormalizedType);
             Assert.IsNull(normalizedTimeSeries3.NormalizedSeries);
             Assert.IsNull(normalizedTimeSeries3.PaaSeries);
             Assert.AreEqual(1, normalizedTimeSeries3.CompressionRate);
@@ -187,6 +197,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts1.Index);
             Assert.AreEqual(label - 1, ts1.Label);
             CollectionAssert.AreEqual(listOfValues, ts1.Series);
+            Assert.AreEqual(EnumNormalization.NONE, ts1.NormalizedType);
             Assert.IsNull(ts1.NormalizedSeries);
             Assert.IsNotNull(ts1.PaaSeries);
             Assert.AreEqual(compressionRate1, ts1.CompressionRate);
@@ -197,6 +208,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, paaTimeSeries1.Index);
             Assert.AreEqual(label - 1, paaTimeSeries1.Label);
             CollectionAssert.AreEqual(listOfValues1, paaTimeSeries1.Series);
+            Assert.AreEqual(EnumNormalization.NONE, paaTimeSeries1.NormalizedType);
             Assert.IsNull(paaTimeSeries1.NormalizedSeries);
             Assert.IsNull(paaTimeSeries1.PaaSeries);
             Assert.AreEqual(1, paaTimeSeries1.CompressionRate);
@@ -214,6 +226,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts2.Index);
             Assert.AreEqual(label - 1, ts2.Label);
             CollectionAssert.AreEqual(listOfValues, ts2.Series);
+            Assert.AreEqual(EnumNormalization.MIN_MAX, ts2.NormalizedType);
             Assert.IsNotNull(ts2.NormalizedSeries);
             Assert.IsNotNull(ts2.PaaSeries);
             Assert.AreEqual(compressionRate2, ts2.CompressionRate);
@@ -225,6 +238,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(label - 1, paaTimeSeries2.Label);
             for (int i = 0; i < paaTimeSeries2.Length; i++)
                 Assert.IsTrue(Math.Abs(listOfValues2[i] - paaTimeSeries2.Series[i]) < 0.000001);
+            Assert.AreEqual(EnumNormalization.MIN_MAX, paaTimeSeries2.NormalizedType);
             Assert.IsNotNull(paaTimeSeries2.NormalizedSeries);
             Assert.IsNull(paaTimeSeries2.PaaSeries);
             Assert.AreEqual(1, paaTimeSeries2.CompressionRate);
@@ -242,6 +256,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(index, ts3.Index);
             Assert.AreEqual(label - 1, ts3.Label);
             CollectionAssert.AreEqual(listOfValues, ts3.Series);
+            Assert.AreEqual(EnumNormalization.ZERO_MEAN, ts3.NormalizedType);
             Assert.IsNotNull(ts3.NormalizedSeries);
             Assert.IsNotNull(ts3.PaaSeries);
             Assert.AreEqual(compressionRate3, ts3.CompressionRate);
@@ -253,6 +268,7 @@ namespace PDTW_clustering.lib.Tests
             Assert.AreEqual(label - 1, paaTimeSeries3.Label);
             for (int i = 0; i < paaTimeSeries3.Length; i++)
                 Assert.IsTrue(Math.Abs(listOfValues3[i] - paaTimeSeries3.Series[i]) < 0.000001);
+            Assert.AreEqual(EnumNormalization.ZERO_MEAN, paaTimeSeries3.NormalizedType);
             Assert.IsNotNull(paaTimeSeries3.NormalizedSeries);
             Assert.IsNull(paaTimeSeries3.PaaSeries);
             Assert.AreEqual(1, paaTimeSeries3.CompressionRate);
