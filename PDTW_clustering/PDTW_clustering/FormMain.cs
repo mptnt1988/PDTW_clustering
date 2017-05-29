@@ -18,7 +18,6 @@ namespace PDTW_clustering
     {
         #region VARIABLES
         private List<TimeSeries> _data;
-        private List<TimeSeries> _clusteringData;
         private TimeSpan _exeTime;
         private long _exeTimeStart;
         private Configuration _configuration;
@@ -191,8 +190,7 @@ namespace PDTW_clustering
         {
             if (_configuration.noOfClusters > _data.Count)
             {
-                MessageBox.Show("The number of clusters should not be greater than number of time series",
-                                "Error");
+                MessageBox.Show("The number of clusters should not be greater than number of time series", "Error");
                 return false;
             }
             return true;
@@ -201,8 +199,6 @@ namespace PDTW_clustering
         private void run_execution()
         {
             // Change GUI status to running
-            //Cursor oldcursor = this.Cursor;
-            //this.Cursor = Cursors.WaitCursor;
             btnRun.Enabled = false;
             btnStop.Enabled = true;
             btnViewResult.Enabled = false;
@@ -238,7 +234,6 @@ namespace PDTW_clustering
 
         private void do_clustering(CancellationToken token)
         {
-            //token.ThrowIfCancellationRequested();
             DtwDistance dtwDistance = new DtwDistance();
             dtwDistance.IsMultithreading = _configuration.multithreading;
             List<ClusteringObject> data;
@@ -284,10 +279,6 @@ namespace PDTW_clustering
             }));
 
             // Clustering Algorithm
-            _clusteringData = new List<TimeSeries>(data.Select(ts =>
-            {
-                return (TimeSeries)ts;
-            }));
             switch (_configuration.clusteringAlgorithm)
             {
                 case EnumClusteringAlgorithm.IMPROVED_KMEDOIDS:

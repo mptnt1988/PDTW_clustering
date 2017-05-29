@@ -16,15 +16,15 @@ namespace PDTW_clustering.lib
     public abstract class Cluster
     {
         #region ABSTRACTION
-        public abstract int[] do_clustering();
-        public abstract Evaluation do_evaluating();
-        public abstract List<int>[] Clusters { get; }
-        public abstract int[] ClusterOfObject { get; }
-        public abstract List<ClusteringObject> Objects { get; }
-        public abstract Evaluation Evaluation { get; }
-        public abstract float TotalSum { get; }
-        public abstract CancellationToken Token { get; set; }
-        public abstract int Percentage { get; }
+        public abstract int[] do_clustering();                   // execute clustering
+        public abstract Evaluation do_evaluating();              // execute clustering evaluation
+        public abstract List<int>[] Clusters { get; }            // clusters in which each is a list of object index
+        public abstract int[] ClusterOfObject { get; }           // cluster of a specific object index
+        public abstract List<ClusteringObject> Objects { get; }  // list of all objects
+        public abstract Evaluation Evaluation { get; }           // an object which has functions of evaluation
+        public abstract float TotalSum { get; }                  // sum of all object-to-center distances
+        public abstract CancellationToken Token { get; set; }    // token to cancel the thread
+        public abstract int Percentage { get; }                  // percentage of done jobs
         #endregion
 
         #region VARIABLES
