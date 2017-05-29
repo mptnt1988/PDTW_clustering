@@ -20,8 +20,12 @@ namespace PDTW_clustering
         private PointPairList m_pointsList;
         private List<TimeSeries> _dataset;
         private List<TimeSeries>[] _tsClusters;
+        // Compression rate & Normalization type
+        // - ORIGINAL: input from form
+        // - CLUSTERING: get from resulted cluster
         private int _compressionRate;
-        public EnumNormalization _normalization;
+        private EnumNormalization _normalization;
+        // 2 types of graph view: browsing time series (ORIGINAL) & view clustering result (CLUSTERING)
         private EnumViewTimeSeriesType _viewTSType = EnumViewTimeSeriesType.ORIGINAL;
         // Mode of view: NormalView or ResultView
         public EnumViewMode _mode;
@@ -36,7 +40,7 @@ namespace PDTW_clustering
             // Data
             this._mainForm = mainForm;
             this._dataset = data == null ? null : new List<TimeSeries>(data);
-            this._drawingData = data;
+            this._drawingData = _dataset;
             _mode = EnumViewMode.NORMAL;
             _normalization = EnumNormalization.NONE;
             _compressionRate = 1;
@@ -126,7 +130,7 @@ namespace PDTW_clustering
                         index += 1;
                     }
                     _dataset = _temp;
-                    this._drawingData = _temp;
+                    _drawingData = _temp;
                     MessageBox.Show("Data successfully loaded", "Information");
                 }
                 catch (Exception)
@@ -141,12 +145,7 @@ namespace PDTW_clustering
                         reader.Close();
                 }
             }
-            DrawData();
-        }
-
-        private void tbViewData_Click(object sender, EventArgs e)
-        {
-            DrawData();
+            redraw_with_new_settings();
         }
 
         private void tbSaveClusters_Click(object sender, EventArgs e)
@@ -232,15 +231,7 @@ namespace PDTW_clustering
                 if (formPAA.ShowDialog() == DialogResult.OK)
                 {
                     _compressionRate = formPAA.CompressionRate;
-                    if (_mode == EnumViewMode.NORMAL)
-                    {
-                        _drawingData = new List<TimeSeries>(_drawingData.Select(ts =>
-                        {
-                            ts.paa(_compressionRate, _normalization != EnumNormalization.NONE);
-                            return ts;
-                        }));
-                    }
-                    DrawData();
+                    redraw_with_new_settings();
                 }
             }
         }
@@ -255,13 +246,8 @@ namespace PDTW_clustering
                 if (formNormalization.ShowDialog() == DialogResult.OK)
                 {
                     _normalization = formNormalization.Normalization;
-                    _drawingData = new List<TimeSeries>(_drawingData.Select(ts =>
-                    {
-                        ts.normalize(_normalization);
-                        return ts.NormalizedSeries;
-                    }));
+                    redraw_with_new_settings();
                 }
-                DrawData();
             }
         }
 
@@ -479,6 +465,21 @@ namespace PDTW_clustering
                     tbToggleClusteringView.Visible = true;
                     break;
             }
+        }
+
+        private void redraw_with_new_settings()
+        {
+            List<TimeSeries> temp = new List<TimeSeries>(_dataset.Select(ts =>
+            {
+                ts.normalize(_normalization);
+                return ts;
+            }));
+            _drawingData = new List<TimeSeries>(temp.Select(ts =>
+            {
+                ts.paa(_compressionRate, _normalization != EnumNormalization.NONE);
+                return ts.ClusteringSeries;
+            }));
+            DrawData();
         }
         #endregion
     }
