@@ -132,7 +132,7 @@ namespace PDTW_clustering.lib
             // Calculate v[j] for each object j
             // Store them to variable 'v'
             List<ValueIndex> v = new List<ValueIndex>();
-            for (int j = 0; j < _size; j++)  // for each time series
+            for (int j = 0; j < _size; j++)  // for each object
             {
                 float vj = 0;
                 for (int i = 0; i < _size; i++)
@@ -198,7 +198,7 @@ namespace PDTW_clustering.lib
                 for (int j = 0; j < _k; j++)  // foreach cluster
                     v.Add(new ValueIndex(_distanceMatrix[i, _medoids[j]], j));  // distance from the object i to medoid of cluster j, indexed by j
                 ValueIndex nearestMedoid = v.Min<ValueIndex>();
-                if (nearestMedoid.index != _clusterOfObject[i])  // if nearest medoid is different from the object's medoid
+                if (nearestMedoid.index != _clusterOfObject[i])  // if nearest medoid's cluster is different from object's current cluster
                 {
                     if (_clusterOfObject[i] != _k)
                         _clusters[_clusterOfObject[i]].Remove(i);  // remove object of index i from old cluster
@@ -239,7 +239,6 @@ namespace PDTW_clustering.lib
         {
             _data = data;
             _k = k;
-            //_dC = 0.018f;
             _minPercentage = 1;
             _maxPercentage = 2;
             _distance = distance;
@@ -251,20 +250,8 @@ namespace PDTW_clustering.lib
         {
             _data = data;
             _k = k;
-            //_dC = dC;
             _minPercentage = minP;
             _maxPercentage = maxP;
-            _distance = distance;
-            _totalSumOld = _totalSum = 0;
-            _size = _data.Count;
-        }
-
-        // Temporarily ignored
-        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k, float dC)
-        {
-            _data = data;
-            _k = k;
-            //_dC = dC;
             _distance = distance;
             _totalSumOld = _totalSum = 0;
             _size = _data.Count;
@@ -282,7 +269,7 @@ namespace PDTW_clustering.lib
             {
                 _totalSum = 0;
                 for (int i = 0; i < _size; i++)
-                    _totalSum += _distanceMatrix[i, _clusterOfObject[i]];
+                    _totalSum += _distanceMatrix[i, _medoids[_clusterOfObject[i]]];
                 return _totalSum;
             }
         }
@@ -316,28 +303,27 @@ namespace PDTW_clustering.lib
         private void calculate_local_density()
         {
             int[] localDensity = new int[_size];
-            float sum = 0;
-            for (int i = 0; i < _size; i++)
-                for (int j = 0; j < _size; j++)
-                {
-                    if (i < j) sum += _distanceMatrix[i, j];
-                }
-            float dCHi = sum / (_size * (_size - 1) / 2);
-            float dCLo = 0;
-            float dC = (dCHi + dCLo) / 2;
+            float sum = 0;  // sum all distances between every pair of object
+            for (int i = 0; i < _size - 1; i++)
+                for (int j = i + 1; j < _size; j++)
+                    sum += _distanceMatrix[i, j];
+            float averageDistance = sum / (_size * (_size - 1) / 2);
+            float dCHi = averageDistance;  // the upperbound to calculate looped dC
+            float dCLo = 0;                // the lowerbound to calculate looped dC
+            float dC = (dCHi + dCLo) / 2;  // choose initial dC
             bool isContinued = true;
             float averageLocalDensity = 0;
-            float percent = (float)_size / 100;
-            float lBound = percent * _minPercentage;
-            float uBound = percent * _maxPercentage;
+            float percent = (float)_size / 100;  // number of objects in each percent
+            float lBound = percent * _minPercentage;  // max number of objects to considered neighbors
+            float uBound = percent * _maxPercentage;  // min number of objects to considered neighbors
             do
             {
                 _token.ThrowIfCancellationRequested();
                 for (int i = 0; i < _size; i++)
                     localDensity[i] = 0;
-                for (int i = 0; i < _size; i++)
-                    for (int j = 0; j < _size; j++)
-                        if (i > j && _distanceMatrix[i, j] < dC)
+                for (int i = 0; i < _size - 1; i++)
+                    for (int j = i + 1; j < _size; j++)
+                        if (_distanceMatrix[i, j] < dC)
                         {
                             localDensity[i]++;
                             localDensity[j]++;
@@ -358,14 +344,14 @@ namespace PDTW_clustering.lib
             while (isContinued);
             _dC = dC;
             _localDensity = localDensity;
-            //Console.WriteLine("CUTOFF: " + _dC.ToString());
 
+            //// Simply calculating local density based on given dC
             //_localDensity = new int[_size];
             //for (int i = 0; i < _size; i++)
             //    _localDensity[i] = 0;
-            //for (int i = 0; i < _size; i++)
-            //    for (int j = 0; j < _size; j++)
-            //        if (i > j && _distanceMatrix[i, j] < _dC)
+            //for (int i = 0; i < _size - 1; i++)
+            //    for (int j = i + 1; j < _size; j++)
+            //        if (_distanceMatrix[i, j] < _dC)
             //        {
             //            _localDensity[i]++;
             //            _localDensity[j]++;
@@ -380,16 +366,14 @@ namespace PDTW_clustering.lib
             List<float>[] deltaDistanceList = new List<float>[_size];
             _adjacentOfObject = new int[_size];
 
-            // Create iteration list for each object,
-            // which is list of other object indices
+            // Create iteration list for each object, which is list of other object indices
+            // For example, iteration list of object i is list of all objects except i
             List<int> seqOfIndices = Enumerable.Range(0, _size).ToList();
             List<int>[] iterationList = new List<int>[_size];
-            //Console.WriteLine("LOCAL DENSITY:");
             for (int i = 0; i < _size; i++)
             {
                 iterationList[i] = new List<int>(seqOfIndices);
                 iterationList[i].Remove(i);
-                //Console.WriteLine(i.ToString() + ": " + _localDensity[i].ToString());
             }
 
             for (int i = 0; i < _size; i++)  // foreach object
@@ -400,7 +384,7 @@ namespace PDTW_clustering.lib
                 float nearestNeigborDistance = float.PositiveInfinity;
                 foreach (int j in iterationList[i])  // foreach other object
                 {
-                    if (_localDensity[j] > _localDensity[i])
+                    if (_localDensity[j] > _localDensity[i])  // not for highest local density objects
                     {
                         deltaDistanceList[i].Add(_distanceMatrix[i, j]);
                         iterationList[j].Remove(i);
@@ -412,10 +396,9 @@ namespace PDTW_clustering.lib
                     }
                 }
                 _adjacentOfObject[i] = nearestNeighbor;
-                //Console.WriteLine("Adjacent of " + i.ToString() + ": " + nearestNeighbor.ToString());
-                if (deltaDistanceList[i].Count == 0)
+                // for highest local density objects, same as _adjacentOfObject[i] == -1
+                if (deltaDistanceList[i].Count == 0)  
                 {
-                    //Console.WriteLine("Sepecial case: " + i.ToString());
                     float maxJ = 0;
                     for (int j = 0; j < _size; j++)
                         if (_distanceMatrix[i, j] > maxJ)
@@ -427,31 +410,19 @@ namespace PDTW_clustering.lib
                     _deltaDistance[i] = deltaDistanceList[i].Min();
                 }
             }
-
-            // testing only
-            //Console.WriteLine("DISTANCE MATRIX:");
-            //for (int i = 0; i < _size; i++)
-            //{
-            //    for (int j = 0; j < _size; j++)
-            //        Console.Write(_distanceMatrix[i, j].ToString() + ", ");
-            //    Console.WriteLine();
-            //}
-
         }
 
         private void select_cluster_centers()
         {
             _medoids = new int[_k];
             List<ValueIndex> heuristicValueList = new List<ValueIndex>();
-            //Console.WriteLine("HEURISTIC");
             for (int i = 0; i < _size; i++)
             {
                 heuristicValueList.Add(new ValueIndex(_localDensity[i] * _deltaDistance[i], i));
-                //Console.WriteLine(i.ToString() + ": " + heuristicValueList.Last().value.ToString());
             }
             _clusters = new List<int>[_k];
             _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
-            for (int i = 0; i < _k; i++)
+            for (int i = 0; i < _k; i++)  // foreach cluster
             {
                 ValueIndex maxObj = heuristicValueList.Max();
                 int maxObjIndex = maxObj.index;
@@ -460,7 +431,6 @@ namespace PDTW_clustering.lib
                 _clusters[i] = new List<int>();
                 _clusters[i].Add(maxObjIndex);  // add obj's index to cluster i
                 heuristicValueList.Remove(maxObj);
-                //Console.WriteLine("Cluster " + i.ToString() + ": " + maxObjIndex.ToString());
             }
         }
 
@@ -470,6 +440,9 @@ namespace PDTW_clustering.lib
                 assign_object_to_cluster_of_adjacent_object(i);
         }
 
+
+        // This function return cluster of object i if i is already assigned to a cluster
+        // If i has not been assigned to any cluster, check (and maybe assign) the adjacent object of i
         private int assign_object_to_cluster_of_adjacent_object(int i)
         {
             if (_clusterOfObject[i] == _k)  // object i has NOT cluster yet
@@ -527,9 +500,8 @@ namespace PDTW_clustering.lib
             // Fowlkes and Mallow
             externalValidation.fm = (float)Math.Sqrt(((double)_a / (_a + _b)) * ((double)_a / (_a + _c)));
             // CSM & NMI
-            int M = cluster.Clusters.Length;
-            int N = cluster.Objects.Count;
-            float csmSum = 0;
+            int M = cluster.Clusters.Length;  // number of clusters
+            int N = cluster.Objects.Count;    // number of objects
             int[] a = new int[M];  // resulted clusters
             int[] g = new int[M];  // real clusters
             int[,] ag = new int[M, M];
@@ -539,7 +511,7 @@ namespace PDTW_clustering.lib
                 for (int j = 0; j < M; j++)
                     ag[i, j] = 0;
             }
-            for (int i = 0; i < cluster.Objects.Count; i++)
+            for (int i = 0; i < cluster.Objects.Count; i++) // foreach object
             {
                 int realCluster = cluster.Objects[i].Label;
                 int resultedCluster = cluster.ClusterOfObject[i];
@@ -547,19 +519,16 @@ namespace PDTW_clustering.lib
                 a[resultedCluster]++;
                 ag[resultedCluster, realCluster]++;
             }
+            // CSM
+            float csmSum = 0;
             for (int i = 0; i < M; i++)
             {
-                //Console.WriteLine("Cluster " + i.ToString() + ":");
-                //Console.Write(a[i].ToString() + ", ");
-                //Console.Write(g[i].ToString() + ", ");
                 float maxSim = 0;
                 for (int j = 0; j < M; j++)
                 {
-                    //Console.Write(ag[j, i].ToString() + "  ");
                     float sim = 2 * (float)ag[j, i] / (g[i] + a[j]);
                     if (maxSim < sim) maxSim = sim;
                 }
-                //Console.WriteLine("");
                 csmSum += maxSim;
             }
             externalValidation.csm = csmSum / M;
