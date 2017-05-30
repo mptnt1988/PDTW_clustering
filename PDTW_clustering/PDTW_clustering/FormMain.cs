@@ -249,6 +249,7 @@ namespace PDTW_clustering
             tmrExeTime.Enabled = false;
             TimeSpan _exeTime = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
             lblExeTimeValue.Text = display_time_string(_exeTime);
+            Console.WriteLine(System.Environment.TickCount - _exeTimeStart);
             pgbDoClustering.Value = 100;
             btnViewResult.Enabled = true;
         }

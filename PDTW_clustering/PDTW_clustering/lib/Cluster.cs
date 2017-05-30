@@ -382,7 +382,8 @@ namespace PDTW_clustering.lib
                 deltaDistanceList[i] = new List<float>();
                 int nearestNeighbor = -1;
                 float nearestNeigborDistance = float.PositiveInfinity;
-                foreach (int j in iterationList[i])  // foreach other object
+                // foreach other object which might have higher local density
+                foreach (int j in iterationList[i])
                 {
                     if (_localDensity[j] > _localDensity[i])  // not for highest local density objects
                     {
