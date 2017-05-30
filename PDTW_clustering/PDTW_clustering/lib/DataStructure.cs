@@ -58,8 +58,15 @@ namespace PDTW_clustering.lib
         public EnumDimentionalityReduction dimensionalityReduction;
         public int paaCompressionRate;
         public EnumClusteringAlgorithm clusteringAlgorithm;
+        public DensityPeaksParams densityPeaksParams;
         public int noOfClusters;
         public EnumNormalization normalization;
+    }
+
+    struct DensityPeaksParams
+    {
+        public int minPercentage;
+        public int maxPercentage;
     }
 
     public struct PathPoint

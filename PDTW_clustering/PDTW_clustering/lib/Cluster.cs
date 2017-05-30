@@ -230,6 +230,8 @@ namespace PDTW_clustering.lib
         private int[] _adjacentOfObject;        // _adjacentOfObject[i]: nearest neighbor of object i
         private Distance _distance;             // method to calculate distance
         private CancellationToken _token;       // token to cancel calculation
+        private int _minPercentage;
+        private int _maxPercentage;
         #endregion
 
         #region CONSTRUCTORS
@@ -238,16 +240,31 @@ namespace PDTW_clustering.lib
             _data = data;
             _k = k;
             //_dC = 0.018f;
+            _minPercentage = 1;
+            _maxPercentage = 2;
             _distance = distance;
             _totalSumOld = _totalSum = 0;
             _size = _data.Count;
         }
 
+        public DensityPeaks(List<ClusteringObject> data, Distance distance, int k, int minP, int maxP)
+        {
+            _data = data;
+            _k = k;
+            //_dC = dC;
+            _minPercentage = minP;
+            _maxPercentage = maxP;
+            _distance = distance;
+            _totalSumOld = _totalSum = 0;
+            _size = _data.Count;
+        }
+
+        // Temporarily ignored
         public DensityPeaks(List<ClusteringObject> data, Distance distance, int k, float dC)
         {
             _data = data;
             _k = k;
-            _dC = dC;
+            //_dC = dC;
             _distance = distance;
             _totalSumOld = _totalSum = 0;
             _size = _data.Count;
@@ -311,8 +328,8 @@ namespace PDTW_clustering.lib
             bool isContinued = true;
             float averageLocalDensity = 0;
             float percent = (float)_size / 100;
-            float lBound = 0.5f * percent;
-            float uBound = 1 * percent;
+            float lBound = percent * _minPercentage;
+            float uBound = percent * _maxPercentage;
             do
             {
                 _token.ThrowIfCancellationRequested();

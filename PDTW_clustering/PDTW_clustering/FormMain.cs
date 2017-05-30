@@ -132,6 +132,24 @@ namespace PDTW_clustering
             btnStop.Enabled = false;
             btnViewResult.Enabled = false;
             lblExeTimeValue.Text = display_time_string(TimeSpan.Zero);
+            gbDensityPeaksParams.Enabled = false;
+        }
+
+        private void radClusterAlgo_DensityPeaks_CheckedChanged(object sender, EventArgs e)
+        {
+            gbDensityPeaksParams.Enabled = radClusterAlgo_DensityPeaks.Checked;
+        }
+
+        private void nudDPParams_Min_ValueChanged(object sender, EventArgs e)
+        {
+            if (nudDPParams_Min.Value >= nudDPParams_Max.Value)
+                nudDPParams_Min.Value = nudDPParams_Max.Value - 1;
+        }
+
+        private void nudDPParams_Max_ValueChanged(object sender, EventArgs e)
+        {
+            if (nudDPParams_Max.Value <= nudDPParams_Min.Value)
+                nudDPParams_Max.Value = nudDPParams_Min.Value + 1;
         }
         #endregion
 
@@ -173,8 +191,11 @@ namespace PDTW_clustering
             if (radClusterAlgo_ImpKMedoids.Checked)
                 _configuration.clusteringAlgorithm = EnumClusteringAlgorithm.IMPROVED_KMEDOIDS;
             else if (radClusterAlgo_DensityPeaks.Checked)
+            {
                 _configuration.clusteringAlgorithm = EnumClusteringAlgorithm.DENSITY_PEAKS;
-
+                _configuration.densityPeaksParams.maxPercentage = (int)nudDPParams_Max.Value;
+                _configuration.densityPeaksParams.minPercentage = (int)nudDPParams_Min.Value;
+            }
             _configuration.noOfClusters = (int)nudNoOfClusters.Value;
 
             // Configuration for normalization
@@ -285,7 +306,9 @@ namespace PDTW_clustering
                     _cluster = new ImprovedKMedoids(data, dtwDistance, _configuration.noOfClusters);
                     break;
                 case EnumClusteringAlgorithm.DENSITY_PEAKS:
-                    _cluster = new DensityPeaks(data, dtwDistance, _configuration.noOfClusters);
+                    _cluster = new DensityPeaks(data, dtwDistance, _configuration.noOfClusters,
+                        _configuration.densityPeaksParams.minPercentage,
+                        _configuration.densityPeaksParams.maxPercentage);
                     break;
                 default:
                     throw new Exception("There is some error in configuring clustering algorithm");
