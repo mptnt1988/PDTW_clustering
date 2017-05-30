@@ -286,8 +286,8 @@ namespace PDTW_clustering.lib
         {
             _distanceMatrix = calculate_distance_matrix(_data, _distance);
             calculate_local_density();
-            calculate_distance_to_higher_density_points();
-            select_cluster_centers();
+            List<int> maxLocalDensityObjects = calculate_distance_to_higher_density_points();
+            select_cluster_centers(maxLocalDensityObjects);
             assign_objects_to_clusters();
             return _clusterOfObject;
         }
@@ -358,13 +358,11 @@ namespace PDTW_clustering.lib
             //        }
         }
 
-        private void calculate_distance_to_higher_density_points()
+        private List<int> calculate_distance_to_higher_density_points()
         {
             _deltaDistance = new float[_size];
-            // deltaDistanceList[i]: list of (distance, index)s of nearest higher local density objects
-            //                       from object i
-            List<float>[] deltaDistanceList = new List<float>[_size];
             _adjacentOfObject = new int[_size];
+            List<int> maxLocalDensityObjects = new List<int>();
 
             // Create iteration list for each object, which is list of other object indices
             // For example, iteration list of object i is list of all objects except i
@@ -379,41 +377,38 @@ namespace PDTW_clustering.lib
             for (int i = 0; i < _size; i++)  // foreach object
             {
                 _token.ThrowIfCancellationRequested();
-                deltaDistanceList[i] = new List<float>();
-                int nearestNeighbor = -1;
-                float nearestNeigborDistance = float.PositiveInfinity;
+
+                // list of (distance, index)s of nearest higher local density objects from object i
+                List<ValueIndex> deltaDistanceList = new List<ValueIndex>();
+
                 // foreach other object which might have higher local density
                 foreach (int j in iterationList[i])
                 {
-                    if (_localDensity[j] > _localDensity[i])  // not for highest local density objects
+                    if (_localDensity[j] > _localDensity[i])  // this is not for highest local density objs
                     {
-                        deltaDistanceList[i].Add(_distanceMatrix[i, j]);
+                        deltaDistanceList.Add(new ValueIndex(_distanceMatrix[i, j], j));
                         iterationList[j].Remove(i);
-                        if (_distanceMatrix[i, j] < nearestNeigborDistance)
-                        {
-                            nearestNeigborDistance = _distanceMatrix[i, j];
-                            nearestNeighbor = j;
-                        }
                     }
                 }
-                _adjacentOfObject[i] = nearestNeighbor;
-                // for highest local density objects, same as _adjacentOfObject[i] == -1
-                if (deltaDistanceList[i].Count == 0)  
+
+                if (deltaDistanceList.Count == 0)  // if highest local density
                 {
-                    float maxJ = 0;
+                    List<float> maxDist = new List<float>();
                     for (int j = 0; j < _size; j++)
-                        if (_distanceMatrix[i, j] > maxJ)
-                            maxJ = _distanceMatrix[i, j];
-                    _deltaDistance[i] = maxJ;
+                        maxDist.Add(_distanceMatrix[i, j]);
+                    _deltaDistance[i] = maxDist.Max();
+                    maxLocalDensityObjects.Add(i);  // add object with index i to list of max local density points
                 }
                 else
                 {
-                    _deltaDistance[i] = deltaDistanceList[i].Min();
+                    _deltaDistance[i] = deltaDistanceList.Min().value;
+                    _adjacentOfObject[i] = deltaDistanceList.Min().index;
                 }
             }
+            return maxLocalDensityObjects;
         }
 
-        private void select_cluster_centers()
+        private void select_cluster_centers(List<int> maxLocalDensityObjects)
         {
             _medoids = new int[_k];
             List<ValueIndex> heuristicValueList = new List<ValueIndex>();
@@ -432,6 +427,16 @@ namespace PDTW_clustering.lib
                 _clusters[i] = new List<int>();
                 _clusters[i].Add(maxObjIndex);  // add obj's index to cluster i
                 heuristicValueList.Remove(maxObj);
+                maxLocalDensityObjects.Remove(maxObjIndex);
+            }
+
+            // Consider max local density objects which are not medoids
+            foreach (int peak in maxLocalDensityObjects)
+            {
+                List<ValueIndex> minDist = new List<ValueIndex>();
+                foreach (int medoid in _medoids)
+                    minDist.Add(new ValueIndex(_distanceMatrix[peak, medoid], medoid));
+                _adjacentOfObject[peak] = minDist.Min().index;
             }
         }
 
@@ -440,7 +445,6 @@ namespace PDTW_clustering.lib
             for (int i = 0; i < _size; i++)
                 assign_object_to_cluster_of_adjacent_object(i);
         }
-
 
         // This function return cluster of object i if i is already assigned to a cluster
         // If i has not been assigned to any cluster, check (and maybe assign) the adjacent object of i
