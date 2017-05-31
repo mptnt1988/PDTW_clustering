@@ -42,7 +42,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.gbxDimRed = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.gbPaaParams = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.nudCompressionRate = new System.Windows.Forms.NumericUpDown();
             this.radDimRed_Paa = new System.Windows.Forms.RadioButton();
@@ -76,7 +76,7 @@
             this.radNormalization_None = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             this.gbxDimRed.SuspendLayout();
-            this.groupBox4.SuspendLayout();
+            this.gbPaaParams.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCompressionRate)).BeginInit();
             this.gbxClusteringAlgo.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -169,7 +169,7 @@
             // 
             // gbxDimRed
             // 
-            this.gbxDimRed.Controls.Add(this.groupBox4);
+            this.gbxDimRed.Controls.Add(this.gbPaaParams);
             this.gbxDimRed.Controls.Add(this.radDimRed_Paa);
             this.gbxDimRed.Controls.Add(this.radDimRed_Disabled);
             this.gbxDimRed.Location = new System.Drawing.Point(30, 144);
@@ -179,16 +179,16 @@
             this.gbxDimRed.TabStop = false;
             this.gbxDimRed.Text = "Dimensionality Reduction";
             // 
-            // groupBox4
+            // gbPaaParams
             // 
-            this.groupBox4.Controls.Add(this.label1);
-            this.groupBox4.Controls.Add(this.nudCompressionRate);
-            this.groupBox4.Location = new System.Drawing.Point(31, 62);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(161, 53);
-            this.groupBox4.TabIndex = 7;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Parameters";
+            this.gbPaaParams.Controls.Add(this.label1);
+            this.gbPaaParams.Controls.Add(this.nudCompressionRate);
+            this.gbPaaParams.Location = new System.Drawing.Point(31, 62);
+            this.gbPaaParams.Name = "gbPaaParams";
+            this.gbPaaParams.Size = new System.Drawing.Size(161, 53);
+            this.gbPaaParams.TabIndex = 7;
+            this.gbPaaParams.TabStop = false;
+            this.gbPaaParams.Text = "Parameters";
             // 
             // label1
             // 
@@ -232,6 +232,7 @@
             this.radDimRed_Paa.TabStop = true;
             this.radDimRed_Paa.Text = "PAA";
             this.radDimRed_Paa.UseVisualStyleBackColor = true;
+            this.radDimRed_Paa.CheckedChanged += new System.EventHandler(this.radDimRed_Paa_CheckedChanged);
             // 
             // radDimRed_Disabled
             // 
@@ -575,8 +576,8 @@
             this.menuStrip1.PerformLayout();
             this.gbxDimRed.ResumeLayout(false);
             this.gbxDimRed.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
+            this.gbPaaParams.ResumeLayout(false);
+            this.gbPaaParams.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudCompressionRate)).EndInit();
             this.gbxClusteringAlgo.ResumeLayout(false);
             this.gbxClusteringAlgo.PerformLayout();
@@ -613,7 +614,7 @@
         private System.Windows.Forms.RadioButton radDimRed_Paa;
         private System.Windows.Forms.RadioButton radDimRed_Disabled;
         private System.Windows.Forms.GroupBox gbxClusteringAlgo;
-        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.GroupBox gbPaaParams;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown nudCompressionRate;
         private System.Windows.Forms.GroupBox groupBox5;

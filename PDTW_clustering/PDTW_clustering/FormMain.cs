@@ -140,6 +140,11 @@ namespace PDTW_clustering
             gbDensityPeaksParams.Enabled = radClusterAlgo_DensityPeaks.Checked;
         }
 
+        private void radDimRed_Paa_CheckedChanged(object sender, EventArgs e)
+        {
+            gbPaaParams.Enabled = radDimRed_Paa.Checked;
+        }
+
         private void nudDPParams_Min_ValueChanged(object sender, EventArgs e)
         {
             if (nudDPParams_Min.Value >= nudDPParams_Max.Value)
