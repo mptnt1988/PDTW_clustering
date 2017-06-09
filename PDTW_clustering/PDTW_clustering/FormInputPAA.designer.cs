@@ -39,7 +39,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(184, 79);
+            this.btnCancel.Location = new System.Drawing.Point(134, 61);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(81, 29);
             this.btnCancel.TabIndex = 20;
@@ -49,7 +49,7 @@
             // btnOk
             // 
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOk.Location = new System.Drawing.Point(97, 79);
+            this.btnOk.Location = new System.Drawing.Point(38, 61);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(81, 29);
             this.btnOk.TabIndex = 19;
@@ -59,14 +59,14 @@
             // 
             // nudPaa
             // 
-            this.nudPaa.Location = new System.Drawing.Point(134, 29);
+            this.nudPaa.Location = new System.Drawing.Point(144, 29);
             this.nudPaa.Maximum = new decimal(new int[] {
             1000,
             0,
             0,
             0});
             this.nudPaa.Name = "nudPaa";
-            this.nudPaa.Size = new System.Drawing.Size(80, 20);
+            this.nudPaa.Size = new System.Drawing.Size(50, 20);
             this.nudPaa.TabIndex = 21;
             this.nudPaa.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.nudPaa.Value = new decimal(new int[] {
@@ -78,7 +78,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(35, 31);
+            this.label1.Location = new System.Drawing.Point(45, 31);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 22;
@@ -88,7 +88,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(278, 123);
+            this.ClientSize = new System.Drawing.Size(259, 118);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
             this.Controls.Add(this.nudPaa);

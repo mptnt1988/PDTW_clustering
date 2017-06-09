@@ -65,7 +65,7 @@
             this.groupBox6.Controls.Add(this.lblJaccard);
             this.groupBox6.Location = new System.Drawing.Point(12, 12);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(468, 174);
+            this.groupBox6.Size = new System.Drawing.Size(238, 202);
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Result";
@@ -73,7 +73,7 @@
             // lblObjFuncValue
             // 
             this.lblObjFuncValue.AutoSize = true;
-            this.lblObjFuncValue.Location = new System.Drawing.Point(342, 98);
+            this.lblObjFuncValue.Location = new System.Drawing.Point(157, 169);
             this.lblObjFuncValue.Name = "lblObjFuncValue";
             this.lblObjFuncValue.Size = new System.Drawing.Size(22, 13);
             this.lblObjFuncValue.TabIndex = 24;
@@ -82,7 +82,7 @@
             // lblAdjustedRandValue
             // 
             this.lblAdjustedRandValue.AutoSize = true;
-            this.lblAdjustedRandValue.Location = new System.Drawing.Point(271, 48);
+            this.lblAdjustedRandValue.Location = new System.Drawing.Point(157, 48);
             this.lblAdjustedRandValue.Name = "lblAdjustedRandValue";
             this.lblAdjustedRandValue.Size = new System.Drawing.Size(22, 13);
             this.lblAdjustedRandValue.TabIndex = 23;
@@ -91,7 +91,7 @@
             // lblNormalMutualValue
             // 
             this.lblNormalMutualValue.AutoSize = true;
-            this.lblNormalMutualValue.Location = new System.Drawing.Point(273, 16);
+            this.lblNormalMutualValue.Location = new System.Drawing.Point(157, 147);
             this.lblNormalMutualValue.Name = "lblNormalMutualValue";
             this.lblNormalMutualValue.Size = new System.Drawing.Size(22, 13);
             this.lblNormalMutualValue.TabIndex = 22;
@@ -100,7 +100,7 @@
             // lblCSMValue
             // 
             this.lblCSMValue.AutoSize = true;
-            this.lblCSMValue.Location = new System.Drawing.Point(63, 102);
+            this.lblCSMValue.Location = new System.Drawing.Point(157, 122);
             this.lblCSMValue.Name = "lblCSMValue";
             this.lblCSMValue.Size = new System.Drawing.Size(22, 13);
             this.lblCSMValue.TabIndex = 21;
@@ -109,7 +109,7 @@
             // lblFowlkesMalowValue
             // 
             this.lblFowlkesMalowValue.AutoSize = true;
-            this.lblFowlkesMalowValue.Location = new System.Drawing.Point(125, 78);
+            this.lblFowlkesMalowValue.Location = new System.Drawing.Point(157, 98);
             this.lblFowlkesMalowValue.Name = "lblFowlkesMalowValue";
             this.lblFowlkesMalowValue.Size = new System.Drawing.Size(22, 13);
             this.lblFowlkesMalowValue.TabIndex = 20;
@@ -118,7 +118,7 @@
             // lblRandValue
             // 
             this.lblRandValue.AutoSize = true;
-            this.lblRandValue.Location = new System.Drawing.Point(63, 54);
+            this.lblRandValue.Location = new System.Drawing.Point(157, 25);
             this.lblRandValue.Name = "lblRandValue";
             this.lblRandValue.Size = new System.Drawing.Size(22, 13);
             this.lblRandValue.TabIndex = 19;
@@ -127,7 +127,7 @@
             // lblJaccardValue
             // 
             this.lblJaccardValue.AutoSize = true;
-            this.lblJaccardValue.Location = new System.Drawing.Point(75, 22);
+            this.lblJaccardValue.Location = new System.Drawing.Point(157, 71);
             this.lblJaccardValue.Name = "lblJaccardValue";
             this.lblJaccardValue.Size = new System.Drawing.Size(22, 13);
             this.lblJaccardValue.TabIndex = 18;
@@ -136,7 +136,7 @@
             // lblObjFunc
             // 
             this.lblObjFunc.AutoSize = true;
-            this.lblObjFunc.Location = new System.Drawing.Point(231, 98);
+            this.lblObjFunc.Location = new System.Drawing.Point(15, 169);
             this.lblObjFunc.Name = "lblObjFunc";
             this.lblObjFunc.Size = new System.Drawing.Size(105, 13);
             this.lblObjFunc.TabIndex = 17;
@@ -145,7 +145,7 @@
             // lblAdjustedRand
             // 
             this.lblAdjustedRand.AutoSize = true;
-            this.lblAdjustedRand.Location = new System.Drawing.Point(231, 48);
+            this.lblAdjustedRand.Location = new System.Drawing.Point(86, 48);
             this.lblAdjustedRand.Name = "lblAdjustedRand";
             this.lblAdjustedRand.Size = new System.Drawing.Size(34, 13);
             this.lblAdjustedRand.TabIndex = 16;
@@ -154,7 +154,7 @@
             // lblNormalMutual
             // 
             this.lblNormalMutual.AutoSize = true;
-            this.lblNormalMutual.Location = new System.Drawing.Point(231, 16);
+            this.lblNormalMutual.Location = new System.Drawing.Point(84, 147);
             this.lblNormalMutual.Name = "lblNormalMutual";
             this.lblNormalMutual.Size = new System.Drawing.Size(36, 13);
             this.lblNormalMutual.TabIndex = 15;
@@ -163,7 +163,7 @@
             // lblCSM
             // 
             this.lblCSM.AutoSize = true;
-            this.lblCSM.Location = new System.Drawing.Point(15, 102);
+            this.lblCSM.Location = new System.Drawing.Point(81, 122);
             this.lblCSM.Name = "lblCSM";
             this.lblCSM.Size = new System.Drawing.Size(39, 13);
             this.lblCSM.TabIndex = 14;
@@ -172,7 +172,7 @@
             // lblFowlkesMalow
             // 
             this.lblFowlkesMalow.AutoSize = true;
-            this.lblFowlkesMalow.Location = new System.Drawing.Point(12, 78);
+            this.lblFowlkesMalow.Location = new System.Drawing.Point(22, 98);
             this.lblFowlkesMalow.Name = "lblFowlkesMalow";
             this.lblFowlkesMalow.Size = new System.Drawing.Size(98, 13);
             this.lblFowlkesMalow.TabIndex = 13;
@@ -181,7 +181,7 @@
             // lblRand
             // 
             this.lblRand.AutoSize = true;
-            this.lblRand.Location = new System.Drawing.Point(12, 54);
+            this.lblRand.Location = new System.Drawing.Point(78, 25);
             this.lblRand.Name = "lblRand";
             this.lblRand.Size = new System.Drawing.Size(42, 13);
             this.lblRand.TabIndex = 12;
@@ -190,7 +190,7 @@
             // lblJaccard
             // 
             this.lblJaccard.AutoSize = true;
-            this.lblJaccard.Location = new System.Drawing.Point(15, 22);
+            this.lblJaccard.Location = new System.Drawing.Point(66, 71);
             this.lblJaccard.Name = "lblJaccard";
             this.lblJaccard.Size = new System.Drawing.Size(54, 13);
             this.lblJaccard.TabIndex = 11;
@@ -200,7 +200,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(618, 210);
+            this.ClientSize = new System.Drawing.Size(262, 229);
             this.Controls.Add(this.groupBox6);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
