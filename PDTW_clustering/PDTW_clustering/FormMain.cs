@@ -137,7 +137,8 @@ namespace PDTW_clustering
 
         private void radClusterAlgo_DensityPeaks_CheckedChanged(object sender, EventArgs e)
         {
-            gbDensityPeaksParams.Enabled = radClusterAlgo_DensityPeaks.Checked;
+            chkDensityPeaksAuto.Visible = gbDensityPeaksParams.Enabled = radClusterAlgo_DensityPeaks.Checked;
+            chkDensityPeaksAuto.Checked = false;
         }
 
         private void radDimRed_Paa_CheckedChanged(object sender, EventArgs e)
@@ -254,6 +255,7 @@ namespace PDTW_clustering
             tmrExeTime.Enabled = false;
             TimeSpan _exeTime = TimeSpan.FromMilliseconds(System.Environment.TickCount - _exeTimeStart);
             lblExeTimeValue.Text = display_time_string(_exeTime);
+            Console.WriteLine("\n---Time:");
             Console.WriteLine(System.Environment.TickCount - _exeTimeStart);
             pgbDoClustering.Value = 100;
             btnViewResult.Enabled = true;
@@ -328,5 +330,10 @@ namespace PDTW_clustering
             return timeSpan.ToString("hh':'mm':'ss'.'fff");
         }
         #endregion
+
+        private void chkDensityPeaksAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            nudNoOfClusters.Enabled = !chkDensityPeaksAuto.Checked;
+        }
     }
 }

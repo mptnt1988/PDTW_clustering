@@ -34,6 +34,7 @@
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,7 +74,7 @@
             this.radNormalization_ZeroMean = new System.Windows.Forms.RadioButton();
             this.radNormalization_MinMax = new System.Windows.Forms.RadioButton();
             this.radNormalization_None = new System.Windows.Forms.RadioButton();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.chkDensityPeaksAuto = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.gbxDimRed.SuspendLayout();
             this.gbPaaParams.SuspendLayout();
@@ -114,7 +115,7 @@
             // 
             this.loadToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadToolStripMenuItem.Image")));
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.loadToolStripMenuItem.Text = "&Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -122,14 +123,19 @@
             // 
             this.viewToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("viewToolStripMenuItem.Image")));
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.viewToolStripMenuItem.Text = "&View";
             this.viewToolStripMenuItem.Click += new System.EventHandler(this.viewToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(97, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -147,18 +153,18 @@
             // 
             this.guideToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("guideToolStripMenuItem.Image")));
             this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
-            this.guideToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.guideToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.guideToolStripMenuItem.Text = "&Guide";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             // 
             // openFile
@@ -227,6 +233,7 @@
             this.radDimRed_Paa.Name = "radDimRed_Paa";
             this.radDimRed_Paa.Size = new System.Drawing.Size(46, 17);
             this.radDimRed_Paa.TabIndex = 1;
+            this.radDimRed_Paa.TabStop = true;
             this.radDimRed_Paa.Text = "PAA";
             this.radDimRed_Paa.UseVisualStyleBackColor = true;
             this.radDimRed_Paa.CheckedChanged += new System.EventHandler(this.radDimRed_Paa_CheckedChanged);
@@ -255,6 +262,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.chkDensityPeaksAuto);
             this.groupBox5.Controls.Add(this.gbDensityPeaksParams);
             this.groupBox5.Controls.Add(this.nudNoOfClusters);
             this.groupBox5.Controls.Add(this.label2);
@@ -393,7 +401,7 @@
             this.radClusterAlgo_ImpKMedoids.Size = new System.Drawing.Size(121, 17);
             this.radClusterAlgo_ImpKMedoids.TabIndex = 0;
             this.radClusterAlgo_ImpKMedoids.TabStop = true;
-            this.radClusterAlgo_ImpKMedoids.Text = "Improved k-Medoids";
+            this.radClusterAlgo_ImpKMedoids.Text = "Improved K-medoids";
             this.radClusterAlgo_ImpKMedoids.UseVisualStyleBackColor = true;
             // 
             // gbxMultithreading
@@ -426,6 +434,7 @@
             this.radMultithreading_Enabled.Name = "radMultithreading_Enabled";
             this.radMultithreading_Enabled.Size = new System.Drawing.Size(64, 17);
             this.radMultithreading_Enabled.TabIndex = 1;
+            this.radMultithreading_Enabled.TabStop = true;
             this.radMultithreading_Enabled.Text = "Enabled";
             this.radMultithreading_Enabled.UseVisualStyleBackColor = true;
             // 
@@ -544,10 +553,17 @@
             this.radNormalization_None.Text = "None";
             this.radNormalization_None.UseVisualStyleBackColor = true;
             // 
-            // toolStripMenuItem3
+            // chkDensityPeaksAuto
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(149, 6);
+            this.chkDensityPeaksAuto.AutoSize = true;
+            this.chkDensityPeaksAuto.Location = new System.Drawing.Point(210, 24);
+            this.chkDensityPeaksAuto.Name = "chkDensityPeaksAuto";
+            this.chkDensityPeaksAuto.Size = new System.Drawing.Size(48, 17);
+            this.chkDensityPeaksAuto.TabIndex = 3;
+            this.chkDensityPeaksAuto.Text = "Auto";
+            this.chkDensityPeaksAuto.UseVisualStyleBackColor = true;
+            this.chkDensityPeaksAuto.Visible = false;
+            this.chkDensityPeaksAuto.CheckedChanged += new System.EventHandler(this.chkDensityPeaksAuto_CheckedChanged);
             // 
             // FormMain
             // 
@@ -644,6 +660,7 @@
         private System.Windows.Forms.NumericUpDown nudDPParams_Min;
         private System.Windows.Forms.NumericUpDown nudDPParams_Max;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.CheckBox chkDensityPeaksAuto;
     }
 }
 
