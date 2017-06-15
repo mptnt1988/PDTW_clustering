@@ -137,8 +137,8 @@ namespace PDTW_clustering
 
         private void radClusterAlgo_DensityPeaks_CheckedChanged(object sender, EventArgs e)
         {
-            chkDensityPeaksAuto.Visible = gbDensityPeaksParams.Enabled = radClusterAlgo_DensityPeaks.Checked;
-            chkDensityPeaksAuto.Checked = false;
+            chkAutoNoOfClusters.Visible = gbDensityPeaksParams.Enabled = radClusterAlgo_DensityPeaks.Checked;
+            chkAutoNoOfClusters.Checked = false;
         }
 
         private void radDimRed_Paa_CheckedChanged(object sender, EventArgs e)
@@ -156,6 +156,11 @@ namespace PDTW_clustering
         {
             if (nudDPParams_Max.Value <= nudDPParams_Min.Value)
                 nudDPParams_Max.Value = nudDPParams_Min.Value + 1;
+        }
+
+        private void chkAutoNoOfClusters_CheckedChanged(object sender, EventArgs e)
+        {
+            nudNoOfClusters.Enabled = !chkAutoNoOfClusters.Checked;
         }
         #endregion
 
@@ -202,7 +207,7 @@ namespace PDTW_clustering
                 _configuration.densityPeaksParams.maxPercentage = (int)nudDPParams_Max.Value;
                 _configuration.densityPeaksParams.minPercentage = (int)nudDPParams_Min.Value;
             }
-            _configuration.noOfClusters = (int)nudNoOfClusters.Value;
+            _configuration.noOfClusters = chkAutoNoOfClusters.Checked ? 0 : (int)nudNoOfClusters.Value;
 
             // Configuration for normalization
             if (radNormalization_None.Checked)
@@ -330,10 +335,5 @@ namespace PDTW_clustering
             return timeSpan.ToString("hh':'mm':'ss'.'fff");
         }
         #endregion
-
-        private void chkDensityPeaksAuto_CheckedChanged(object sender, EventArgs e)
-        {
-            nudNoOfClusters.Enabled = !chkDensityPeaksAuto.Checked;
-        }
     }
 }

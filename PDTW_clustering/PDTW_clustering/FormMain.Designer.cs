@@ -49,6 +49,7 @@
             this.radDimRed_Disabled = new System.Windows.Forms.RadioButton();
             this.gbxClusteringAlgo = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.chkAutoNoOfClusters = new System.Windows.Forms.CheckBox();
             this.gbDensityPeaksParams = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
             this.lblNeighborPercentage = new System.Windows.Forms.Label();
@@ -74,7 +75,6 @@
             this.radNormalization_ZeroMean = new System.Windows.Forms.RadioButton();
             this.radNormalization_MinMax = new System.Windows.Forms.RadioButton();
             this.radNormalization_None = new System.Windows.Forms.RadioButton();
-            this.chkDensityPeaksAuto = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.gbxDimRed.SuspendLayout();
             this.gbPaaParams.SuspendLayout();
@@ -262,7 +262,7 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.chkDensityPeaksAuto);
+            this.groupBox5.Controls.Add(this.chkAutoNoOfClusters);
             this.groupBox5.Controls.Add(this.gbDensityPeaksParams);
             this.groupBox5.Controls.Add(this.nudNoOfClusters);
             this.groupBox5.Controls.Add(this.label2);
@@ -272,6 +272,18 @@
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Parameters";
+            // 
+            // chkAutoNoOfClusters
+            // 
+            this.chkAutoNoOfClusters.AutoSize = true;
+            this.chkAutoNoOfClusters.Location = new System.Drawing.Point(210, 24);
+            this.chkAutoNoOfClusters.Name = "chkAutoNoOfClusters";
+            this.chkAutoNoOfClusters.Size = new System.Drawing.Size(48, 17);
+            this.chkAutoNoOfClusters.TabIndex = 3;
+            this.chkAutoNoOfClusters.Text = "Auto";
+            this.chkAutoNoOfClusters.UseVisualStyleBackColor = true;
+            this.chkAutoNoOfClusters.Visible = false;
+            this.chkAutoNoOfClusters.CheckedChanged += new System.EventHandler(this.chkAutoNoOfClusters_CheckedChanged);
             // 
             // gbDensityPeaksParams
             // 
@@ -553,18 +565,6 @@
             this.radNormalization_None.Text = "None";
             this.radNormalization_None.UseVisualStyleBackColor = true;
             // 
-            // chkDensityPeaksAuto
-            // 
-            this.chkDensityPeaksAuto.AutoSize = true;
-            this.chkDensityPeaksAuto.Location = new System.Drawing.Point(210, 24);
-            this.chkDensityPeaksAuto.Name = "chkDensityPeaksAuto";
-            this.chkDensityPeaksAuto.Size = new System.Drawing.Size(48, 17);
-            this.chkDensityPeaksAuto.TabIndex = 3;
-            this.chkDensityPeaksAuto.Text = "Auto";
-            this.chkDensityPeaksAuto.UseVisualStyleBackColor = true;
-            this.chkDensityPeaksAuto.Visible = false;
-            this.chkDensityPeaksAuto.CheckedChanged += new System.EventHandler(this.chkDensityPeaksAuto_CheckedChanged);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -660,7 +660,7 @@
         private System.Windows.Forms.NumericUpDown nudDPParams_Min;
         private System.Windows.Forms.NumericUpDown nudDPParams_Max;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
-        private System.Windows.Forms.CheckBox chkDensityPeaksAuto;
+        private System.Windows.Forms.CheckBox chkAutoNoOfClusters;
     }
 }
 
