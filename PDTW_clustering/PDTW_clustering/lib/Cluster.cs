@@ -410,12 +410,23 @@ namespace PDTW_clustering.lib
 
         private void select_cluster_centers(List<int> maxLocalDensityObjects)
         {
-            _medoids = new int[_k];
             List<ValueIndex> heuristicValueList = new List<ValueIndex>();
+            List<float> productValues = new List<float>();
             for (int i = 0; i < _size; i++)
             {
-                heuristicValueList.Add(new ValueIndex(_localDensity[i] * _deltaDistance[i], i));
+                float prod = _localDensity[i] * _deltaDistance[i];
+                productValues.Add(prod);
+                heuristicValueList.Add(new ValueIndex(prod, i));
             }
+            if (_k == 0)
+            {
+                float max = productValues.Max();
+                float min = productValues.Min();
+                float threshold = min + (max - min) * 0.4f;
+                _k = productValues.Count(prod => prod > threshold);
+            }
+
+            _medoids = new int[_k];
             _clusters = new List<int>[_k];
             _clusterOfObject = Enumerable.Repeat(_k, _size).ToArray();
             for (int i = 0; i < _k; i++)  // foreach cluster
